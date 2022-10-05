@@ -9,37 +9,45 @@
 
 Set-WinUILanguageOverride -Language en-US
 
-configuration FileDemo
+configuration CorporateMachine
 {
-    # Import-DscResource -ModuleName 'PSDesiredStateConfiguration'
+    Import-DscResource -ModuleName 'PSDesiredStateConfiguration'
     Import-DscResource -ModuleName cChoco 
-    # Import-DscResource -ModuleName cChoco -Name cChocoInstaller 
-    # Import-DscResource -ModuleName cChoco -Name cChocoPackageInstaller
 
     Node "localhost"
     {
-        cChocoInstaller installChoco
+        cChocoInstaller InstallChoco
         {
             InstallDir = "c:\ProgramData\chocolatey"
         }
 
-        cChocoPackageInstaller installGit
+        cChocoPackageInstaller InstallGit
         {
             Name = "git"
-            DependsOn = "[cChocoInstaller]installChoco"
+            DependsOn = "[cChocoInstaller]InstallChoco"
         }
 
-        File Demo 
+        cChocoPackageInstaller InstallAutoDarkMode
         {
-            Type            = 'Directory'
-            DestinationPath = 'C:\Users\horvathda\fostalicska'
+            Name = "auto-dark-mode"
+            DependsOn = "[cChocoInstaller]InstallChoco"
+        }
+
+        File AutoDarkModeConfig
+        {
+            DependsOn = "[cChocoPackageInstaller]InstallAutoDarkMode"
+
+            Type            = 'File'
+            SourcePath      = "C:\Users\horvathda\myconfig\tools\windows\auto_dark_mode\config.yaml"
+            DestinationPath = 'C:\Users\horvathda\AppData\Roaming\AutoDarkMode\config.yaml'
             Ensure          = "Present"
+            Checksum        = "SHA-1"
         }
     }
 }
 
 # Compile the configuration file to a MOF format
-FileDemo
+CorporateMachine
 
 # Run the configuration on localhost
-Start-DscConfiguration -Path .\FileDemo -Wait -Force -Verbose
+Start-DscConfiguration -Path .\CorporateMachine -Wait -Force -Verbose

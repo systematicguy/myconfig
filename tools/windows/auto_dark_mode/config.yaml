@@ -21,7 +21,7 @@ ColorFilterSwitch:
   Enabled: false
   Component: {}
 OfficeSwitch:
-  Enabled: false
+  Enabled: true
   Component:
     Mode: Switch
     LightTheme: 0
