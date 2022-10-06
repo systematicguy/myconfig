@@ -15,6 +15,7 @@ configuration BaseMachineConfig
             Name      = "vscode"
             DependsOn = "[cChocoInstaller]InstallChoco"
         }
+        # TODO: auto-theme switch
 
         cChocoPackageInstaller InstallGit
         {

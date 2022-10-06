@@ -1,4 +1,7 @@
+# existing ini file location: https://ghisler.ch/board/viewtopic.php?t=26830
 $winCmdPath = "C:\Users\horvathda\AppData\Roaming\GHISLER\wincmd.ini"
+
+# activation: place the wincmd.key file into the installation folder
 
 configuration TotalCommanderDependencies
 {
@@ -114,6 +117,11 @@ configuration TotalCommanderConfiguration
         }
     }
 }
+
+
+# TODO: plugins
+# https://www.ghisler.ch/board/viewtopic.php?t=42019
+
 
 # Compile the configuration file to a MOF format
 TotalCommanderDependencies

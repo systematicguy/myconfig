@@ -10,6 +10,9 @@ configuration AutoDarkMode
             Name = "auto-dark-mode"
         }
 
+        # the installer does not ensure config, config will be generated upon first start,
+        # so it is safe to pre-copy the config.yaml
+        
         File AutoDarkModeConfig
         {
             DependsOn = "[cChocoPackageInstaller]InstallAutoDarkMode"
