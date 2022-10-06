@@ -1,2 +1,4 @@
 *.mof
 *.mof.error
+DscPublicKey.cer
+DscConfig.psd1

@@ -16,6 +16,7 @@ configuration BaseMachineConfig
             DependsOn = "[cChocoInstaller]InstallChoco"
         }
         # TODO: auto-theme switch
+        # TODO: plugins
 
         cChocoPackageInstaller InstallGit
         {

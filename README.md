@@ -21,6 +21,7 @@ With version 5 all stuff works.
 # Useful resources
 
 ## DSC howto, show-case
+- https://learn.microsoft.com/en-us/powershell/dsc/getting-started/wingettingstarted?view=dsc-1.1
 - https://www.tutorialspoint.com/powershell-desired-state-configuration
 - https://octopus.com/blog/getting-started-with-powershell-dsc
 - https://4sysops.com/archives/powershell-desired-state-configuration-dsc-part-2-setup/
@@ -101,7 +102,25 @@ https://learn.microsoft.com/en-us/powershell/dsc/reference/resources/windows/fil
 ## DSC Script Resource
 https://learn.microsoft.com/en-us/powershell/dsc/reference/resources/windows/scriptresource?view=dsc-1.1
 
+https://powershellmagazine.com/2014/08/13/running-commands-as-another-user-using-dsc-script-resource/
+
+### Impersonation, certificate-encrypted credentials
+https://stackoverflow.com/questions/43040896/write-to-a-variable-from-dsc-script-resource
+
+It is not possible to pass an external variable to Script.
+Before executing every Test/Set function the LCM resets the state of the Runspace - i.e all variables are cleared. Therefore if you want to pass information, the best way is to write to a file and read from it.
+
+https://blog.jermdavis.dev/posts/2015/wait-who-is-dsc-running-as-again
+
+https://learn.microsoft.com/en-us/powershell/dsc/pull-server/secureMOF?view=dsc-1.1&viewFallbackFrom=powershell-7.2
+
+https://learn.microsoft.com/en-us/powershell/dsc/configurations/configdata?view=dsc-1.1
+
+https://serverfault.com/questions/632390/protecting-credentials-in-desired-state-configuration-using-certificates
+
 ## DSC Choco
+https://www.powershellgallery.com/packages/cChoco/2.3.1.0/Content/ExampleConfig.ps1
+
 https://docs.chocolatey.org/en-us/features/integrations#powershell-dsc
 
 ```
@@ -135,11 +154,20 @@ configuration BaseMachineConfig
 
         # or
 
-
+        cChocoPackageInstallerSet InstallSomeStuff
+        {
+            Ensure = 'Present'
+            Name = @(
+                "git"
+                "vscode"
+            )
+            DependsOn = "[cChocoInstaller]installChoco"
+        }
     }
 }
 
 ```
+
 
 ## DSC IniSettingsFile
 https://github.com/dsccommunity/FileContentDsc

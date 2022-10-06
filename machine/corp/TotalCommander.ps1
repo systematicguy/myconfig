@@ -6,7 +6,7 @@ $winCmdPath = "C:\Users\horvathda\AppData\Roaming\GHISLER\wincmd.ini"
 configuration TotalCommanderDependencies
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco 
+    Import-DscResource -ModuleName cChoco
 
     Node "localhost"
     {
