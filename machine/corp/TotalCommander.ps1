@@ -34,6 +34,63 @@ configuration TotalCommanderInstallation
     }
 }
 
+$totalCmdIniConfig = 
+@{
+    Configuration = 
+    @{
+        Editor                    = '"C:\Program Files\Microsoft VS Code\Code.exe" "%1"';
+        DarkMode                  = "1";
+        RenameSelOnlyName         = "1";
+        AltSearch                 = "3";
+        QuickSearchMatchBeginning = "0";
+        QuickSearchExactMatch     = "0";
+        SizeStyle                 = "3";
+        SizeFooter                = "3";
+        SoundDelay                = "-10";
+        VerifyCopy                = "1";
+        ShowHiddenSystem          = "1";
+        QuickSearchAutoFilter     = "1";
+        UseLongNames              = "1";
+        IconOverlays              = "1";
+        DirTabOptions             = "1";
+        DirTabRevert              = "1977";
+        DirTabFilters             = "1";
+        WatchDirs                 = "51";
+    };
+    Confirmation =
+    @{
+        deleteDirs        = "0";
+        OverwriteFiles    = "1";
+        OverwriteReadonly = "0";
+        OverwriteHidSys   = "0";
+        MouseActions      = "1";
+    };
+    Tabstops =
+    @{
+        AdjustWidth = "1";
+    };
+    Layout =
+    @{
+        ButtonBar             = "1";
+        ButtonBarVertical     = "1";
+        DriveBar1             = "1";
+        DriveBar2             = "1";
+        DriveBarFlat          = "1";
+        InterfaceFlat         = "1";
+        DriveCombo            = "1";
+        DirectoryTabs         = "1";
+        XPthemeBg             = "1";
+        CurDir                = "1";
+        TabHeader             = "1";
+        StatusBar             = "1";
+        CmdLine               = "1";
+        KeyButtons            = "1";
+        HistoryHotlistButtons = "1";
+        BreadCrumbBar         = "1";
+    };
+
+}
+
 configuration TotalCommanderConfiguration
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
@@ -42,328 +99,18 @@ configuration TotalCommanderConfiguration
 
     Node "localhost"
     {
-        # Configuration section
-        IniSettingsFile Tcmd_Configuration_Editor
+        foreach ($sectionKey in $totalCmdIniConfig)
         {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "Editor"
-            Text    = '"C:\Program Files\Microsoft VS Code\Code.exe" "%1"'
-        }
-
-        IniSettingsFile Tcmd_Configuration_DarkMode
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "DarkMode"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Configuration_RenameSelOnlyName
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "RenameSelOnlyName"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Configuration_AltSearch
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "AltSearch"
-            Text    = "3"
-        }
-
-        IniSettingsFile Tcmd_Configuration_QuickSearchMatchBeginning
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "QuickSearchMatchBeginning"
-            Text    = "0"
-        }
-
-        IniSettingsFile Tcmd_Configuration_QuickSearchExactMatch
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "QuickSearchExactMatch"
-            Text    = "0"
-        }
-
-        IniSettingsFile Tcmd_Configuration_SizeStyle
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "SizeStyle"
-            Text    = "3"
-        }
-
-        IniSettingsFile Tcmd_Configuration_SizeFooter
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "SizeFooter"
-            Text    = "3"
-        }
-
-        IniSettingsFile Tcmd_Configuration_SoundDelay
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "SoundDelay"
-            Text    = "-10"
-        }
-
-        IniSettingsFile Tcmd_Configuration_VerifyCopy
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "VerifyCopy"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Configuration_ShowHiddenSystem
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "ShowHiddenSystem"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Configuration_QuickSearchAutoFilter
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "QuickSearchAutoFilter"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Configuration_UseLongNames
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "UseLongNames"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Configuration_IconOverlays
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "IconOverlays"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Configuration_DirTabOptions
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "DirTabOptions"
-            Text    = "1977"
-        }
-
-        IniSettingsFile Tcmd_Configuration_DirTabRevert
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "DirTabRevert"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Configuration_DirTabFilters
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "DirTabFilters"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Configuration_WatchDirs
-        {
-            Path    = $winCmdPath
-            Section = "Configuration"
-            Key     = "WatchDirs"
-            Text    = "51"
-        }
-
-        # Confirmation section
-        IniSettingsFile Tcmd_Confirmation_DeleteDirs
-        {
-            Path    = $winCmdPath
-            Section = "Confirmation"
-            Key     = "deleteDirs"
-            Text    = "0"
-        }
-
-        IniSettingsFile Tcmd_Confirmation_OverwriteFiles
-        {
-            Path    = $winCmdPath
-            Section = "Confirmation"
-            Key     = "OverwriteFiles"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Confirmation_OverwriteReadonly
-        {
-            Path    = $winCmdPath
-            Section = "Confirmation"
-            Key     = "OverwriteReadonly"
-            Text    = "0"
-        }
-
-        IniSettingsFile Tcmd_Confirmation_OverwriteHidSys
-        {
-            Path    = $winCmdPath
-            Section = "Confirmation"
-            Key     = "OverwriteHidSys"
-            Text    = "0"
-        }
-
-        IniSettingsFile Tcmd_Confirmation_MouseActions
-        {
-            Path    = $winCmdPath
-            Section = "Confirmation"
-            Key     = "MouseActions"
-            Text    = "1"
-        }
-
-        # Tabstops section
-        IniSettingsFile Tcmd_Tabstops_AdjustWidth
-        {
-            Path    = $winCmdPath
-            Section = "Tabstops"
-            Key     = "AdjustWidth"
-            Text    = "1"
-        }
-
-        # Layout section
-        IniSettingsFile Tcmd_Layout_ButtonBar
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "ButtonBar"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_ButtonBarVertical
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "ButtonBarVertical"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_DriveBar1
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "DriveBar1"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_DriveBar2
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "DriveBar2"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_DriveBarFlat
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "DriveBarFlat"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_InterfaceFlat
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "InterfaceFlat"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_DriveCombo
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "DriveCombo"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_DirectoryTabs
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "DirectoryTabs"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_XPthemeBg
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "XPthemeBg"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_CurDir
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "CurDir"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_TabHeader
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "TabHeader"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_StatusBar
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "StatusBar"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_CmdLine
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "CmdLine"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_KeyButtons
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "KeyButtons"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_HistoryHotlistButtons
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "HistoryHotlistButtons"
-            Text    = "1"
-        }
-
-        IniSettingsFile Tcmd_Layout_BreadCrumbBar
-        {
-            Path    = $winCmdPath
-            Section = "Layout"
-            Key     = "BreadCrumbBar"
-            Text    = "1"
+            foreach ($key in $totalCmdIniConfig[$sectionKey]) 
+            {
+                IniSettingsFile Tcmd_$sectionKey_$key
+                {
+                    Path    = $winCmdPath
+                    Section = "$sectionKey"
+                    Key     = "$key"
+                    Text    = $totalCmdIniConfig[$sectionKey][$key]
+                }
+            }
         }
     }
 }
