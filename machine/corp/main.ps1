@@ -9,45 +9,6 @@
 
 Set-WinUILanguageOverride -Language en-US
 
-configuration CorporateMachine
-{
-    Import-DscResource -ModuleName 'PSDesiredStateConfiguration'
-    Import-DscResource -ModuleName cChoco 
-
-    Node "localhost"
-    {
-        cChocoInstaller InstallChoco
-        {
-            InstallDir = "c:\ProgramData\chocolatey"
-        }
-
-        cChocoPackageInstaller InstallGit
-        {
-            Name = "git"
-            DependsOn = "[cChocoInstaller]InstallChoco"
-        }
-
-        cChocoPackageInstaller InstallAutoDarkMode
-        {
-            Name = "auto-dark-mode"
-            DependsOn = "[cChocoInstaller]InstallChoco"
-        }
-
-        File AutoDarkModeConfig
-        {
-            DependsOn = "[cChocoPackageInstaller]InstallAutoDarkMode"
-
-            Type            = 'File'
-            SourcePath      = "C:\Users\horvathda\myconfig\tools\windows\auto_dark_mode\config.yaml"
-            DestinationPath = 'C:\Users\horvathda\AppData\Roaming\AutoDarkMode\config.yaml'
-            Ensure          = "Present"
-            Checksum        = "SHA-1"
-        }
-    }
-}
-
-# Compile the configuration file to a MOF format
-CorporateMachine
-
-# Run the configuration on localhost
-Start-DscConfiguration -Path .\CorporateMachine -Wait -Force -Verbose
+.\BaseMachineConfig.ps1
+.\AutoDarkMode.ps1
+.\TotalCommander.ps1
