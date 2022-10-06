@@ -37,7 +37,7 @@ Configuration LCMConfig
     }
 }
 LCMConfig
-Set-DscLocalConfigurationManager -Path .\LCMConfig -Wait -Force -Verbose
+Set-DscLocalConfigurationManager -Path .\LCMConfig -Force -Verbose
 
 # this is the configdata to be used on the author node if credentials need to be passed
 $ConfigData = @{
