@@ -3,10 +3,6 @@
 
 $pxVersion = "0.8.3"
 $pxZipFile = "px-v$pxVersion-windows.zip"
-
-$outputFile = "$DscWorkDir\PxProxy.txt"
-"" | Out-File $outputFile -Encoding ASCII
-
 $startScriptPath = "$UserBinDir\StartPxProxy.ps1"
 $schTaskName = "Start Px Proxy"
 
