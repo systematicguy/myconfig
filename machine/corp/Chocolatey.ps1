@@ -1,3 +1,5 @@
+if ($_AlreadySourcedChocolatey -ne $null) { return } else { $_AlreadySourcedChocolatey = $true }
+
 . $PSScriptRoot\Environment
 
 configuration Chocolatey

@@ -22,9 +22,11 @@ if (-not (Test-Path -Path $userConfigFile))
 }
 
 $UserConfig = Import-PowerShellDataFile $userConfigFile
+$CorpDomain = $UserConfig.CorpDomain
 $UserName = $UserConfig.UserName
 $UserDir = $UserConfig.UserDir
 $UserBinDir = $UserConfig.UserBinDir
+$NoProxy = $UserConfig.NoProxy
 if (-not (Test-Path -Path $UserBinDir)) 
 {
     New-Item -ItemType Directory -Force -Path $UserBinDir

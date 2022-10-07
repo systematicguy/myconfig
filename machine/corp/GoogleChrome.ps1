@@ -5,6 +5,7 @@ configuration GoogleChrome
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName cChoco
+    Import-DscResource -Name cChocoPackageInstaller -ModuleName cChoco
 
     Node "localhost"
     {

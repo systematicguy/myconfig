@@ -14,6 +14,7 @@ Install-Module -Name ConvertTo-Expression -Force
 Install-Module -Name cChoco -Force
 Install-Module -Name FileContentDsc -Force
 Install-Module -Name xPSDesiredStateConfiguration -Force
+Install-Module -Name ComputerManagementDsc -Force
 
 . $PSScriptRoot\DscSetupCert.ps1
 . $PSScriptRoot\Chocolatey.ps1
