@@ -1,21 +1,10 @@
-$ErrorActionPreference = "Stop"
-
-$dscConfigPath = ".\DscConfig.psd1"
-$dscWorkDir = (Resolve-Path ".\dsc_run").Path
-
-# TODO move to separate module:
-if ($myCreds -eq $null) {
-    Write-Output "Retrieving domain..."
-    $domain = (systeminfo | findstr /B /C:"Domain") | Out-String
-    $myCreds = Get-Credential -Message "Specify credentials like user@domain. $domain"
-} else {
-    Write-Output "Working with existing credentials for $($myCreds.UserName)"
-}
+. $PSScriptRoot\Environment.ps1
+. $PSScriptRoot\UserCredentials.ps1
 
 configuration GoogleChrome
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco 
+    Import-DscResource -ModuleName cChoco
 
     Node "localhost"
     {
@@ -35,7 +24,8 @@ configuration GoogleChrome
     }
 }
 
-$outputFile = "$dscWorkDir\GoogleChromeAsDefaultBrowser.txt"
+
+$outputFile = "$DscWorkDir\GoogleChromeAsDefaultBrowser.txt"
 
 configuration GoogleChromeAsDefaultBrowser
 {
@@ -86,10 +76,8 @@ configuration GoogleChromeAsDefaultBrowser
     }
 }
 
+GoogleChrome -Output $DscMofDir\GoogleChrome
+Start-DscConfiguration -Path $DscMofDir\GoogleChrome -Wait -Force -Verbose
 
-# Compile the configuration file to a MOF format
-GoogleChrome 
-GoogleChromeAsDefaultBrowser -UserCredential $myCreds -ConfigurationData $dscConfigPath
-
-Start-DscConfiguration -Path .\GoogleChrome -Wait -Force -Verbose
-Start-DscConfiguration -Path .\GoogleChromeAsDefaultBrowser -Wait -Force -Verbose
+GoogleChromeAsDefaultBrowser -Output $DscMofDir\GoogleChromeAsDefaultBrowser -UserCredential $UserCredentials -ConfigurationData $DscConfigPath
+Start-DscConfiguration -Path $DscMofDir\GoogleChromeAsDefaultBrowser -Wait -Force -Verbose

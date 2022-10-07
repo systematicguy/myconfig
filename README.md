@@ -3,7 +3,7 @@ The following might be needed even if we only do everything only locally:
 ```
 PS > Set-WsManQuickConfig -Force
 ```
-See [./machine/corp/prep_elevated.ps1]()
+See [./machine/corp/PrepElevated.ps1]()
 
 ## DSC Powershell version lesson learned
 https://learn.microsoft.com/en-us/powershell/scripting/dsc/overview?view=powershell-7.2

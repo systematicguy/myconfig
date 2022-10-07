@@ -1,3 +1,6 @@
+. $PSScriptRoot\Environment
+. $PSScriptRoot\VsCode.ps1
+
 configuration BaseMachineConfig
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
@@ -5,29 +8,12 @@ configuration BaseMachineConfig
 
     Node "localhost"
     {
-        cChocoInstaller InstallChoco
-        {
-            InstallDir = "c:\ProgramData\chocolatey"
-        }
-
-        cChocoPackageInstaller InstallVsCode
-        {
-            Name      = "vscode"
-            DependsOn = "[cChocoInstaller]InstallChoco"
-        }
-        # TODO: auto-theme switch
-        # TODO: plugins
-
         cChocoPackageInstaller InstallGit
         {
-            Name      = "git"
-            DependsOn = "[cChocoInstaller]InstallChoco"
+            Name = "git"
         }
     }
 }
 
-
-# Compile the configuration file to a MOF format
-BaseMachineConfig
-
-Start-DscConfiguration -Path .\BaseMachineConfig -Wait -Force -Verbose
+BaseMachineConfig -Output $DscMofDir\BaseMachineConfig
+Start-DscConfiguration -Path $DscMofDir\BaseMachineConfig -Wait -Force -Verbose

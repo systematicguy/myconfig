@@ -1,5 +1,7 @@
 *.mof
 *.mof.error
+UserConfig.psd1
 DscPublicKey.cer
 DscConfig.psd1
 dsc_run/
+repro.ps1

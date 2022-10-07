@@ -1,13 +1,12 @@
-$ErrorActionPreference = "Stop"
+. $PSScriptRoot\Environment.ps1
+
+Write-Output "Configuring self-signed certificates for LCM..."
 
 # generating a cert for encryption of MOF files (some of them will contain credentials)
 # as seen on https://learn.microsoft.com/en-us/powershell/dsc/pull-server/secureMOF?view=dsc-1.1
 
-$publicKeyPath = ".\DscPublicKey.cer"
-$dscConfigPath = ".\DscConfig.psd1"
-$dscWorkDir = ".\dsc_run"
-
-New-Item -ItemType Directory -Force -Path $dscWorkDir
+$publicKeyPath = $LocalConfig.PublicKeyPath
+$dscConfigPath = $LocalConfig.DscConfigPath
 
 # https://learn.microsoft.com/en-us/powershell/dsc/pull-server/secureMOF?view=dsc-1.1#creating-the-certificate-on-the-target-node
 # Note: These steps need to be performed in an Administrator PowerShell session on the target node.
@@ -40,8 +39,8 @@ Configuration LCMConfig
         }
     }
 }
-LCMConfig
-Set-DscLocalConfigurationManager -Path .\LCMConfig -Force -Verbose
+LCMConfig -Output $DscMofDir\LCMConfig
+Set-DscLocalConfigurationManager -Path $DscMofDir\LCMConfig -Force -Verbose
 
 # this is the configdata to be used on the author node if credentials need to be passed
 $ConfigData = @{

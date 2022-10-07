@@ -1,47 +1,15 @@
+. $PSScriptRoot\Environment.ps1
+
 # existing ini file location: https://ghisler.ch/board/viewtopic.php?t=26830
-$winCmdPath = "C:\Users\horvathda\AppData\Roaming\GHISLER\wincmd.ini"
+$winCmdPath = "$UserDir\AppData\Roaming\GHISLER\wincmd.ini"
 
-# activation: place the wincmd.key file into the installation folder
+# TODO: activation: place the wincmd.key file into the installation dir
 
-configuration TotalCommanderDependencies
-{
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco
+. $PSScriptRoot\VsCode.ps1
 
-    Node "localhost"
-    {
-        cChocoInstaller InstallChoco
-        {
-            InstallDir = "c:\ProgramData\chocolatey"
-        }
-
-        cChocoPackageInstaller InstallVsCode
-        {
-            Name      = "vscode"
-            DependsOn = "[cChocoInstaller]InstallChoco"
-        }
-    }
-}
-
-configuration TotalCommanderInstallation
-{
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco 
-
-    Node "localhost"
-    {
-        cChocoPackageInstaller TotalCommander
-        {
-            Name = "totalcommander"
-        }
-    }
-}
-
-$totalCmdIniConfig = 
-@{
-    Configuration = 
-    @{
-        Editor                    = '"C:\Program Files\Microsoft VS Code\Code.exe" "%1"';
+$totalCmdIniConfig = @{
+    Configuration = @{
+        Editor                    = "`"$VsCodeExePath`" `"%1`"";
         DarkMode                  = "1";
         RenameSelOnlyName         = "1";
         AltSearch                 = "3";
@@ -60,20 +28,17 @@ $totalCmdIniConfig =
         DirTabFilters             = "1";
         WatchDirs                 = "51";
     };
-    Confirmation =
-    @{
+    Confirmation = @{
         deleteDirs        = "0";
         OverwriteFiles    = "1";
         OverwriteReadonly = "0";
         OverwriteHidSys   = "0";
         MouseActions      = "1";
     };
-    Tabstops =
-    @{
+    Tabstops = @{
         AdjustWidth = "1";
     };
-    Layout =
-    @{
+    Layout = @{
         ButtonBar             = "1";
         ButtonBarVertical     = "1";
         DriveBar1             = "1";
@@ -91,22 +56,34 @@ $totalCmdIniConfig =
         HistoryHotlistButtons = "1";
         BreadCrumbBar         = "1";
     };
+}
 
+configuration TotalCommanderInstallation
+{
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+    Import-DscResource -ModuleName cChoco 
+
+    Node "localhost"
+    {
+        cChocoPackageInstaller TotalCommander
+        {
+            Name = "totalcommander"
+        }
+    }
 }
 
 configuration TotalCommanderConfiguration
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco 
     Import-DSCResource -ModuleName FileContentDsc
 
     Node "localhost"
     {
-        foreach ($sectionKey in $totalCmdIniConfig)
+        foreach ($sectionKey in $totalCmdIniConfig.Keys)
         {
-            foreach ($key in $totalCmdIniConfig[$sectionKey]) 
+            foreach ($key in $totalCmdIniConfig[$sectionKey].Keys) 
             {
-                IniSettingsFile Tcmd_$sectionKey_$key
+                IniSettingsFile "Tcmd_$sectionKey_$key"
                 {
                     Path    = $winCmdPath
                     Section = "$sectionKey"
@@ -123,12 +100,8 @@ configuration TotalCommanderConfiguration
 # https://www.ghisler.ch/board/viewtopic.php?t=42019
 
 
-# Compile the configuration file to a MOF format
-TotalCommanderDependencies
-TotalCommanderInstallation
-TotalCommanderConfiguration
+TotalCommanderInstallation -Output $DscMofDir\TotalCommanderInstallation
+Start-DscConfiguration -Path $DscMofDir\TotalCommanderInstallation -Wait -Force -Verbose
 
-# Run the configuration on localhost
-Start-DscConfiguration -Path .\TotalCommanderDependencies -Wait -Force -Verbose
-Start-DscConfiguration -Path .\TotalCommanderInstallation -Wait -Force -Verbose
-Start-DscConfiguration -Path .\TotalCommanderConfiguration -Wait -Force -Verbose
+TotalCommanderConfiguration -Output $DscMofDir\TotalCommanderConfiguration
+Start-DscConfiguration -Path $DscMofDir\TotalCommanderConfiguration -Wait -Force -Verbose

@@ -1,3 +1,5 @@
+. $PSScriptRoot\Environment.ps1
+
 [cultureinfo]::CurrentUICulture = 'en-US'
 Set-WinSystemLocale en-US
 
@@ -7,13 +9,11 @@ Set-WinSystemLocale en-US
 # maybe needed:
 #Install-Module -Name PSDscResources -Force
 
+Write-Output "Installing required Powershell Modules..."
 Install-Module -Name ConvertTo-Expression -Force
-
 Install-Module -Name cChoco -Force
-
 Install-Module -Name FileContentDsc -Force
+Install-Module -Name xPSDesiredStateConfiguration -Force
 
-choco install yq -y
-Install-Module -Name PSYamlQuery -Force
-
-.\DscSetupCert.ps1
+. $PSScriptRoot\DscSetupCert.ps1
+. $PSScriptRoot\Chocolatey.ps1
