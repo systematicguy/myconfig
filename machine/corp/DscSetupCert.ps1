@@ -5,6 +5,9 @@ $ErrorActionPreference = "Stop"
 
 $publicKeyPath = ".\DscPublicKey.cer"
 $dscConfigPath = ".\DscConfig.psd1"
+$dscWorkDir = ".\dsc_run"
+
+New-Item -ItemType Directory -Force -Path $dscWorkDir
 
 # https://learn.microsoft.com/en-us/powershell/dsc/pull-server/secureMOF?view=dsc-1.1#creating-the-certificate-on-the-target-node
 # Note: These steps need to be performed in an Administrator PowerShell session on the target node.
@@ -18,8 +21,9 @@ $cert = New-SelfSignedCertificate -Type DocumentEncryptionCertLegacyCsp -DnsName
 $cert | Export-Certificate -FilePath $publicKeyPath -Force
 $publicKeyPath = (Resolve-Path $publicKeyPath).Path
 
-# TODO: maybe the following can be skipped because the target node is the same as the authoring node and New-SelfSignedCertificate already imports the cert.
-# Import to the my store of the authoring node.
+# The following can be skipped because the target node is the same as the authoring node 
+#  and New-SelfSignedCertificate already imports the cert.
+# However, if the target node would be remote, we would import the public cert to the my store of the authoring node:
 # Import-Certificate -FilePath $publicKeyPath -CertStoreLocation Cert:\LocalMachine\My
 
 

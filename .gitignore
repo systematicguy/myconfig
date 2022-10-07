@@ -2,3 +2,4 @@
 *.mof.error
 DscPublicKey.cer
 DscConfig.psd1
+dsc_run/

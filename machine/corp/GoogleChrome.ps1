@@ -1,6 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $dscConfigPath = ".\DscConfig.psd1"
+$dscWorkDir = (Resolve-Path ".\dsc_run").Path
 
 # TODO move to separate module:
 if ($myCreds -eq $null) {
@@ -34,6 +35,8 @@ configuration GoogleChrome
     }
 }
 
+$outputFile = "$dscWorkDir\GoogleChromeAsDefaultBrowser.txt"
+
 configuration GoogleChromeAsDefaultBrowser
 {
     param (
@@ -47,22 +50,39 @@ configuration GoogleChromeAsDefaultBrowser
 
     Node "localhost"
     {
-        Script SetAsDefaultBrowser {
+        Script SetAsDefaultBrowser 
+        {
             Credential = $UserCredential
 
             GetScript = {
                 #Do Nothing
             }
             SetScript = {
-                Write-Verbose "$env:UserName"
-                $env:UserName | Out-File "$env:UserProfile\username.txt" -Encoding ASCII
-                SetDefaultBrowser chrome
+                SetDefaultBrowser chrome | Out-File $using:outputFile -Encoding ASCII
                 # https://kolbi.cz/blog/2017/11/10/setdefaultbrowser-set-the-default-browser-per-user-on-windows-10-and-server-2016-build-1607/
+                if ($LASTEXITCODE -ne 0) {
+                    throw "Exited with $LASTEXITCODE"
+                }
             }
             TestScript = {
                 $false
             }
-        }   
+        }
+
+        Script ShowOutput 
+        {
+            DependsOn = "[Script]SetAsDefaultBrowser"
+
+            GetScript = {
+                #Do Nothing
+            }
+            SetScript = {
+                Get-Content $using:outputFile | Write-Verbose
+            }
+            TestScript = {
+                !(Test-Path -Path $using:outputFile)
+            }
+        } 
     }
 }
 
