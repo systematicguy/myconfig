@@ -21,6 +21,7 @@ So I am automating the hell out of my config. For myself. But feel free to use t
 I have Software Engineering and DevOps background, the latter with a lot of exposure to 
 - Python, Powershell, Bash
 - Puppet, Chocolatey, Ansible, Terraform, Docker
+- Ini, json, yaml
 - IntelliJ, Visual Studio Code, Vim
 
 Scripted/compiled/configured software and tooling on Windows, Linux, even Mac.
@@ -58,7 +59,7 @@ some storage provider so you sync it everywhere.
 - Download: https://github.com/systematicguy/myconfig/archive/refs/heads/main.zip
 - Unzip to somewhere (e.g. in your userfolder)
 - Copy [local_config/UserConfig.template.psd1](./local_config/UserConfig.template.psd1) to `local_config/UserConfig.psd1`, edit it, remove the `Draft` entry.
-- Start powershell as Administrator
+- Start powershell 5 as Administrator
 - Prepare your environment running [windows/DscPrepare.ps1](./windows/DscPrepare.ps1)
     ```
     windows\DscPrepare.ps1
@@ -93,7 +94,7 @@ The following might be needed even if we only do everything only locally:
 ```
 PS > Set-WsManQuickConfig -Force
 ```
-See [./windows/DscPrepare.ps1]()
+See [windows/DscPrepare.ps1](./windows/DscPrepare.ps1)
 
 ## DSC Powershell version lesson learned
 https://learn.microsoft.com/en-us/powershell/scripting/dsc/overview?view=powershell-7.2
@@ -120,9 +121,9 @@ With version 5 all stuff works.
 
 ## Notable examples from this repo
 
-- [./machine/Corporate.ps1]()
-- [./tools/AutoDarkMode.ps1]()
-- [./tools/TotalCommander.ps1]()
+- [scripts/CorporateMachine.ps1](./scripts/CorporateMachine.ps1)
+- [tools/AutoDarkMode.ps1](./tools/AutoDarkMode.ps1)
+- [tools/TotalCommander.ps1](./tools/TotalCommander.ps1)
 
 ## Get-DscResource
 ```
