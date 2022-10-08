@@ -87,3 +87,9 @@ function ShowTodo {
     Write-Output "The following has to be done manually:"
     Get-Content $TodoFile | Write-Output
 }
+
+######################################################################################
+# Warning:
+# This file is dot sourced almost everywhere, assumed to be working before any setup.
+# It must not rely on any non-standard module, nor should it perform any DSC job.
+#####################################################################################

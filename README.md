@@ -1,4 +1,38 @@
-# Prerequisites
+# Quick start
+- Download: https://github.com/systematicguy/myconfig/archive/refs/heads/main.zip
+- Unzip to somewhere (e.g. in your userfolder)
+- Copy [local_config/UserConfig.template.psd1](./local_config/UserConfig.template.psd1) to `local_config/UserConfig.psd1`, edit it, remove the `Draft` entry.
+- Start powershell as Administrator
+- Prepare your environment running [windows/DscPrepare.ps1](./windows/DscPrepare.ps1)
+    ```
+    windows\DscPrepare.ps1
+    ```
+- Run
+  - any of the tools ps1 script in the [tools](./tools/) folder in any order
+  - any of the scripts in the [scripts](./scripts/) folder
+
+    e.g.
+    ```
+    scripts\CorporateMachine.ps1
+
+    # or
+
+    tools\GitConfig.ps1
+    tools\SshKey.ps1
+    tools\TotalCommander.ps1
+    ```
+
+- Between runs you can avoid multiple prompts for credential via dotsourcing the variable into your scope:
+    ```
+    . .\windows\UserCredential.ps1
+    ```
+- DSC generates mof files, containing only encrypted credentials. You can cleanup the certificate after configuration running [windows/DscCleanupCert.ps1](./windows/DscCleanupCert.ps1)
+    ```
+    windows\DscCleanupCert.ps1
+    ```
+
+# Desired State Configuration (DSC)
+## Prerequisites
 The following might be needed even if we only do everything only locally:
 ```
 PS > Set-WsManQuickConfig -Force
