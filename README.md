@@ -3,7 +3,7 @@ The following might be needed even if we only do everything only locally:
 ```
 PS > Set-WsManQuickConfig -Force
 ```
-See [./machine/corp/PrepElevated.ps1]()
+See [./windows/DscPrepare.ps1]()
 
 ## DSC Powershell version lesson learned
 https://learn.microsoft.com/en-us/powershell/scripting/dsc/overview?view=powershell-7.2
@@ -30,9 +30,9 @@ With version 5 all stuff works.
 
 ## Notable examples from this repo
 
-- [./machine/corp/BaseMachineConfig.ps1]()
-- [./machine/corp/AutoDarkMode.ps1]()
-- [./machine/corp/TotalCommander.ps1]()
+- [./machine/Corporate.ps1]()
+- [./tools/AutoDarkMode.ps1]()
+- [./tools/TotalCommander.ps1]()
 
 ## Get-DscResource
 ```
@@ -117,6 +117,22 @@ https://learn.microsoft.com/en-us/powershell/dsc/pull-server/secureMOF?view=dsc-
 https://learn.microsoft.com/en-us/powershell/dsc/configurations/configdata?view=dsc-1.1
 
 https://serverfault.com/questions/632390/protecting-credentials-in-desired-state-configuration-using-certificates
+
+## ComputerManagement DSC
+https://github.com/dsccommunity/ComputerManagementDsc
+
+- PendingReboot
+- PowerPlan
+- ScheduledTask: https://www.powershellgallery.com/packages/ComputerManagementDsc/5.1.0.0/Content/Examples%5CResources%5CScheduledTask%5C1-CreateScheduledTaskOnce.ps1
+- RemoteDesktopAdmin
+- PowerShellExecutionPolicy
+- SystemLocale
+- WindowsCapability
+
+## xPSDesiredStateConfiguration
+https://github.com/dsccommunity/xPSDesiredStateConfiguration/blob/main/source/Examples/Resources/xRemoteFile/1-xRemoteFile_DownloadFile_Config.ps1
+
+- xRemoteFile 
 
 ## DSC Choco
 https://www.powershellgallery.com/packages/cChoco/2.3.1.0/Content/ExampleConfig.ps1
