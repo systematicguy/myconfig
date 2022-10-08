@@ -4,8 +4,9 @@
 
 . $PSScriptRoot\PxProxy.ps1
 
-. $PSScriptRoot\BaseMachineConfig.ps1
 . $PSScriptRoot\AutoDarkMode.ps1
 . $PSScriptRoot\VsCode.ps1
+. $PSScriptRoot\GitConfig.ps1
+. $PSScriptRoot\SshKey.ps1
 . $PSScriptRoot\TotalCommander.ps1
 . $PSScriptRoot\GoogleChrome.ps1
