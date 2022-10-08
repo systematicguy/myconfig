@@ -1,3 +1,46 @@
+# What is this
+This is my 7th time to install almost the same set of tools and click through the configurations on a work laptop.
+Frankly, I had enough. So I've automated the hell out of it. 
+
+For myself. But feel free to use this if you want.
+
+## Background
+I have Software Engineering and DevOps background, the latter with a lot of exposure to 
+- Python, Powershell, Bash
+- Puppet, Chocolatey, Ansible, Terraform, Docker
+- IntelliJ, Visual Studio Code, Vim
+
+Scripted/compiled/configured software and tooling on Windows, Linux, even Mac.
+
+This exposure will show on my structure and the technologies applied.
+
+## Configuring your work machine is hard
+- Even if I want to treat it as a cattle, sometimes there are parts that need to be left alone, so immutability is a no-no. 
+- It is also not enough to just put all your config files, GPOs, registries, heck, even tool binaries into version control or 
+some storage provider so you sync it everywhere. 
+    - Some of these will be user/domain/environment specific. 
+    - Some update will bring in/remove new/old settings, that you will want to make use of.
+    - For me, tjhis approach would be dirty, and not elegant enough.
+- I have to work with managed corporate workstations/laptops where although I have admin right, but cannot ditch all their managed config.
+- My mantra is (taken from Zolaly): take as many defaults as possible, don't fight the stream too much, configure 15%.
+    - I do have my quirks, where I really need my way all the way till death. But I keep these to a minimum.
+    - I try to play nice with the ecosystem, always considering what is the most maintainable solution.
+
+## Design Considerations
+- Idempotence
+- Additive config instead of replacing
+- Modularity, Single Responsibility Principle
+- Dependencies as Directed Acyclic Graph (DAG), where 
+    - each node makes sense to grab and start
+    - each node lists all of their dependencies
+- Should not matter where you `cd`
+- Don't Repeat Yourself (DRY)
+    - Least amount of copy-pasting boilerplate, supporting code (e.g. dot-sourcing)
+    - No amount of copy-pasting business-critical code/data (in this case config)
+- Secure credentials at rest: no plaintext passwords
+- Generalizing
+    - Although I will compromise somewhat on that in this case as this repo represents how I organize my setup
+
 # Quick start
 - Download: https://github.com/systematicguy/myconfig/archive/refs/heads/main.zip
 - Unzip to somewhere (e.g. in your userfolder)
