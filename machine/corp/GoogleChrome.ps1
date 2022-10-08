@@ -1,3 +1,5 @@
+if ($_AlreadySourcedGoogleChrome -ne $null) { return } else { $_AlreadySourcedGoogleChrome = $true }
+
 . $PSScriptRoot\..\..\windows\Environment.ps1
 . $PSScriptRoot\..\..\windows\UserCredential.ps1
 

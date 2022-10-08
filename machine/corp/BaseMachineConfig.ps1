@@ -1,3 +1,5 @@
+if ($_AlreadySourcedBaseMachineConfig -ne $null) { return } else { $_AlreadySourcedBaseMachineConfig = $true }
+
 . $PSScriptRoot\..\..\windows\Environment.ps1
 . $PSScriptRoot\VsCode.ps1
 

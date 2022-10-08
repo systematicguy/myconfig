@@ -1,3 +1,6 @@
+if ($_AlreadySourcedPxProxy -ne $null) { return } else { $_AlreadySourcedPxProxy = $true }
+
+
 . $PSScriptRoot\..\..\windows\Environment.ps1
 . $PSScriptRoot\..\..\windows\UserCredential.ps1
 

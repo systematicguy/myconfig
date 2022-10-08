@@ -1,3 +1,5 @@
+if ($_AlreadySourcedAutoDarkMode -ne $null) { return } else { $_AlreadySourcedAutoDarkMode = $true }
+
 . $PSScriptRoot\..\..\windows\Environment.ps1
 
 configuration AutoDarkMode
