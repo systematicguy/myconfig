@@ -1,8 +1,7 @@
-if ($_AlreadySourcedPxProxy -ne $null) { return } else { $_AlreadySourcedPxProxy = $true }
+. $PSScriptRoot\..\windows\Environment.ps1
+if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-
-. $PSScriptRoot\..\..\windows\Environment.ps1
-. $PSScriptRoot\..\..\windows\UserCredential.ps1
+. $RepoRoot\windows\UserCredential.ps1
 
 $pxVersion = "0.8.3"
 $pxZipFile = "px-v$pxVersion-windows.zip"

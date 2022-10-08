@@ -1,7 +1,8 @@
-if ($_AlreadySourcedGoogleChrome -ne $null) { return } else { $_AlreadySourcedGoogleChrome = $true }
+. $PSScriptRoot\..\windows\Environment.ps1
+if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $PSScriptRoot\..\..\windows\Environment.ps1
-. $PSScriptRoot\..\..\windows\UserCredential.ps1
+. $RepoToolsDir\Chocolatey.ps1
+. $RepoRoot\windows\UserCredential.ps1
 
 Configuration GoogleChrome
 {

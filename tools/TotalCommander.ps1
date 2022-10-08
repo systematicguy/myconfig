@@ -1,6 +1,7 @@
-if ($_AlreadySourcedTotalCommander -ne $null) { return } else { $_AlreadySourcedTotalCommander = $true }
+. $PSScriptRoot\..\windows\Environment.ps1
+if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $PSScriptRoot\..\..\windows\Environment.ps1
+. $RepoToolsDir\Chocolatey.ps1
 
 # existing ini file location: https://ghisler.ch/board/viewtopic.php?t=26830
 $winCmdPath = "$UserDir\AppData\Roaming\GHISLER\wincmd.ini"

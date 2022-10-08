@@ -1,6 +1,7 @@
-if ($_AlreadySourcedAutoDarkMode -ne $null) { return } else { $_AlreadySourcedAutoDarkMode = $true }
+. $PSScriptRoot\..\windows\Environment.ps1
+if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $PSScriptRoot\..\..\windows\Environment.ps1
+. $RepoToolsDir\Chocolatey.ps1
 
 Configuration AutoDarkMode
 {
@@ -25,7 +26,7 @@ Configuration AutoDarkMode
             DependsOn = "[cChocoPackageInstaller]InstallAutoDarkMode"
 
             Type            = 'File'
-            SourcePath      = "$RepoRoot\tools\windows\auto_dark_mode\config.yaml"
+            SourcePath      = "$RepoRoot\config\auto_dark_mode\config.yaml"
             DestinationPath = "$UserDir\AppData\Roaming\AutoDarkMode\config.yaml"
             Ensure          = "Present"
             Checksum        = "SHA-1"

@@ -17,4 +17,4 @@ Install-Module -Name xPSDesiredStateConfiguration -Force
 Install-Module -Name ComputerManagementDsc -Force
 
 . $PSScriptRoot\DscSetupCert.ps1
-. $RepoRoot\machine\corp\Chocolatey.ps1
+. $RepoToolsDir\Chocolatey.ps1

@@ -1,7 +1,7 @@
-if ($_AlreadySourcedVsCode -ne $null) { return } else { $_AlreadySourcedVsCode = $true }
+. $PSScriptRoot\..\windows\Environment.ps1
+if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $PSScriptRoot\..\..\windows\Environment.ps1
-
+. $RepoToolsDir\Chocolatey.ps1
 
 Configuration VsCode
 {

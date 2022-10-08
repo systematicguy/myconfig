@@ -1,6 +1,5 @@
-if ($_AlreadySourcedChocolatey -ne $null) { return } else { $_AlreadySourcedChocolatey = $true }
-
-. $PSScriptRoot\..\..\windows\Environment.ps1
+. $PSScriptRoot\..\windows\Environment.ps1
+if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 Configuration Chocolatey
 {

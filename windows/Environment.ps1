@@ -1,7 +1,14 @@
-if ($_AlreadySourcedEnvironment -ne $null) { return } else { $_AlreadySourcedEnvironment = $true }
+######################################################################################
+# Warning:
+# This file is dot sourced almost everywhere, assumed to be working before any setup.
+# It must not rely on any non-standard module, nor should it perform any DSC job.
+#####################################################################################
+if ($AlreadySourced -ne $null) { return } else { $AlreadySourced = @{} }
 
 $ErrorActionPreference = "Stop"
 
+
+##############################################################################
 # validate administrator:
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (! $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
@@ -15,17 +22,21 @@ if ($PSVersionTable.PSVersion.Major -ge 7 -or $PSVersionTable.PSVersion.Major -l
 
 $RepoRoot = (Resolve-Path $PSScriptRoot\..).Path
 $LocalConfigDir = "$RepoRoot\local_config"
+$RepoToolsDir = "$RepoRoot\tools"
 
 # validate user config existence
 $userConfigFile = "$LocalConfigDir\UserConfig.psd1"
 if (-not (Test-Path -Path $userConfigFile))
 {
-    throw "You must copy $LocalConfigDir\UserConfig.template.psd1 as $userConfigFile and adjust its content"
+    Copy-Item -Path $LocalConfigDir\UserConfig.template.psd1 -Destination $userConfigFile
+}
+$UserConfig = Import-PowerShellDataFile $userConfigFile
+if ($UserConfig.Draft -eq $true) {
+    throw "You must edit $userConfigFile, adjust its content and remove the Draft entry from it"
 }
 
-##########################
+##############################################################################
 
-$UserConfig = Import-PowerShellDataFile $userConfigFile
 $CorpDomain = $UserConfig.CorpDomain
 $UserName = $UserConfig.UserName
 $UserDir = $UserConfig.UserDir
@@ -57,6 +68,8 @@ if (-not (Test-Path -Path $DscMofDir))
     New-Item -ItemType Directory -Force -Path $DscMofDir
 }
 
+##############################################################################
+
 $TodoFile = "$LocalConfigDir\manual_todo.txt"
 function LogTodo {
     param (
@@ -67,7 +80,8 @@ function LogTodo {
     Write-Output $Message
     Write-Output $Message | Out-File $TodoFile -Append
 }
-LogTodo -Message "--------------------------------------------------------------------------------------------------"
+LogTodo -Message ""
+LogTodo -Message "---------$(Get-Date)-----------------------------------------------------------------------------------------"
 
 function ShowTodo {
     Write-Output "The following has to be done manually:"

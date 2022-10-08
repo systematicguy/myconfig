@@ -1,13 +1,11 @@
-if ($_AlreadySourcedGitConfig -ne $null) { return } else { $_AlreadySourcedGitConfig = $true }
+. $PSScriptRoot\..\windows\Environment.ps1
+if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $PSScriptRoot\..\..\windows\Environment.ps1
-. $RepoRoot\machine\corp\GitConfig.ps1
-
-$sshKeyFilePath = "$UserDir\.ssh\id_$($UserConfig.SshKeygen.Algorithm)"
+$sshKeyFilePath = "$UserDir\.ssh\id_$($UserConfig.SshKey.Type)"
 Write-Output "Checking existence of $sshKeyFilePath..."
 $outputFile = "$DscWorkDir\ssh_key.txt"
 if (! (Test-Path $sshKeyFilePath)) {
-    . $PSScriptRoot\..\..\windows\UserCredential.ps1
+    . $RepoRoot\windows\UserCredential.ps1
 
     $sshKeyPasswordCredential = Get-Credential -Message "Specify password for ssh key" -User "n.a."
 
@@ -38,10 +36,10 @@ if (! (Test-Path $sshKeyFilePath)) {
                     $sshKeyPassword = $sshPwCred.GetNetworkCredential().Password
 
                     ssh-keygen `
-                        -t $using:UserConfig.SshKeygen.Algorithm `
-                        -C $using:UserConfig.Git.UserEmail `
+                        -t $using:UserConfig.SshKey.Type `
+                        -C $using:UserConfig.SshKey.Comment `
                         -f $using:sshKeyFilePath `
-                        -N $sshKeyPassword
+                        -N $sshKeyPassword | Out-File $using:outputFile
 
                     if ($LASTEXITCODE -ne 0) {
                         throw "Exited with $LASTEXITCODE"
