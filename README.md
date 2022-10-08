@@ -28,7 +28,7 @@ Scripted/compiled/configured software and tooling on Windows, Linux, even Mac.
 This exposure will show on my structure and the technologies applied.
 
 ## Configuring your work machine is hard
-- Even if I want to treat it as a cattle, sometimes there are parts that need to be left alone, so immutability is a no-no. 
+- Even if I want to treat it as a cattle, it is still a pet. Sometimes there are parts that need to be left alone, so immutability is a no-no. 
 - It is also not enough to just put all your config files, GPOs, registries, heck, even tool binaries into version control or 
 some storage provider so you sync it everywhere. 
     - Some of these will be user/domain/environment specific. 
