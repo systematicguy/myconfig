@@ -1,5 +1,5 @@
-. $PSScriptRoot\Environment.ps1
-. $PSScriptRoot\UserCredentials.ps1
+. $PSScriptRoot\..\..\windows\Environment.ps1
+. $PSScriptRoot\..\..\windows\UserCredential.ps1
 
 $pxVersion = "0.8.3"
 $pxZipFile = "px-v$pxVersion-windows.zip"
@@ -104,7 +104,7 @@ configuration PxProxy
             SetScript = {
                 [System.Environment]::SetEnvironmentVariable('HTTP_PROXY',  'http://127.0.0.1:3128', 'User')
                 [System.Environment]::SetEnvironmentVariable('HTTPS_PROXY', 'http://127.0.0.1:3128', 'User')
-                [System.Environment]::SetEnvironmentVariable('NO_PROXY',    "$($UserConfig.NoProxy)", 'User')
+                [System.Environment]::SetEnvironmentVariable('NO_PROXY',    $UserConfig.NoProxy, 'User')
             }
             TestScript = {
                 $false
@@ -112,5 +112,5 @@ configuration PxProxy
         }
     }
 }
-PxProxy -Output $DscMofDir\PxProxy -UserCredential $UserCredentials -ConfigurationData $DscConfigPath
+PxProxy -Output $DscMofDir\PxProxy -UserCredential $UserCredential -ConfigurationData $DscConfigPath
 Start-DscConfiguration -Path $DscMofDir\PxProxy -Wait -Force -Verbose

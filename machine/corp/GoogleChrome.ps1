@@ -1,5 +1,5 @@
-. $PSScriptRoot\Environment.ps1
-. $PSScriptRoot\UserCredentials.ps1
+. $PSScriptRoot\..\..\windows\Environment.ps1
+. $PSScriptRoot\..\..\windows\UserCredential.ps1
 
 configuration GoogleChrome
 {
@@ -80,5 +80,5 @@ configuration GoogleChromeAsDefaultBrowser
 GoogleChrome -Output $DscMofDir\GoogleChrome
 Start-DscConfiguration -Path $DscMofDir\GoogleChrome -Wait -Force -Verbose
 
-GoogleChromeAsDefaultBrowser -Output $DscMofDir\GoogleChromeAsDefaultBrowser -UserCredential $UserCredentials -ConfigurationData $DscConfigPath
+GoogleChromeAsDefaultBrowser -Output $DscMofDir\GoogleChromeAsDefaultBrowser -UserCredential $UserCredential -ConfigurationData $DscConfigPath
 Start-DscConfiguration -Path $DscMofDir\GoogleChromeAsDefaultBrowser -Wait -Force -Verbose

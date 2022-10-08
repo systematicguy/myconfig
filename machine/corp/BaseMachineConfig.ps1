@@ -1,4 +1,4 @@
-. $PSScriptRoot\Environment
+. $PSScriptRoot\..\..\windows\Environment.ps1
 . $PSScriptRoot\VsCode.ps1
 
 configuration BaseMachineConfig

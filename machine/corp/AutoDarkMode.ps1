@@ -1,4 +1,4 @@
-. $PSScriptRoot\Environment.ps1
+. $PSScriptRoot\..\..\windows\Environment.ps1
 
 configuration AutoDarkMode
 {

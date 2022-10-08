@@ -1,5 +1,7 @@
 if ($_AlreadySourcedVsCode -ne $null) { return } else { $_AlreadySourcedVsCode = $true }
-. $PSScriptRoot\Environment.ps1
+
+. $PSScriptRoot\..\..\windows\Environment.ps1
+
 
 configuration VsCode
 {

@@ -8,10 +8,10 @@ if (! $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Admini
 }
 
 if ($PSVersionTable.PSVersion.Major -ge 7) {
-    throw "You must run this inside powershell version lower than 7. Try simply entering powershell"
+    throw "You must run this inside powershell version lower than 7. Try simply entering: powershell"
 }
 
-$RepoRoot = (Resolve-Path $PSScriptRoot\..\..).Path
+$RepoRoot = (Resolve-Path $PSScriptRoot\..).Path
 
 $LocalConfigDir = "$RepoRoot\local_config"
 
@@ -33,9 +33,9 @@ if (-not (Test-Path -Path $UserBinDir))
 }
 
 $LocalConfig = @{
-    PublicKeyPath = "$LocalConfigDir\DscPublicKey.cer"
-    DscConfigPath = "$LocalConfigDir\DscConfig.psd1"
-    DscWorkDir    = "$RepoRoot\dsc_run"
+    DscPublicKeyPath = "$LocalConfigDir\DscPublicKey.cer"
+    DscConfigPath    = "$LocalConfigDir\DscConfig.psd1"
+    DscWorkDir       = "$RepoRoot\dsc_run"
 }
 $DscWorkDir = $LocalConfig.DscWorkDir
 if (-not (Test-Path -Path $DscWorkDir))
