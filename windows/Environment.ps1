@@ -58,12 +58,18 @@ if (-not (Test-Path -Path $DscMofDir))
 }
 
 $TodoFile = "$LocalConfigDir\manual_todo.txt"
-function LogManualTodo {
+function LogTodo {
     param (
         [string]
         $Message
     )
 
     Write-Output $Message
-    Write-Output $Message | Out-File $TodoFile
+    Write-Output $Message | Out-File $TodoFile -Append
+}
+LogTodo -Message "--------------------------------------------------------------------------------------------------"
+
+function ShowTodo {
+    Write-Output "The following has to be done manually:"
+    Get-Content $TodoFile | Write-Output
 }

@@ -2,7 +2,7 @@ if ($_AlreadySourcedChocolatey -ne $null) { return } else { $_AlreadySourcedChoc
 
 . $PSScriptRoot\..\..\windows\Environment.ps1
 
-configuration Chocolatey
+Configuration Chocolatey
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName cChoco 

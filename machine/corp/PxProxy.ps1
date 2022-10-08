@@ -9,7 +9,7 @@ $pxZipFile = "px-v$pxVersion-windows.zip"
 $startScriptPath = "$UserBinDir\StartPxProxy.ps1"
 $schTaskName = "Start Px Proxy"
 
-configuration PxProxy
+Configuration PxProxy
 {
 
     param (

@@ -2,7 +2,7 @@ if ($_AlreadySourcedAutoDarkMode -ne $null) { return } else { $_AlreadySourcedAu
 
 . $PSScriptRoot\..\..\windows\Environment.ps1
 
-configuration AutoDarkMode
+Configuration AutoDarkMode
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName cChoco 

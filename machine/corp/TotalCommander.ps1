@@ -5,8 +5,6 @@ if ($_AlreadySourcedTotalCommander -ne $null) { return } else { $_AlreadySourced
 # existing ini file location: https://ghisler.ch/board/viewtopic.php?t=26830
 $winCmdPath = "$UserDir\AppData\Roaming\GHISLER\wincmd.ini"
 
-# TODO: activation: place the wincmd.key file into the installation dir
-
 . $PSScriptRoot\VsCode.ps1
 
 $totalCmdIniConfig = @{
@@ -60,7 +58,7 @@ $totalCmdIniConfig = @{
     };
 }
 
-configuration TotalCommanderInstallation
+Configuration TotalCommanderInstallation
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName cChoco 
@@ -74,7 +72,7 @@ configuration TotalCommanderInstallation
     }
 }
 
-configuration TotalCommanderConfiguration
+Configuration TotalCommanderConfiguration
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DSCResource -ModuleName FileContentDsc
@@ -107,3 +105,5 @@ Start-DscConfiguration -Path $DscMofDir\TotalCommanderInstallation -Wait -Force 
 
 TotalCommanderConfiguration -Output $DscMofDir\TotalCommanderConfiguration
 Start-DscConfiguration -Path $DscMofDir\TotalCommanderConfiguration -Wait -Force -Verbose
+
+LogTodo -Message "Total Commander activation: place the wincmd.key file into the installation dir"

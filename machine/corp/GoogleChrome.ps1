@@ -3,7 +3,7 @@ if ($_AlreadySourcedGoogleChrome -ne $null) { return } else { $_AlreadySourcedGo
 . $PSScriptRoot\..\..\windows\Environment.ps1
 . $PSScriptRoot\..\..\windows\UserCredential.ps1
 
-configuration GoogleChrome
+Configuration GoogleChrome
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName cChoco
@@ -30,7 +30,7 @@ configuration GoogleChrome
 
 $outputFile = "$DscWorkDir\GoogleChromeAsDefaultBrowser.txt"
 
-configuration GoogleChromeAsDefaultBrowser
+Configuration GoogleChromeAsDefaultBrowser
 {
     param (
         [Parameter(Mandatory=$true)]

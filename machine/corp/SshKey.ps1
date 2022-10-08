@@ -9,17 +9,25 @@ $outputFile = "$DscWorkDir\ssh_key.txt"
 if (! (Test-Path $sshKeyFilePath)) {
     . $PSScriptRoot\..\..\windows\UserCredential.ps1
 
-    # $sshKeyPassword = Read-Host -AsSecureString "Specify password for ssh key"
     $sshKeyPasswordCredential = Get-Credential -Message "Specify password for ssh key" -User "n.a."
 
-    configuration SshKey
+    Configuration SshKey
     {
         Import-DscResource -ModuleName PSDesiredStateConfiguration
 
         Node "localhost"
         {
+            File SshDir 
+            {
+                Credential      = $UserCredential
+                Type            = "Directory"
+                DestinationPath = "$UserDir\.ssh"
+                Ensure          = "Present"
+            }
+
             Script SshKey
             {
+                DependsOn = "[File]SshDir"
                 Credential = $UserCredential
 
                 GetScript = {
@@ -29,7 +37,11 @@ if (! (Test-Path $sshKeyFilePath)) {
                     $sshPwCred = $using:sshKeyPasswordCredential
                     $sshKeyPassword = $sshPwCred.GetNetworkCredential().Password
 
-                    ssh-keygen -N $sshKeyPassword -t $using:UserConfig.SshKeygen.Algorithm -C $using:UserConfig.Git.UserEmail -f $using:sshKeyFilePath
+                    ssh-keygen `
+                        -t $using:UserConfig.SshKeygen.Algorithm `
+                        -C $using:UserConfig.Git.UserEmail `
+                        -f $using:sshKeyFilePath `
+                        -N $sshKeyPassword
 
                     if ($LASTEXITCODE -ne 0) {
                         throw "Exited with $LASTEXITCODE"
@@ -44,4 +56,6 @@ if (! (Test-Path $sshKeyFilePath)) {
 
     SshKey -Output $DscMofDir\SshKey -ConfigurationData $DscConfigPath
     Start-DscConfiguration -Path $DscMofDir\SshKey -Wait -Force -Verbose
+
+    LogTodo -Message "Don't forget to add your public ssh key to BitBucket, Github, Gitlab, etc."
 }

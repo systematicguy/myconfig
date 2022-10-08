@@ -3,7 +3,7 @@ if ($_AlreadySourcedGitConfig -ne $null) { return } else { $_AlreadySourcedGitCo
 . $PSScriptRoot\..\..\windows\Environment.ps1
 . $PSScriptRoot\..\..\windows\UserCredential.ps1
 
-configuration GitConfig
+Configuration GitConfig
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName cChoco 

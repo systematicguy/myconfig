@@ -3,7 +3,7 @@ if ($_AlreadySourcedVsCode -ne $null) { return } else { $_AlreadySourcedVsCode =
 . $PSScriptRoot\..\..\windows\Environment.ps1
 
 
-configuration VsCode
+Configuration VsCode
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName cChoco

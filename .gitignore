@@ -5,3 +5,4 @@ DscPublicKey.cer
 DscConfig.psd1
 dsc_run/
 repro.ps1
+local_config/manual_todo.txt
