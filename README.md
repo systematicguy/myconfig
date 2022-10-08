@@ -1,8 +1,21 @@
 # What is this
 This is my 7th time to install almost the same set of tools and click through the configurations on a work laptop.
-Frankly, I had enough. So I've automated the hell out of it. 
+Frankly, I had enough. 
+- Enough of installing stuff, having opened 3 laptops.
+- Enough of keeping settings in sync whenever my config evolves on one of my concurrent 3 work-laptops.
+- Enough of spending time on my mother's/dad's/< insert random relative here >'s machine's random state whenever I need to troubleshoot it.
 
-For myself. But feel free to use this if you want.
+Even if I have been documenting every config for the past 10 yeears in my notes.
+
+I know, this will take 3 to 5 years in total to touch the Big 3.
+
+I am too lazy to go back to the old days (and I don't have the time or device).
+ - When I spent 8 hours a day in ssh screens with vim. 
+ - Or the time when I was fighting a macbook for more than a year.
+
+As of this writing (late 2022) I am using Windows and WSL, so the repo will resemble this.
+
+So I am automating the hell out of my config. For myself. But feel free to use this if you want.
 
 ## Background
 I have Software Engineering and DevOps background, the latter with a lot of exposure to 
