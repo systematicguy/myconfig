@@ -24,8 +24,8 @@ $totalCmdIniConfig = @{
         QuickSearchAutoFilter     = "1";
         UseLongNames              = "1";
         IconOverlays              = "1";
-        DirTabOptions             = "1";
-        DirTabRevert              = "1977";
+        DirTabOptions             = "1945";
+        DirTabRevert              = "1";
         DirTabFilters             = "1";
         WatchDirs                 = "51";
     };
