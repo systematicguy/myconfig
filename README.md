@@ -108,6 +108,11 @@ Anyways, I tried with 7.2 as admin, it partially worked, but not any more once s
 
 With version 5 all stuff works.
 
+We cannot even uninstall Powershell 5.1 as it relies on .NET framework, with parts not opensourced, 
+wherease Powershell 7.2 is relying on .NET core.
+
+Read more here: https://stackoverflow.com/questions/70931513/how-to-uninstall-powershell-5-1-on-windows-after-installing-72
+
 
 # Useful resources
 

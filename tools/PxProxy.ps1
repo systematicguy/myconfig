@@ -10,14 +10,6 @@ $schTaskName = "Start Px Proxy"
 
 Configuration PxProxy
 {
-
-    param (
-        [Parameter(Mandatory=$true)]
-        [ValidateNotNullOrEmpty()]
-        [PSCredential]
-        $UserCredential
-    )
-
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName xPSDesiredStateConfiguration
     Import-DscResource -ModuleName ComputerManagementDsc
@@ -60,7 +52,7 @@ Configuration PxProxy
             User                       = "$UserName"
             ScheduleType               = 'AtLogOn'
             LogonType                  = "Interactive"
-            ExecuteAsCredential        = $UserCredential
+            ExecuteAsCredential        = $UserCredentialAtAd
             ActionExecutable           = "powershell.exe"
             ActionArguments            = $startScriptPath  
             
@@ -73,7 +65,7 @@ Configuration PxProxy
 
         Script StartPxProxyNow
         {
-            Credential = $UserCredential
+            Credential = $UserCredentialAtComputerDomain
 
             DependsOn = "[ScheduledTask]ScheduledTaskLogon"
 
@@ -81,7 +73,7 @@ Configuration PxProxy
                 #Do Nothing
             }
             SetScript = {
-                Start-ScheduledTask -TaskName $schTaskName
+                Start-ScheduledTask -TaskName $using:schTaskName
             }
             TestScript = {
                 $pxProcesses = Get-Process px -ErrorAction SilentlyContinue
@@ -96,7 +88,7 @@ Configuration PxProxy
         Script SetUserProxyEnvVars
         {
             # Environment resource cannot set an Environment Variable in the User's context
-            Credential = $UserCredential
+            Credential = $UserCredentialAtComputerDomain
 
             DependsOn = "[Script]StartPxProxyNow"
 
@@ -104,9 +96,10 @@ Configuration PxProxy
                 #Do Nothing
             }
             SetScript = {
+                $userConfig = $using:UserConfig
                 [System.Environment]::SetEnvironmentVariable('HTTP_PROXY',  'http://127.0.0.1:3128', 'User')
                 [System.Environment]::SetEnvironmentVariable('HTTPS_PROXY', 'http://127.0.0.1:3128', 'User')
-                [System.Environment]::SetEnvironmentVariable('NO_PROXY',    $UserConfig.NoProxy, 'User')
+                [System.Environment]::SetEnvironmentVariable('NO_PROXY',    $userConfig.NoProxy, 'User')
             }
             TestScript = {
                 $false
@@ -114,5 +107,5 @@ Configuration PxProxy
         }
     }
 }
-PxProxy -Output $DscMofDir\PxProxy -UserCredential $UserCredential -ConfigurationData $DscConfigPath
+PxProxy -Output $DscMofDir\PxProxy -ConfigurationData $DscConfigPath
 Start-DscConfiguration -Path $DscMofDir\PxProxy -Wait -Force -Verbose

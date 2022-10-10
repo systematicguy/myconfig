@@ -19,7 +19,7 @@ Configuration GitConfig
         Script GitConfig 
         {
             DependsOn  = "[cChocoPackageInstaller]Git"
-            Credential = $UserCredential
+            Credential = $UserCredentialAtComputerDomain
 
             GetScript = {
                 #Do Nothing

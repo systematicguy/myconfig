@@ -4,5 +4,5 @@ UserConfig.psd1
 DscPublicKey.cer
 DscConfig.psd1
 dsc_run/
-repro.ps1
+repro.*
 local_config/manual_todo.txt

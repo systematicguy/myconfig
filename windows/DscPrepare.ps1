@@ -15,5 +15,6 @@ Install-Module -Name cChoco -Force
 Install-Module -Name FileContentDsc -Force
 Install-Module -Name xPSDesiredStateConfiguration -Force
 Install-Module -Name ComputerManagementDsc -Force
+Install-Module -Name PowerShellModule -Force
 
 . $PSScriptRoot\DscSetupCert.ps1

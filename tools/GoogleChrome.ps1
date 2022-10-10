@@ -33,20 +33,13 @@ $outputFile = "$DscWorkDir\GoogleChromeAsDefaultBrowser.txt"
 
 Configuration GoogleChromeAsDefaultBrowser
 {
-    param (
-        [Parameter(Mandatory=$true)]
-        [ValidateNotNullOrEmpty()]
-        [PSCredential]
-        $UserCredential
-    )
-
     Import-DscResource -ModuleName PSDesiredStateConfiguration
 
     Node "localhost"
     {
         Script SetAsDefaultBrowser 
         {
-            Credential = $UserCredential
+            Credential = $UserCredentialAtComputerDomain
 
             GetScript = {
                 #Do Nothing
@@ -83,5 +76,5 @@ Configuration GoogleChromeAsDefaultBrowser
 GoogleChrome -Output $DscMofDir\GoogleChrome
 Start-DscConfiguration -Path $DscMofDir\GoogleChrome -Wait -Force -Verbose
 
-GoogleChromeAsDefaultBrowser -Output $DscMofDir\GoogleChromeAsDefaultBrowser -UserCredential $UserCredential -ConfigurationData $DscConfigPath
+GoogleChromeAsDefaultBrowser -Output $DscMofDir\GoogleChromeAsDefaultBrowser -ConfigurationData $DscConfigPath
 Start-DscConfiguration -Path $DscMofDir\GoogleChromeAsDefaultBrowser -Wait -Force -Verbose
