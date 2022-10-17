@@ -43,6 +43,7 @@ some storage provider so you sync it everywhere.
 ## Design Considerations
 - Idempotence
 - Additive config instead of replacing
+    - State needs to be picked up dynamically
 - Modularity, Single Responsibility Principle
 - Dependencies as Directed Acyclic Graph (DAG), where 
     - each node makes sense to grab and start
@@ -53,7 +54,7 @@ some storage provider so you sync it everywhere.
     - No amount of copy-pasting business-critical code/data (in this case config)
 - Secure credentials at rest: no plaintext passwords
 - Generalizing
-    - Although I will compromise somewhat on that in this case as this repo represents how I organize my setup
+    - Although I will compromise somewhat on that in this case, as this repo represents how I organize my setup
 
 # Quick start
 - Download: https://github.com/systematicguy/myconfig/archive/refs/heads/main.zip
@@ -213,6 +214,43 @@ https://learn.microsoft.com/en-us/powershell/dsc/pull-server/secureMOF?view=dsc-
 https://learn.microsoft.com/en-us/powershell/dsc/configurations/configdata?view=dsc-1.1
 
 https://serverfault.com/questions/632390/protecting-credentials-in-desired-state-configuration-using-certificates
+
+## Credential vs PsDscRunAsCredential
+https://learn.microsoft.com/en-us/powershell/dsc/configurations/configdatacredentials?view=dsc-1.1
+https://learn.microsoft.com/en-us/powershell/dsc/configurations/runasuser?view=dsc-1.1
+
+From the docs:
+- DSC configuration resources run as Local System by default. However, some resources need a credential, for example when the Package resource needs to install software under a specific user account.
+- Earlier resources used a hard-coded `Credential` property name to handle this. WMF 5.0 added an automatic `PsDscRunAsCredential` property for all resources. Newer resources and custom resources can use this automatic property instead of creating their own property for credentials.
+
+```
+PS > Get-DscResource -Name cChocopackageInstaller -Syntax
+cChocoPackageInstaller [String] #ResourceName
+{
+    Name = [string]
+    [AutoUpgrade = [bool]]
+    [chocoParams = [string]]
+    [DependsOn = [string[]]]
+    [Ensure = [string]{ Absent | Present }]
+    [MinimumVersion = [string]]
+    [Params = [string]]
+    [PsDscRunAsCredential = [PSCredential]]
+    [Source = [string]]
+    [Version = [string]]
+}
+
+PS > Get-DscResource -Name Script -Syntax
+Script [String] #ResourceName
+{
+    GetScript = [string]
+    SetScript = [string]
+    TestScript = [string]
+    [Credential = [PSCredential]]
+    [DependsOn = [string[]]]
+    [PsDscRunAsCredential = [PSCredential]]
+}
+```
+
 
 ## ComputerManagement DSC
 https://github.com/dsccommunity/ComputerManagementDsc
