@@ -11,5 +11,6 @@
 . $RepoToolsDir\SshAgentForGit.ps1
 . $RepoToolsDir\TotalCommander.ps1
 . $RepoToolsDir\Pyenv.ps1
+. $RepoToolsDir\PipConfig.ps1
 
 ShowTodo
