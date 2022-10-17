@@ -35,3 +35,5 @@ VsCode -Output $DscMofDir\VsCode
 Start-DscConfiguration -Path $DscMofDir\VsCode -Wait -Force -Verbose
 
 $VsCodeExePath = "C:\Program Files\Microsoft VS Code\Code.exe"
+
+LogTodo -Message "VSCode: You may want to turn on Settings Sync (sign in to Github)"
