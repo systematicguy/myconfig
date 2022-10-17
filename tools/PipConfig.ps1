@@ -21,7 +21,7 @@ Configuration PipConfig
             }
             TestScript = {
                 $userConfig = $using:UserConfig
-                $userConfig.Python.PipIndexUrl -eq ""
+                $userConfig.Python.PipIndexUrl -eq ""  # no need to config if left as empty
             }
         }
     }
