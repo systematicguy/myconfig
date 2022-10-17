@@ -6,14 +6,16 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 
 $UserLocalAppData = $env:LOCALAPPDATA
 
-Configuration Pyenv
+$globalPythonVersion = $UserConfig.Python.GlobalVersion
+
+Configuration PyenvConfig
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -Name cChocoPackageInstaller -ModuleName cChoco
 
     Node "localhost"
     {
-        cChocoPackageInstaller GoogleChrome
+        cChocoPackageInstaller Pyenv
         {
             PsDscRunAsCredential = $UserCredentialAtComputerDomain  # need to set for proper PATH
             Name                 = "pyenv-win"
@@ -34,8 +36,24 @@ Configuration Pyenv
                 $false
             }
         }
+
+        Script InstallGlobalPythonVersion
+        {
+            DependsOn = "[cChocoPackageInstaller]Pyenv"
+            Credential = $UserCredentialAtComputerDomain
+            GetScript = {
+                #Do Nothing
+            }
+            SetScript = {
+                pyenv install $using:globalPythonVersion
+                pyenv global $using:globalPythonVersion
+            }
+            TestScript = {
+                (pyenv versions | Select-String $using:globalPythonVersion) -ne $null
+            }
+        }
     }
 }
 
-Pyenv -Output $DscMofDir\Pyenv -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\Pyenv -Wait -Force -Verbose
+PyenvConfig -Output $DscMofDir\PyenvConfig -ConfigurationData $DscConfigPath
+Start-DscConfiguration -Path $DscMofDir\PyenvConfig -Wait -Force -Verbose
