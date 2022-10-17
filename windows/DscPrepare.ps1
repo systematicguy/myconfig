@@ -16,5 +16,6 @@ Install-Module -Name FileContentDsc -Force
 Install-Module -Name xPSDesiredStateConfiguration -Force
 Install-Module -Name ComputerManagementDsc -Force
 Install-Module -Name PowerShellModule -Force
+Install-Module -Name xPowerShellExecutionPolicy -Force
 
 . $PSScriptRoot\DscSetupCert.ps1

@@ -4,6 +4,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\windows\UserCredential.ps1
 . $RepoToolsDir\GitConfig.ps1
 . $RepoToolsDir\SshKey.ps1
+. $RepoToolsDir\PowershellConfig.ps1
 . $RepoToolsDir\PowershellProfile.ps1
 
 Write-Output "Profile is $CurrentUserProfilePath"
@@ -29,6 +30,7 @@ Configuration SshAgent
             Ensure               = "Present"
         }
 
+        # https://github.com/dahlbyk/posh-sshell
         PSModuleResource PoshSshell
         {
             PsDscRunAsCredential = $UserCredentialAtComputerDomain
@@ -59,6 +61,14 @@ Configuration SshAgent
                 }
                 return $currentContent.ToLower().Contains($desiredProfileContent.ToLower())
             }
+        }
+
+        Service SshAgent 
+        {
+            DependsOn  = @("[PSModuleResource]PoshGit", "[PSModuleResource]PoshSshell")
+            Name        = "Ssh-Agent"
+            StartupType = "Manual"
+            State       = "Running"
         }
     }
 }

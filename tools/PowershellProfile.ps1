@@ -4,6 +4,9 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\windows\UserCredential.ps1
 
 $CurrentUserProfilePath = $Profile.CurrentUserCurrentHost
+# 5.1: $Home\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+# 7:   $Home\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+
 Configuration PowershellProfile
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
