@@ -4,31 +4,32 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\windows\UserCredential.ps1
 . $RepoToolsDir\Pyenv.ps1
 
-Configuration PipConfig
-{
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Node "localhost"
+# ensure user pip ini
+#  note: pip config --user lately updates AppData/Roaming/pip/pip.ini, so we don't configure using pip command
+#  we want the pip folder to be in the user home (just like .ssh, .aws, etc)
+$PipUserConfigPath = "$UserDir\pip\pip.ini"
+if (! (Test-Path $PipUserConfigPath)) {
+    New-Item -Path $PipUserConfigPath -ItemType File -Force
+}
+
+if ($userConfig.Python.PipIndexUrl -ne "") {
+    Configuration PipConfig
     {
-        Script SetIndexUrl
+        Import-DscResource -ModuleName PSDesiredStateConfiguration
+        Import-DSCResource -ModuleName FileContentDsc
+
+        Node "localhost"
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
-            GetScript = {
-                #Do Nothing
-            }
-            SetScript = {
-                $userConfig = $using:UserConfig
-                pip config --user set global.index-url $userConfig.Python.PipIndexUrl
-            }
-            TestScript = {
-                $userConfig = $using:UserConfig
-                $userConfig.Python.PipIndexUrl -eq ""  # no need to config if left as empty
+            IniSettingsFile GlobalIndexUrl
+            {
+                Path    = $PipUserConfigPath
+                Section = "global"
+                Key     = "index-url"
+                Text    = $UserConfig.Python.PipIndexUrl
             }
         }
     }
+
+    PipConfig -Output $DscMofDir\PipConfig -ConfigurationData $DscConfigPath
+    Start-DscConfiguration -Path $DscMofDir\PipConfig -Wait -Force -Verbose
 }
-
-# TODO: parse this using pip config list -v
-$PipUserConfigPath = "$env:Home\pip\pip.ini"
-
-PipConfig -Output $DscMofDir\PipConfig -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\PipConfig -Wait -Force -Verbose
