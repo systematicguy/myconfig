@@ -13,10 +13,21 @@ Configuration VsCode
         cChocoPackageInstaller InstallVsCode
         {
             Name = "vscode"
-
-            # TODO: auto-theme switch
-            # TODO: plugins
         }
+
+        # TODO: merge settings instead of overwriting them
+        File VsCodeUserConfig
+        {
+            DependsOn = "[cChocoPackageInstaller]InstallVsCode"
+
+            Type            = 'File'
+            SourcePath      = "$RepoRoot\config\vscode\settings.json"
+            DestinationPath = "$UserDir\AppData\Roaming\Code\User\settings.json"
+            Ensure          = "Present"
+            Checksum        = "SHA-1"
+        }
+
+        # TODO: plugins
     }
 }
 
