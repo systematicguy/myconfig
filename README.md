@@ -1,6 +1,6 @@
 # What is this
 This is my 7th time to install almost the same set of tools and click through the configurations on a work laptop.
-Frankly, I had enough. 
+Frankly, I had enough.
 - Enough of installing stuff, having opened 3 laptops.
 - Enough of keeping settings in sync whenever my config evolves on one of my concurrent 3 work-laptops.
 - Enough of spending time on my mother's/dad's/< insert random relative here >'s machine's random state whenever I need to troubleshoot it.
@@ -10,7 +10,7 @@ Even if I have been documenting every config for the past 10 yeears in my notes.
 I know, this will take 3 to 5 years in total to touch the Big 3.
 
 I am too lazy to go back to the old days (and I don't have the time or device).
- - When I spent 8 hours a day in ssh screens with vim. 
+ - When I spent 8 hours a day in ssh screens with vim.
  - Or the time when I was fighting a macbook for more than a year.
 
 As of this writing (late 2022) I am using Windows and WSL, so the repo will resemble this.
@@ -18,7 +18,7 @@ As of this writing (late 2022) I am using Windows and WSL, so the repo will rese
 So I am automating the hell out of my config. For myself. But feel free to use this if you want.
 
 ## Background
-I have Software Engineering and DevOps background, the latter with a lot of exposure to 
+I have Software Engineering and DevOps background, the latter with a lot of exposure to
 - Python, Powershell, Bash
 - Puppet, Chocolatey, Ansible, Terraform, Docker
 - Ini, json, yaml
@@ -29,10 +29,10 @@ Scripted/compiled/configured software and tooling on Windows, Linux, even Mac.
 This exposure will show on my structure and the technologies applied.
 
 ## Configuring your work machine is hard
-- Even if I want to treat it as a cattle, it is still a pet. Sometimes there are parts that need to be left alone, so immutability is a no-no. 
-- It is also not enough to just put all your config files, GPOs, registries, heck, even tool binaries into version control or 
-some storage provider so you sync it everywhere. 
-    - Some of these will be user/domain/environment specific. 
+- Even if I want to treat it as a cattle, it is still a pet. Sometimes there are parts that need to be left alone, so immutability is a no-no.
+- It is also not enough to just put all your config files, GPOs, registries, heck, even tool binaries into version control or
+some storage provider so you sync it everywhere.
+    - Some of these will be user/domain/environment specific.
     - Some update will bring in/remove new/old settings, that you will want to make use of.
     - For me, tjhis approach would be dirty, and not elegant enough.
 - I have to work with managed corporate workstations/laptops where although I have admin right, but cannot ditch all their managed config.
@@ -45,7 +45,7 @@ some storage provider so you sync it everywhere.
 - Additive config instead of replacing
     - State needs to be picked up dynamically
 - Modularity, Single Responsibility Principle
-- Dependencies as Directed Acyclic Graph (DAG), where 
+- Dependencies as Directed Acyclic Graph (DAG), where
     - each node makes sense to grab and start
     - each node lists all of their dependencies
 - Should not matter where you `cd`
@@ -109,7 +109,7 @@ Anyways, I tried with 7.2 as admin, it partially worked, but not any more once s
 
 With version 5 all stuff works.
 
-We cannot even uninstall Powershell 5.1 as it relies on .NET framework, with parts not opensourced, 
+We cannot even uninstall Powershell 5.1 as it relies on .NET framework, with parts not opensourced,
 wherease Powershell 7.2 is relying on .NET core.
 
 Read more here: https://stackoverflow.com/questions/70931513/how-to-uninstall-powershell-5-1-on-windows-after-installing-72
@@ -251,6 +251,20 @@ Script [String] #ResourceName
 }
 ```
 
+## Redirect Script output
+A DSC Configuration's Script output would make it fail.
+
+- https://stackoverflow.com/questions/34049604/powershell-dsc-script-resource-fails-on-successful-execution-installing-apache
+- https://stackoverflow.com/questions/18780956/suppress-console-output-in-powershell
+
+
+`| Out-Null` was not enoguh to suppress all output, this is what worked for me:
+```
+command *> $null
+if ($LASTEXITCODE -ne 0) {
+    throw "Exited with $LASTEXITCODE"
+}
+```
 
 ## ComputerManagement DSC
 https://github.com/dsccommunity/ComputerManagementDsc
@@ -266,7 +280,7 @@ https://github.com/dsccommunity/ComputerManagementDsc
 ## xPSDesiredStateConfiguration
 https://github.com/dsccommunity/xPSDesiredStateConfiguration/blob/main/source/Examples/Resources/xRemoteFile/1-xRemoteFile_DownloadFile_Config.ps1
 
-- xRemoteFile 
+- xRemoteFile
 
 ## DSC Choco
 https://www.powershellgallery.com/packages/cChoco/2.3.1.0/Content/ExampleConfig.ps1
@@ -281,7 +295,7 @@ Install-Module -Name cChoco
 configuration BaseMachineConfig
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco 
+    Import-DscResource -ModuleName cChoco
 
     Node "localhost"
     {
@@ -358,7 +372,7 @@ https://github.com/dfinke/PSYamlQuery
 
 Note: don't install with powershell-yaml together at the same time.
 ```
-Install-Package: The following commands are already available on this system:'ConvertTo-Yaml'. This module 'PSYamlQuery' may override the existing commands. If you still want to install this module 
+Install-Package: The following commands are already available on this system:'ConvertTo-Yaml'. This module 'PSYamlQuery' may override the existing commands. If you still want to install this module
 'PSYamlQuery',
 use -AllowClobber parameter.
 ```
@@ -368,7 +382,7 @@ choco install yq -y
 Install-Module -Name PSYamlQuery
 ```
 
-Look out! 
+Look out!
 - To merge lists, use the `-Append` switch.
 - Merging will leave keys having value in place.
 So if you want to override, put your config first, then merge the target.
@@ -411,7 +425,7 @@ ColorFilterSwitch         : @{Component=; Enabled=False}
 Events                    : @{DarkThemeOnBattery=False; SystemResumeTrigger=True}
 GPUMonitoring             : @{Enabled=False; MonitorTimeSpanMin=1; Samples=1; Threshold=30}
 Hotkeys                   : @{Enabled=False; ForceDarkHotkey=; ForceLightHotkey=; NoForceHotkey=}
-Location                  : @{CustomLat=47.285561; CustomLon=7.94759; Enabled=True; PollingCooldownTimeSpan=1.00:00:00; SunriseOffsetMin=120; SunsetOffsetMin=-80; UseGeolocatorService=False}        
+Location                  : @{CustomLat=47.285561; CustomLon=7.94759; Enabled=True; PollingCooldownTimeSpan=1.00:00:00; SunriseOffsetMin=120; SunsetOffsetMin=-80; UseGeolocatorService=False}
 OfficeSwitch              : @{Component=; Enabled=True}
 Sunrise                   : 11.10.2021 07:00:00
 Sunset                    : 11.10.2021 20:00:00
@@ -428,7 +442,7 @@ True
 PS > Import-Yaml .\tools\windows\auto_dark_mode\config.yaml SystemSwitch | ConvertTo-Yaml
 Component:
   Mode: Switch
-  TaskbarColorOnAdaptive: false     
+  TaskbarColorOnAdaptive: false
   TaskbarColorWhenNonAdaptive: Light
   TaskbarSwitchDelay: 1200
 Enabled: true
