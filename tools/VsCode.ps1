@@ -31,7 +31,7 @@ Configuration VsCode
     }
 }
 
-VsCode -Output $DscMofDir\VsCode
+VsCode -Output $DscMofDir\VsCode -ConfigurationData $DscConfigPath
 Start-DscConfiguration -Path $DscMofDir\VsCode -Wait -Force -Verbose
 
 $VsCodeExePath = "C:\Program Files\Microsoft VS Code\Code.exe"

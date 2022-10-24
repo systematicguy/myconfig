@@ -4,7 +4,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 Configuration Chocolatey
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco 
+    Import-DscResource -ModuleName cChoco
 
     Node "localhost"
     {
@@ -15,5 +15,5 @@ Configuration Chocolatey
     }
 }
 
-Chocolatey -Output $DscMofDir\Chocolatey
+Chocolatey -Output $DscMofDir\Chocolatey -ConfigurationData $DscConfigPath
 Start-DscConfiguration -Path $DscMofDir\Chocolatey -Wait -Force -Verbose

@@ -6,7 +6,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 Configuration AutoDarkMode
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco 
+    Import-DscResource -ModuleName cChoco
 
     Node "localhost"
     {
@@ -20,7 +20,7 @@ Configuration AutoDarkMode
         # would we want to prepare for merging to existing config.yaml, the followings will be needed:
         #  choco install yq -y
         #  Install-Module -Name PSYamlQuery -Force
-        
+
         File AutoDarkModeConfig
         {
             DependsOn = "[cChocoPackageInstaller]InstallAutoDarkMode"
@@ -34,5 +34,5 @@ Configuration AutoDarkMode
     }
 }
 
-AutoDarkMode -Output $DscMofDir\AutoDarkMode
+AutoDarkMode -Output $DscMofDir\AutoDarkMode -ConfigurationData $DscConfigPath
 Start-DscConfiguration -Path $DscMofDir\AutoDarkMode -Wait -Force -Verbose

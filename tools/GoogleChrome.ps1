@@ -15,10 +15,10 @@ Configuration GoogleChrome
         cChocoPackageInstaller GoogleChrome
         {
             Name = "googlechrome"
-            # This package uses Chrome's administrative MSI installer and installs the 32-bit on 32-bit OSes and the 64-bit version on 64-bit OSes. 
+            # This package uses Chrome's administrative MSI installer and installs the 32-bit on 32-bit OSes and the 64-bit version on 64-bit OSes.
             # If this package is installed on a 64-bit OS and the 32-bit version of Chrome is already installed, the package keeps installing/updating the 32-bit version of Chrome.
         }
-        
+
 
         cChocoPackageInstaller SetDefaultBrowser
         {
@@ -37,7 +37,7 @@ Configuration GoogleChromeAsDefaultBrowser
 
     Node "localhost"
     {
-        Script SetAsDefaultBrowser 
+        Script SetAsDefaultBrowser
         {
             Credential = $UserCredentialAtComputerDomain
 
@@ -56,7 +56,7 @@ Configuration GoogleChromeAsDefaultBrowser
             }
         }
 
-        Script ShowOutput 
+        Script ShowOutput
         {
             DependsOn = "[Script]SetAsDefaultBrowser"
 
@@ -69,11 +69,11 @@ Configuration GoogleChromeAsDefaultBrowser
             TestScript = {
                 !(Test-Path -Path $using:outputFile)
             }
-        } 
+        }
     }
 }
 
-GoogleChrome -Output $DscMofDir\GoogleChrome
+GoogleChrome -Output $DscMofDir\GoogleChrome -ConfigurationData $DscConfigPath
 Start-DscConfiguration -Path $DscMofDir\GoogleChrome -Wait -Force -Verbose
 
 GoogleChromeAsDefaultBrowser -Output $DscMofDir\GoogleChromeAsDefaultBrowser -ConfigurationData $DscConfigPath

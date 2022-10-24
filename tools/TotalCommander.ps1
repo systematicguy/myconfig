@@ -62,7 +62,7 @@ $totalCmdIniConfig = @{
 Configuration TotalCommanderInstallation
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco 
+    Import-DscResource -ModuleName cChoco
 
     Node "localhost"
     {
@@ -82,7 +82,7 @@ Configuration TotalCommanderConfiguration
     {
         foreach ($sectionKey in $totalCmdIniConfig.Keys)
         {
-            foreach ($key in $totalCmdIniConfig[$sectionKey].Keys) 
+            foreach ($key in $totalCmdIniConfig[$sectionKey].Keys)
             {
                 IniSettingsFile "Tcmd_$sectionKey_$key"
                 {
