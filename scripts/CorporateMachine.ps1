@@ -14,7 +14,9 @@
 . $RepoToolsDir\Pyenv.ps1
 . $RepoToolsDir\PipConfig.ps1
 . $RepoToolsDir\Pipx.ps1
-. $RepoToolsDir\Precommit.ps1
 . $RepoToolsDir\PythonPoetry.ps1
+. $RepoToolsDir\Terraform.ps1
+
+. $RepoToolsDir\Precommit.ps1
 
 ShowTodo

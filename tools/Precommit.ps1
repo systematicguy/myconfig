@@ -4,6 +4,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\windows\UserCredential.ps1
 . $RepoToolsDir\Pipx.ps1
 . $RepoToolsDir\GitConfig.ps1
+. $RepoToolsDir\Terraform.ps1  # TODO reconsider this dependency in light of potential for modular precommit config
 
 $GitTemplateDir = "$HOME/.git-template"
 
