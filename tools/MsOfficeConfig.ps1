@@ -1,6 +1,8 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
+. $RepoRoot\windows\UserCredential.ps1
+
 Configuration MSOfficeConfig
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
@@ -18,6 +20,92 @@ Configuration MSOfficeConfig
                 Ensure          = "Present"
                 Checksum        = "SHA-1"
             }
+        }
+
+        Registry OneNoteSpellingOptions
+        {
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            
+            Key       = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Shared Tools\Proofing Tools\1.0\Office"
+            ValueName = "OneNoteSpellingOptions"
+            ValueType = "Dword"
+            ValueData = 0x00000002
+        }
+
+        Registry WordSpellingOptions
+        {
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            
+            Key       = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Shared Tools\Proofing Tools\1.0\Office"
+            ValueName = "WordSpellingOptions"
+            ValueType = "Dword"
+            ValueData = 0x00000005
+        }
+
+        foreach ($valueName in @("CapitalizeNamesOfDays", "CapitalizeSentence", "CorrectTwoInitialCapitals"))
+        {
+            Registry "OfficeCommonAutoCorrect_$valueName"
+            {
+                PsDscRunAsCredential = $UserCredentialAtComputerDomain
+                
+                Key       = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Common\AutoCorrect"
+                ValueName = $valueName
+                ValueType = "Dword"
+                ValueData = 0x00000000
+            }
+        }
+
+        Registry "OfficeCommon_NotificationsNeverShowAgainLanguages"
+        {
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            
+            Key       = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Common\LanguageResources"
+            ValueName = "NotificationsNeverShowAgainLanguages"
+            ValueType = "String"
+            ValueData = "hu-HU"
+        }
+
+        # Outlook Calendar
+        $outlookCalendar = @{
+            "Alter Calendar Lang"    = 0x00000409  # (1033)
+            "Alter Calendar Type"    = 0x00000001
+            "CalDefStart"            = 0x0000021c  #  (540)
+            "CalDefEnd"              = 0x00000438  # (1080)
+            "FirstDOW"               = 0x00000001
+            "SelectCalendarViewType" = 0x00000000
+            "WorkDay"                = 0x0000007c  #  (124)
+        }
+        foreach ($valueName in $outlookCalendar.Keys)
+        {
+            Registry "OutlookCalendar_$valueName"
+            {
+                PsDscRunAsCredential = $UserCredentialAtComputerDomain
+                
+                Key       = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Outlook\Options\Calendar"
+                ValueName = $valueName
+                ValueType = "Dword"
+                ValueData = $outlookCalendar[$valueName]
+            }
+        }
+
+        Registry "Outlook_ConversationsOnInAllFoldersChangeNumber"
+        {
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            
+            Key       = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Outlook\Options\Conversations"
+            ValueName = "ConversationsOnInAllFoldersChangeNumber"
+            ValueType = "Dword"
+            ValueData = 0x00000003
+        }
+
+        Registry "Outlook_DatePickerMonths"
+        {
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            
+            Key       = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Outlook\Preferences"
+            ValueName = "DatePickerMonths"
+            ValueType = "Dword"
+            ValueData = 0x00000001
         }
     }
 }
