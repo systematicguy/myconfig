@@ -13,5 +13,14 @@
     "security.workspace.trust.untrustedFiles": "open",
     "redhat.telemetry.enabled": true,
     "editor.inlineSuggest.enabled": true,
-    "workbench.colorTheme": "Default Light+"
+    "github.copilot.enable": {
+        "*": true,
+        "yaml": true,
+        "plaintext": false,
+        "markdown": false
+    },
+    "workbench.colorTheme": "Default Light+",
+    "files.associations": {
+        "*.officeUI": "xml"
+    }
 }
