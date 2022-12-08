@@ -2,6 +2,8 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\windows\UserCredential.ps1
+. $RepoRoot\tools\Git.ps1
+. $RepoRoot\tools\SshKey.ps1
 
 Configuration TerraformTooling
 {
@@ -25,6 +27,23 @@ Configuration TerraformTooling
         cChocoPackageInstaller TerraformDocs
         {
             Name = "terraform-docs"
+        }
+
+        Script SetUserEnvVars
+        {
+            # Environment resource cannot set an Environment Variable in the User's context
+            Credential = $UserCredentialAtComputerDomain
+
+            GetScript = {
+                #Do Nothing
+            }
+            SetScript = {
+                # https://github.com/hashicorp/terraform-google-vault/issues/45#issuecomment-531903592
+                [System.Environment]::SetEnvironmentVariable('GIT_SSH_COMMAND', "C:\\Windows\\System32\\OpenSSH\\ssh.exe", 'User')
+            }
+            TestScript = {
+                $false
+            }
         }
     }
 }
