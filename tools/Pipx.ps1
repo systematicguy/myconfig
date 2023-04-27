@@ -25,7 +25,12 @@ Configuration PipxConfig
                 # TODO: eliminate red output
             }
             TestScript = {
-                $false
+                try {
+                    $foundPipxVersionString = (pipx --version)
+                } catch {
+                    $foundPipxVersionString = $null
+                }
+                $foundPipxVersionString -ne $null  # emit $true if already installed
             }
         }
 
@@ -41,3 +46,5 @@ Configuration PipxConfig
 
 PipxConfig -Output $DscMofDir\PipxConfig -ConfigurationData $DscConfigPath
 Start-DscConfiguration -Path $DscMofDir\PipxConfig -Wait -Force -Verbose
+
+LogTodo -Message "To reload changed user PATH environment variable, you have to relogin"

@@ -7,10 +7,17 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 $UserLocalAppData = $env:LOCALAPPDATA
 
 $globalPythonVersion = $UserConfig.Python.GlobalVersion
+$pythonInstallerFileName = "python-$globalPythonVersion-amd64.exe"
+$pythonInstallerUrl = "https://www.python.org/ftp/python/$globalPythonVersion/$pythonInstallerFileName"
+$cachedPythonInstallerPath = "$UserDir\.pyenv\pyenv-win\install_cache\$pythonInstallerFileName"
+
+$pyenvOutputFile = "$DscWorkDir\pyenv.txt"
+"-------------" | Out-File -Append $pyenvOutputFile -Encoding ASCII
 
 Configuration PyenvConfig
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
+    Import-DscResource -ModuleName xPSDesiredStateConfiguration
     Import-DscResource -Name cChocoPackageInstaller -ModuleName cChoco
 
     Node "localhost"
@@ -37,19 +44,54 @@ Configuration PyenvConfig
             }
         }
 
+        if (! (Test-Path $cachedPythonInstallerPath)) {
+            # This is a hack needed in some strict environments where pyenv itself was not able to download the msi file
+            xRemoteFile DownloadGlobalPython
+            {
+                DependsOn            = "[cChocoPackageInstaller]Pyenv"
+                PsDscRunAsCredential = $UserCredentialAtComputerDomain
+                DestinationPath      = $cachedPythonInstallerPath
+                Uri                  = $pythonInstallerUrl
+            }
+            $installGlobalPythonDependency = @("[xRemoteFile]DownloadGlobalPython")
+        } else {
+            $installGlobalPythonDependency = @()
+        }
+
         Script InstallGlobalPythonVersion
         {
-            DependsOn = "[cChocoPackageInstaller]Pyenv"
+            DependsOn = @("[cChocoPackageInstaller]Pyenv") + $installGlobalPythonDependency
             Credential = $UserCredentialAtComputerDomain
             GetScript = {
                 #Do Nothing
             }
             SetScript = {
-                pyenv install $using:globalPythonVersion
-                pyenv global $using:globalPythonVersion
+                pyenv install $using:globalPythonVersion | Out-File -Append $using:pyenvOutputFile -Encoding ASCII
+                if ($LASTEXITCODE -ne 0) {
+                    throw "pyenv install exited with $LASTEXITCODE"
+                }
+                pyenv global $using:globalPythonVersion | Out-File -Append $using:pyenvOutputFile -Encoding ASCII
+                if ($LASTEXITCODE -ne 0) {
+                    throw "pyenv global exited with $LASTEXITCODE"
+                }
             }
             TestScript = {
                 (pyenv versions | Select-String $using:globalPythonVersion) -ne $null
+            }
+        }
+
+        Script ShowOutput
+        {
+            DependsOn = "[Script]InstallGlobalPythonVersion"
+
+            GetScript = {
+                #Do Nothing
+            }
+            SetScript = {
+                Get-Content $using:pyenvOutputFile | Write-Verbose
+            }
+            TestScript = {
+                !(Test-Path -Path $using:pyenvOutputFile)
             }
         }
     }

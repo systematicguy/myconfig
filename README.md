@@ -450,3 +450,27 @@ Enabled: true
 
 ## About Docker
 https://dscottraynsford.wordpress.com/2016/10/15/install-docker-on-windows-server-2016-using-dsc/
+
+## Downloading something via authenticated WebClient
+Sometimes your corporate environment just won't let random connections go outbound, you have to use your credentials to download stuff.
+```
+Script InstallPoetry
+{
+    PsDscRunAsCredential = $UserCredentialAtComputerDomain
+    GetScript = {
+        #Do Nothing
+    }
+    SetScript = {
+        $proxyCredential = $using:UserCredentialAtAd
+        $webClient = New-Object System.Net.WebClient
+        $webClient.Proxy.Credentials = $proxyCredential.GetNetworkCredential()
+        $webClient.DownloadString("https://install.python-poetry.org") | python | Out-File $using:outputFile -Encoding ASCII -Append
+        if ($LASTEXITCODE -ne 0) {
+            throw "Exited with $LASTEXITCODE"
+        }
+    }
+    TestScript = {
+        $false
+    }
+}
+```

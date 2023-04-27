@@ -4,7 +4,8 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoToolsDir\Chocolatey.ps1
 
 # existing ini file location: https://ghisler.ch/board/viewtopic.php?t=26830
-$winCmdPath = "$UserDir\AppData\Roaming\GHISLER\wincmd.ini"
+$winCmdParentDir = "$UserDir\AppData\Roaming\GHISLER"
+$winCmdPath = "$winCmdParentDir\wincmd.ini"
 
 . $PSScriptRoot\VsCode.ps1
 
@@ -80,6 +81,14 @@ Configuration TotalCommanderConfiguration
 
     Node "localhost"
     {
+        File WinCmdParentDir 
+        {
+            #Credential      = $UserCredentialAtComputerDomain
+            Type            = "Directory"
+            DestinationPath = "$winCmdParentDir"
+            Ensure          = "Present"
+        }
+
         foreach ($sectionKey in $totalCmdIniConfig.Keys)
         {
             foreach ($key in $totalCmdIniConfig[$sectionKey].Keys)

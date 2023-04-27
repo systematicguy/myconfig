@@ -17,3 +17,5 @@ spotify
 
 wsl
 exclude wsl from scan
+os long path support
+snip & sketch turn off notification sound
