@@ -14,7 +14,8 @@ Configuration GoogleChrome
     {
         cChocoPackageInstaller GoogleChrome
         {
-            Name = "googlechrome"
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain  # needed to be able to download the msi in some hardened corporate environments
+            Name                 = "googlechrome"
             # This package uses Chrome's administrative MSI installer and installs the 32-bit on 32-bit OSes and the 64-bit version on 64-bit OSes.
             # If this package is installed on a 64-bit OS and the 32-bit version of Chrome is already installed, the package keeps installing/updating the 32-bit version of Chrome.
         }
