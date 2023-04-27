@@ -12,7 +12,7 @@ $pythonInstallerUrl = "https://www.python.org/ftp/python/$globalPythonVersion/$p
 $cachedPythonInstallerPath = "$UserDir\.pyenv\pyenv-win\install_cache\$pythonInstallerFileName"
 
 $pyenvOutputFile = "$DscWorkDir\pyenv.txt"
-"-------------" | Out-File $pyenvOutputFile -Encoding ASCII
+"-------------" | Out-File -Append $pyenvOutputFile -Encoding ASCII
 
 Configuration PyenvConfig
 {
