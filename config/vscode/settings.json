@@ -16,11 +16,18 @@
     "github.copilot.enable": {
         "*": true,
         "yaml": true,
-        "plaintext": false,
+        "plaintext": true,
         "markdown": false
     },
-    "workbench.colorTheme": "Default Light+",
     "files.associations": {
         "*.officeUI": "xml"
-    }
+    },
+    "workbench.colorTheme": "Default Light+",
+    "settingsSync.ignoredSettings": [
+    
+    ],
+    "git.autofetch": true,
+    "settingsSync.ignoredExtensions": [
+        
+    ]
 }

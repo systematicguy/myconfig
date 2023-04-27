@@ -1,6 +1,8 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
+. $RepoRoot\windows\UserCredential.ps1
+
 . $RepoToolsDir\Chocolatey.ps1
 
 Configuration AutoDarkMode
@@ -12,7 +14,8 @@ Configuration AutoDarkMode
     {
         cChocoPackageInstaller InstallAutoDarkMode
         {
-            Name = "auto-dark-mode"
+            Name                 = "auto-dark-mode"
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain  # need to install to user
         }
 
         # the installer does not ensure config, config will be generated upon first start,
