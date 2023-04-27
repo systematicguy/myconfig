@@ -37,8 +37,8 @@ Configuration GitConfig
                 
                 ################################
                 # global config (os-independent)
-                git config --global user.name $UserConfig.Git.UserName
-                git config --global user.email $UserConfig.Git.UserEmail
+                git config --global user.name $using:UserConfig.Git.UserName
+                git config --global user.email $using:UserConfig.Git.UserEmail
 
                 git config --global core.autocrlf input
                 git config --global core.symlinks true
