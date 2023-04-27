@@ -24,7 +24,7 @@
 
 #. $RepoToolsDir\Precommit.ps1
 
-#. $RepoToolsDir\MSOfficeConfig.ps1
+. $RepoToolsDir\MSOfficeConfig.ps1
 . $RepoToolsDir\LanguageConfig.ps1
 . $RepoToolsDir\ClipboardHistory.ps1
 

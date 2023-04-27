@@ -1,6 +1,6 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 
-#. $RepoToolsDir\PxProxy.ps1
+. $RepoToolsDir\PxProxy.ps1
 
 . $RepoToolsDir\AutoDarkMode.ps1
 . $RepoToolsDir\GoogleChrome.ps1
@@ -19,12 +19,12 @@
 . $RepoToolsDir\Pipx.ps1
 . $RepoToolsDir\PythonPoetry.ps1
 
-#. $RepoToolsDir\Golang.ps1
+. $RepoToolsDir\Golang.ps1
 . $RepoToolsDir\Terraform.ps1
 
-#. $RepoToolsDir\Precommit.ps1
+. $RepoToolsDir\Precommit.ps1
 
-#. $RepoToolsDir\MSOfficeConfig.ps1
+. $RepoToolsDir\MSOfficeConfig.ps1
 . $RepoToolsDir\LanguageConfig.ps1
 . $RepoToolsDir\ClipboardHistory.ps1
 
