@@ -3,8 +3,8 @@
 [cultureinfo]::CurrentUICulture = 'en-US'
 Set-WinSystemLocale en-US
 
-# maybe needed:
-#Set-WsManQuickConfig -Force
+# was needed on my own laptop, some corporate machines have it already:
+Set-WsManQuickConfig -Force
 
 # maybe needed:
 #Install-Module -Name PSDscResources -Force
