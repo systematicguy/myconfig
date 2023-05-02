@@ -2,7 +2,6 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\windows\UserCredential.ps1
-. $RepoToolsDir\PowershellConfig.ps1
 . $RepoToolsDir\Pipx.ps1
 
 $desiredPoetryVersion = $UserConfig.Python.PoetryVersion
