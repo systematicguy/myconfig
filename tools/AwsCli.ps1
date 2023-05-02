@@ -6,6 +6,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoToolsDir\Chocolatey.ps1
 
 Write-Output "Profile is $CurrentUserProfilePath"
+# https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
 $desiredProfileContent = ". `"$RepoRoot\config\powershell_profile\aws_cli_completion.ps1`""
 
 $AwsConfigDir = "$UserDir\.aws"
