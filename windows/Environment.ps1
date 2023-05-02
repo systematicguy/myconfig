@@ -88,6 +88,19 @@ function ShowTodo {
     Get-Content $TodoFile | Write-Output
 }
 
+#############################################################################
+
+function ApplyDscConfiguration {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$ConfigurationName
+    )
+
+    & $ConfigurationName -Output "$DscMofDir\$ConfigurationName" -ConfigurationData $DscConfigPath
+    Start-DscConfiguration -Path "$DscMofDir\$ConfigurationName" -Wait -Force -Verbose
+}
+
+
 ######################################################################################
 # Warning:
 # This file is dot sourced almost everywhere, assumed to be working before any setup.
