@@ -1,10 +1,4 @@
-choco install awscli
-aws completion
-
-path length limit
 registry exporter and differ
-
-show hidden folders in explorer
 
 fn-ctrl switch on lenovo
 
@@ -20,5 +14,6 @@ spotify
 
 wsl
 exclude wsl from scan
-os long path support
 snip & sketch turn off notification sound
+
+powershell 5-7 profile interop

@@ -24,9 +24,14 @@
 
 #. $RepoToolsDir\Precommit.ps1
 
+. $RepoToolsDir\AwsCli.ps1
+
 #. $RepoToolsDir\MSOfficeConfig.ps1
+. $RepoToolsDir\LongPathsEnabled.ps1
 . $RepoToolsDir\LanguageConfig.ps1
 . $RepoToolsDir\ClipboardHistory.ps1
 . $RepoToolsDir\HideSearchToolbox.ps1
+. $RepoToolsDir\WinExplorerShowFileExt.ps1
+. $RepoToolsDir\WinExplorerShowHidden.ps1
 
 ShowTodo
