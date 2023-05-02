@@ -3,6 +3,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 
 . $RepoToolsDir\Chocolatey.ps1
 . $RepoRoot\windows\UserCredential.ps1
+. $RepoToolsDir\LongPathsEnabled.ps1
 
 Configuration GitConfig
 {
@@ -34,6 +35,7 @@ Configuration GitConfig
 
                 git config --system credential.helper manager-core
                 git config --system core.fscache true
+                git config --system core.longpaths true
                 
                 ################################
                 # global config (os-independent)
