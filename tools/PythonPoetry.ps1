@@ -6,10 +6,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoToolsDir\Pipx.ps1
 
 $desiredPoetryVersion = $UserConfig.Python.PoetryVersion
-$desiredPathElement = "$UserDir\AppData\Roaming\Python\Scripts"
 
-$outputFile = "$DscWorkDir\PoetryInstall.txt"
-"------------------------------------------" | Out-File $outputFile -Encoding ASCII
 Configuration PythonPoetry
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
@@ -44,7 +41,4 @@ Configuration PythonPoetry
     }
 }
 
-PythonPoetry -Output $DscMofDir\PythonPoetry -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\PythonPoetry -Wait -Force -Verbose
-
-Get-Content $outputFile | Write-Output
+ApplyDscConfiguration "PythonPoetry"
