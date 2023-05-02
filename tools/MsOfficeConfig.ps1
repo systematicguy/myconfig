@@ -110,5 +110,4 @@ Configuration MSOfficeConfig
     }
 }
 
-MSOfficeConfig -Output $DscMofDir\MSOfficeConfig -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\MSOfficeConfig -Wait -Force -Verbose
+ApplyDscConfiguration "MSOfficeConfig"

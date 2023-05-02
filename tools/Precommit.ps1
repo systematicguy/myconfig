@@ -58,5 +58,4 @@ Configuration PreCommit
     }
 }
 
-PreCommit -Output $DscMofDir\PreCommit -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\PreCommit -Wait -Force -Verbose
+ApplyDscConfiguration "PreCommit"

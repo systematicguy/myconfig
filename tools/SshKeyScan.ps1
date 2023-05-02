@@ -23,8 +23,7 @@ if (! (Test-Path $SshKnownHostsFile)) {
         }
     }
 
-    SshKnownHosts -Output $DscMofDir\SshKnownHosts -ConfigurationData $DscConfigPath
-    Start-DscConfiguration -Path $DscMofDir\SshKnownHosts -Wait -Force -Verbose
+    ApplyDscConfiguration "SshKnownHosts"
 }
 
 
@@ -65,5 +64,4 @@ Configuration SshKeyScan
     }
 }
 
-SshKeyScan -Output $DscMofDir\SshKeyScan -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\SshKeyScan -Wait -Force -Verbose
+ApplyDscConfiguration "SshKeyScan"

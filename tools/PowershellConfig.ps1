@@ -17,5 +17,4 @@ Configuration PowershellConfig
     }
 }
 
-PowershellConfig -Output $DscMofDir\PowershellConfig -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\PowershellConfig -Wait -Force -Verbose
+ApplyDscConfiguration "PowershellConfig"

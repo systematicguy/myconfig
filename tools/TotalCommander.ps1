@@ -110,10 +110,6 @@ Configuration TotalCommanderConfiguration
 # https://www.ghisler.ch/board/viewtopic.php?t=42019
 
 
-TotalCommanderInstallation -Output $DscMofDir\TotalCommanderInstallation
-Start-DscConfiguration -Path $DscMofDir\TotalCommanderInstallation -Wait -Force -Verbose
-
-TotalCommanderConfiguration -Output $DscMofDir\TotalCommanderConfiguration
-Start-DscConfiguration -Path $DscMofDir\TotalCommanderConfiguration -Wait -Force -Verbose
-
+ApplyDscConfiguration "TotalCommanderInstallation"
+ApplyDscConfiguration "TotalCommanderConfiguration"
 LogTodo -Message "Total Commander activation: place the wincmd.key file into the installation dir"

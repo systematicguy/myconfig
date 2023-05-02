@@ -15,5 +15,4 @@ Configuration Chocolatey
     }
 }
 
-Chocolatey -Output $DscMofDir\Chocolatey -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\Chocolatey -Wait -Force -Verbose
+ApplyDscConfiguration "Chocolatey"

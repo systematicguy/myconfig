@@ -37,5 +37,4 @@ Configuration AutoDarkMode
     }
 }
 
-AutoDarkMode -Output $DscMofDir\AutoDarkMode -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\AutoDarkMode -Wait -Force -Verbose
+ApplyDscConfiguration "AutoDarkMode"

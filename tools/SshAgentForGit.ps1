@@ -74,7 +74,5 @@ Configuration SshAgent
 }
 
 
-SshAgent -Output $DscMofDir\SshAgent -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\SshAgent -Wait -Force -Verbose
-
+ApplyDscConfiguration "SshAgent"
 LogTodo -Message "To reload and add new ssh keys, start powershell and execute ssh-add"

@@ -86,5 +86,4 @@ Configuration LanguageConfig
     }
 }
 
-LanguageConfig -Output $DscMofDir\LanguageConfig -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\LanguageConfig -Wait -Force -Verbose
+ApplyDscConfiguration "LanguageConfig"

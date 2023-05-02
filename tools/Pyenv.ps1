@@ -97,5 +97,4 @@ Configuration PyenvConfig
     }
 }
 
-PyenvConfig -Output $DscMofDir\PyenvConfig -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\PyenvConfig -Wait -Force -Verbose
+ApplyDscConfiguration "PyenvConfig"

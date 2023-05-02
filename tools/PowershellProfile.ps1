@@ -35,5 +35,4 @@ Configuration PowershellProfile
     }
 }
 
-PowershellProfile -Output $DscMofDir\PowershellProfile -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\PowershellProfile -Wait -Force -Verbose
+ApplyDscConfiguration "PowershellProfile"

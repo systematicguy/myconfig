@@ -34,5 +34,4 @@ Configuration PowerConfig
     }
 }
 
-PowerConfig -Output $DscMofDir\PowerConfig -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\PowerConfig -Wait -Force -Verbose
+ApplyDscConfiguration "PowerConfig"

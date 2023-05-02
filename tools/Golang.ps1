@@ -80,5 +80,4 @@ Configuration Golang
     }
 }
 
-Golang -Output $DscMofDir\Golang -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\Golang -Wait -Force -Verbose
+ApplyDscConfiguration "Golang"

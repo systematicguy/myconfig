@@ -74,8 +74,5 @@ Configuration GoogleChromeAsDefaultBrowser
     }
 }
 
-GoogleChrome -Output $DscMofDir\GoogleChrome -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\GoogleChrome -Wait -Force -Verbose
-
-GoogleChromeAsDefaultBrowser -Output $DscMofDir\GoogleChromeAsDefaultBrowser -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\GoogleChromeAsDefaultBrowser -Wait -Force -Verbose
+ApplyDscConfiguration "GoogleChrome"
+ApplyDscConfiguration "GoogleChromeAsDefaultBrowser"

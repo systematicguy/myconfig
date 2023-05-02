@@ -54,5 +54,4 @@ Configuration GitConfig
     }
 }
 
-GitConfig -Output $DscMofDir\GitConfig -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\GitConfig -Wait -Force -Verbose
+ApplyDscConfiguration "GitConfig"

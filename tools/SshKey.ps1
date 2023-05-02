@@ -52,8 +52,6 @@ if (! (Test-Path $sshKeyFilePath)) {
         }
     }
 
-    SshKey -Output $DscMofDir\SshKey -ConfigurationData $DscConfigPath
-    Start-DscConfiguration -Path $DscMofDir\SshKey -Wait -Force -Verbose
-
+    ApplyDscConfiguration "SshKey"
     LogTodo -Message "Don't forget to add your public ssh key to BitBucket, Github, Gitlab, etc."
 }

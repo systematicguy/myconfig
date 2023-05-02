@@ -107,5 +107,5 @@ Configuration PxProxy
         }
     }
 }
-PxProxy -Output $DscMofDir\PxProxy -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\PxProxy -Wait -Force -Verbose
+
+ApplyDscConfiguration "PxProxy"

@@ -27,5 +27,6 @@
 #. $RepoToolsDir\MSOfficeConfig.ps1
 . $RepoToolsDir\LanguageConfig.ps1
 . $RepoToolsDir\ClipboardHistory.ps1
+. $RepoToolsDir\HideSearchToolbox.ps1
 
 ShowTodo

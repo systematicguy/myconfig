@@ -52,7 +52,5 @@ Configuration TerraformTooling
     }
 }
 
-TerraformTooling -Output $DscMofDir\TerraformTooling -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\TerraformTooling -Wait -Force -Verbose
-
+ApplyDscConfiguration "TerraformTooling"
 LogTodo -Message "Get .tflint.hcl and place it into $UserDir"

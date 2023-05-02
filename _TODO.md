@@ -1,3 +1,6 @@
+choco install awscli
+aws completion
+
 path length limit
 registry exporter and differ
 

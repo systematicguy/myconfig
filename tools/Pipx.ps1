@@ -44,7 +44,5 @@ Configuration PipxConfig
     }
 }
 
-PipxConfig -Output $DscMofDir\PipxConfig -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\PipxConfig -Wait -Force -Verbose
-
+ApplyDscConfiguration "PipxConfig"
 LogTodo -Message "To reload changed user PATH environment variable, you have to relogin"

@@ -25,5 +25,4 @@ Configuration ClipboardHistory
     }
 }
 
-ClipboardHistory -Output $DscMofDir\ClipboardHistory -ConfigurationData $DscConfigPath
-Start-DscConfiguration -Path $DscMofDir\ClipboardHistory -Wait -Force -Verbose
+ApplyDscConfiguration "ClipboardHistory"

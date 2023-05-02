@@ -30,6 +30,5 @@ if ($userConfig.Python.PipIndexUrl -ne "") {
         }
     }
 
-    PipConfig -Output $DscMofDir\PipConfig -ConfigurationData $DscConfigPath
-    Start-DscConfiguration -Path $DscMofDir\PipConfig -Wait -Force -Verbose
+    ApplyDscConfiguration "PipConfig"
 }
