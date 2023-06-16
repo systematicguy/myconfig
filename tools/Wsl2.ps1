@@ -93,38 +93,73 @@ if ($rebootPending) {
 }
 
 $wslDistroName = Split-Path -Path $userConfig.Wsl.Distro -Leaf
-$downloadedWslDistroPath = "$DscWorkDir\$wslDistroName.appx"
-if (! (Test-Path $downloadedWslDistroPath)) {
-    Configuration DownloadWslDistro
+$downloadedWslDistroBundlePath = "$DscWorkDir\$wslDistroName.appxbundle"
+if (! (Test-Path $downloadedWslDistroBundlePath)) {
+    Configuration DownloadWslDistroBundle
     {
         Import-DscResource -ModuleName xPSDesiredStateConfiguration
 
         Node "localhost" 
         {
-            xRemoteFile DownloadWslDistro
+            xRemoteFile DownloadWslDistroBundle
             {
                 PsDscRunAsCredential = $UserCredentialAtComputerDomain
-                DestinationPath      = $downloadedWslDistroPath
+                DestinationPath      = $downloadedWslDistroBundlePath
                 Uri                  = $userConfig.Wsl.Distro
             }
         }
     }
-    ApplyDscConfiguration "DownloadWslDistro"
+    ApplyDscConfiguration "DownloadWslDistroBundle"
 }
 
-$wslDistroZipPath = "$DscWorkDir\$wslDistroName.zip"
-$wslDistroDir = "$UserBinDir\$wslDistroName"
+$wslDistroBundleZipPath = "$downloadedWslDistroBundlePath.zip"
+$wslDistroBundleDir = "$DscWorkDir\$wslDistroName"
+Configuration "ExtractWslDistroBundle"
+{
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+
+    Node "localhost"
+    {
+        File WslDistroBundleZip
+        {
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+
+            Type            = "File"
+            SourcePath      = $downloadedWslDistroBundlePath
+            DestinationPath = $wslDistroBundleZipPath
+            Ensure          = "Present"
+            Checksum        = "SHA-1"
+        }
+
+        Archive WslDistroBundleUnzipped
+        {
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            DependsOn = "[File]WslDistroBundleZip"
+
+            Ensure      = "Present"
+            Path        = $wslDistroBundleZipPath
+            Destination = $wslDistroBundleDir
+        }
+    }
+}
+ApplyDscConfiguration "ExtractWslDistroBundle"
+
+$wslDistroAppx = Get-ChildItem -Path $wslDistroBundleDir -Filter "*_x64.appx" | Select-Object -Last 1
+$wslDistroAppxPath = $wslDistroAppx.FullName
+$wslDistroZipPath = "$DscWorkDir\$($wslDistroAppx.Name).zip"
+$wslDistroDir = "$userBinDir\$($wslDistroAppx.Name)"
 Configuration "ExtractWslDistro"
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName DSCR_AppxPackage
 
     Node "localhost"
     {
         File WslDistroZip
         {
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+
             Type            = "File"
-            SourcePath      = $downloadedWslDistroPath
+            SourcePath      = $wslDistroAppxPath
             DestinationPath = $wslDistroZipPath
             Ensure          = "Present"
             Checksum        = "SHA-1"
@@ -132,24 +167,31 @@ Configuration "ExtractWslDistro"
 
         Archive WslDistroUnzipped
         {
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain
             DependsOn = "[File]WslDistroZip"
 
             Ensure      = "Present"
-            Path        = $downloadedWslDistroPath
+            Path        = $wslDistroZipPath
             Destination = $wslDistroDir
         }
     }
 }
 ApplyDscConfiguration "ExtractWslDistro"
 
-$wslDistroAppx = Get-ChildItem -Path $wslDistroDir -Filter "*_x64.appx" | Select-Object -Last 1
-$wslDistroAppxPath = $wslDistroAppx.FullName
-$wslDistroAppxManifestXmlDoc = [xml](Get-Content -Path "$wslDistroDir\AppxMetadata\AppxBundleManifest.xml")
-$ns = New-Object System.Xml.XmlNamespaceManager($wslDistroAppxManifestXmlDoc.NameTable)
-$ns.AddNamespace("ns", "http://schemas.microsoft.com/appx/2013/bundle")
-$wslDistroAppxName = $wslDistroAppxManifestXmlDoc.SelectSingleNode("//ns:Identity", $ns).Name
-Write-Host "Parsed wsl distro appx identity name: $wslDistroAppxName"
 
+$wslDistroAppxManifestXmlDoc = [xml](Get-Content -Path "$wslDistroDir\AppxManifest.xml")
+$nsMgr = New-Object System.Xml.XmlNamespaceManager($wslDistroAppxManifestXmlDoc.NameTable)
+$nsMgr.AddNamespace("ns", "http://schemas.microsoft.com/appx/manifest/foundation/windows10")
+$wslDistroAppxName = $wslDistroAppxManifestXmlDoc.SelectSingleNode("//ns:Identity", $nsMgr).Name
+Write-Host "Parsed wsl distro appx identity name: $wslDistroAppxName"
+$wslDistroShortName = $wslDistroAppxName -split '\.' | Select-Object -Last 1
+
+$wslCredential = Get-Credential -Message "Specify password for wsl distro" -User $userConfig.Wsl.UserName
+$wslDistroExe = "$wslDistroDir\$wslDistroShortName"
+$outputFile = "$DscWorkDir\wsl_install.txt"
+Write-Output "-----------------" | Out-File $outputFile -Append
+
+# https://github.com/microsoft/WSL/issues/3369#issuecomment-803515113
 Configuration "InstallWslDistro"
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
@@ -164,6 +206,65 @@ Configuration "InstallWslDistro"
             Name        = $wslDistroAppxName
             PackagePath = $wslDistroAppxPath
         }
+
+        Script InstallWslDistro 
+        {
+            DependsOn = "[cAppxPackage]WslDistroAppxPackageInstall"
+            Credential = $UserCredentialAtComputerDomain
+
+            GetScript = {
+                # do nothing
+            }
+            TestScript = {
+                $output = (wsl -l) -replace "\x00",""
+                $noInstalledDistributions = $output.Contains("Windows Subsystem for Linux has no installed distributions.")
+                if ($noInstalledDistributions) {
+                    return $false
+                }
+                $distro = "$using:wslDistroShortName"
+                foreach ($line in $output -split '\r?\n') {
+                    if ($line.StartsWith($distro)) {
+                        return $true
+                    }
+                }
+                return $false
+            }
+            SetScript = {
+                $distro = $using:wslDistroExe
+                # https://github.com/microsoft/WSL/issues/3369
+                $wslCredential = $using:wslCredential
+                $userName = $wslCredential.GetNetworkCredential().UserName
+                $password = $wslCredential.GetNetworkCredential().Password
+
+                & $distro install --root | Out-File $using:outputFile -Append
+                if ($LASTEXITCODE -ne 0) {
+                    throw "Exited with $LASTEXITCODE"
+                }
+
+                # TODO detect if not Ubuntu and skip followings
+
+                # create user account
+                & $distro run useradd -m "$username" | Out-File $using:outputFile -Append
+                # wrapped in sh -c to get the pipe to work:
+                & $distro run sh -c "echo "${username}:${password}" | chpasswd" | Out-File $using:outputFile -Append
+                & $distro run chsh -s /bin/bash "$username" | Out-File $using:outputFile -Append
+                & $distro run usermod -aG adm,cdrom,sudo,dip,plugdev "$username" | Out-File $using:outputFile -Append
+
+                & $distro config --default-user "$username" | Out-File $using:outputFile -Append
+
+                # initial system update
+                $env:DEBIAN_FRONTEND = "noninteractive"
+                $env:WSLENV += ":DEBIAN_FRONTEND"
+                & $distro config --default-user "root" | Out-File $using:outputFile -Append
+                & $distro run sh -c 'apt-get update && apt-get full-upgrade -y && apt-get autoremove -y && apt-get autoclean' | Out-File $using:outputFile -Append
+                & $distro config --default-user "$username" | Out-File $using:outputFile -Append
+                
+                # https://github.com/microsoft/WSL/issues/7749
+                #Restart-Service -Name vmcompute
+                #gpupdate /force
+            }
+        }
     }
 }
 ApplyDscConfiguration "InstallWslDistro"
+Get-Content $outputFile | Write-Verbose
