@@ -6,7 +6,7 @@ $DomainUser = whoami  # e.g. BIG\horvathda
 $parsedUserName = ($DomainUser -split "\\")[-1]
 
 if ($AlreadySourcedUserCredential -ne $null) { 
-    Write-Output "Working with existing credential for $($UserCredentialAtComputerDomain.UserName) and $($UserCredentialAtAd.UserName)"
+    Write-Output "Working with existing credential for [$($UserCredentialAtComputerDomain.UserName)] and [$($UserCredentialAtAd.UserName)]"
     if ($parsedUserName -ne $UserName) {
         Write-Output "Warning: your UserName coming from your local_config\UserConfig.psd1 is [$UserName] while whoami is [$(whoami)]"
     }

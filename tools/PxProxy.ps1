@@ -2,17 +2,47 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\windows\UserCredential.ps1
+. $RepoRoot\windows\CredentialProvider.ps1
+Import-Module CredentialManager
 
 $pxVersion = "0.8.3"
 $pxZipFile = "px-v$pxVersion-windows.zip"
 $startScriptPath = "$UserBinDir\StartPxProxy.ps1"
 $schTaskName = "Start Px Proxy"
+$pxConfigPath = "$UserDir\px.ini"
+$pxIniConfig = $UserConfig.PxProxy.PxIni
+$pxCredentialTarget = "Px"
+$pxIniDependencies = [System.Collections.ArrayList]@()
+
+if (-not (Test-Path -Path $pxConfigPath)) {
+    # need to ensure ASCII encoding for px proxy
+    [Environment]::NewLine | Out-File -FilePath $pxConfigPath -Encoding ASCII
+}
+
+# store password for proxy in windows credential manager if server:username has been configured
+$pxIniProxyUsername = $pxIniConfig.proxy.username
+if (($pxIniConfig.Count -gt 0) -and ($pxIniProxyUsername -ne $null)) {
+    Write-Host "UserConfig.PxProxy.PxIni.proxy.username has been specified, dealing with password for proxy server..."
+    $storedPxProxyCredential = Get-StoredCredential -Target $pxCredentialTarget
+    if ($storedPxProxyCredential -eq $null) {
+        $proxyCredentials = ProvideCredential -Purpose "px_password" -User $pxIniProxyUsername -Message "Provide password for px proxy server (UserConfig.PxProxy.PxIni.proxy.username was set)"
+        New-StoredCredential -Credentials $proxyCredentials -Target $pxCredentialTarget -Persist "Enterprise" > $null
+    } else {
+        Write-Host "Password already stored in credential store for target [$pxCredentialTarget]"
+    }
+}
+
+if (($pxIniConfig.Count -gt 0) -and ($pxIniConfig.proxy.Count -gt 0) -and ($pxIniConfig.proxy.noproxy -eq $null)) {
+    Write-Host "Setting server:noproxy to be the same value as UserConfig.NoProxy (UserConfig.PxProxy.PxIni.proxy.server section is present but server:noproxy was absent)..."
+    $pxIniConfig.proxy.noproxy = $UserConfig.NoProxy
+}
 
 Configuration PxProxy
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName xPSDesiredStateConfiguration
     Import-DscResource -ModuleName ComputerManagementDsc
+    Import-DSCResource -ModuleName FileContentDsc
 
     Node localhost 
     {
@@ -34,12 +64,28 @@ Configuration PxProxy
             Destination = "$UserBinDir\px_proxy"
         }
 
+        foreach ($sectionKey in $pxIniConfig.Keys)
+        {
+            foreach ($key in $pxIniConfig[$sectionKey].Keys)
+            {
+                $iniEntry = "PxIni_$sectionKey_$key"
+                $pxIniDependencies.Add("[IniSettingsFile]$iniEntry")
+                IniSettingsFile $iniEntry
+                {
+                    Path    = $pxConfigPath
+                    Section = "$sectionKey"
+                    Key     = "$key"
+                    Text    = $pxIniConfig[$sectionKey][$key]
+                }
+            }
+        }
+
         File StartPxProxy
         {
             DependsOn   = $unzipDependency
 
             Type            = 'File'
-            Contents        = "$UserBinDir\px_proxy\px.exe --workers=5 --gateway"
+            Contents        = "$UserBinDir\px_proxy\px.exe --config=$pxConfigPath"
             DestinationPath = $startScriptPath
             Ensure          = "Present"
         }
@@ -67,7 +113,7 @@ Configuration PxProxy
         {
             Credential = $UserCredentialAtComputerDomain
 
-            DependsOn = "[ScheduledTask]ScheduledTaskLogon"
+            DependsOn = @("[ScheduledTask]ScheduledTaskLogon") + $pxIniDependencies
 
             GetScript = {
                 #Do Nothing
@@ -109,3 +155,5 @@ Configuration PxProxy
 }
 
 ApplyDscConfiguration "PxProxy"
+
+LogTodo -Message "PxProxy: You may want to review $startScriptPath (and optionally $pxConfigPath) based on https://github.com/genotrance/px#usage"
