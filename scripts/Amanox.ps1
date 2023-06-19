@@ -26,6 +26,9 @@
 
 . $RepoToolsDir\AwsCli.ps1
 
+. $RepoToolsDir\JetbrainsToolbox.ps1
+. $RepoToolsDir\PycharmProfessional.ps1
+
 . $RepoToolsDir\MSOfficeConfig.ps1
 . $RepoToolsDir\LongPathsEnabled.ps1
 . $RepoToolsDir\LanguageConfig.ps1
