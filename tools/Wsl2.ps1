@@ -81,6 +81,9 @@ Configuration Wsl2
             }
             SetScript = {
                 wsl --set-default-version 2
+                if ($LASTEXITCODE -ne 0) {
+                    throw "Exited with $LASTEXITCODE"
+                }
             }
         }
     }
@@ -186,7 +189,7 @@ $wslDistroAppxName = $wslDistroAppxManifestXmlDoc.SelectSingleNode("//ns:Identit
 Write-Host "Parsed wsl distro appx identity name: $wslDistroAppxName"
 $wslDistroShortName = $wslDistroAppxName -split '\.' | Select-Object -Last 1
 
-$wslCredential = Get-Credential -Message "Specify password for wsl distro" -User $userConfig.Wsl.UserName
+$wslCredential = ProvideCredential -Purpose "wsl_password_$wslDistroShortName" -Message "Specify password for wsl distro" -User $userConfig.Wsl.UserName
 $wslDistroExe = "$wslDistroDir\$wslDistroShortName"
 $outputFile = "$DscWorkDir\wsl_install.txt"
 Write-Output "-----------------" | Out-File $outputFile -Append
