@@ -29,12 +29,14 @@
 . $RepoToolsDir\JetbrainsToolbox.ps1
 . $RepoToolsDir\PycharmProfessional.ps1
 
-#. $RepoToolsDir\MSOfficeConfig.ps1
+. $RepoToolsDir\MSOfficeConfig.ps1        # David's personal settings for MS Office
 . $RepoToolsDir\LongPathsEnabled.ps1
 . $RepoToolsDir\LanguageConfig.ps1
+. $RepoToolsDir\WinInternational.ps1      # David's personal regional and international settings
 . $RepoToolsDir\ClipboardHistory.ps1
 . $RepoToolsDir\HideSearchToolbox.ps1
 . $RepoToolsDir\WinExplorerShowFileExt.ps1
 . $RepoToolsDir\WinExplorerShowHidden.ps1
+. $RepoToolsDir\WinExplorerConfig.ps1     # David's personal settings for Windows Explorer
 
 ShowTodo

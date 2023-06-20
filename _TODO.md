@@ -1,8 +1,8 @@
 snip & sketch turn off notification sound
 fn-ctrl switch on lenovo
 
-os ui language
-date format
+network drive mapping
+    Computer\HKEY_CURRENT_USER\Network\
 
 windows features
     Containers
@@ -13,18 +13,16 @@ windows features
         WIndows Media Player
     ? SMB 1.0/CIFS
     SMB Direct
-    Virtual Machine Platform
-    Windows Subsystem for Linux
 
 
 wsl
     exclude wsl from scan
+    aws session manager plugin
+
 docker desktop
 powershell 7
 powershell 5-7 profile interop
 
-aws session manager plugin
-jetbrains toolbox
 tfswitch
     check out tfenv
 kubectl and completion
