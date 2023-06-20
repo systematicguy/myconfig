@@ -1,6 +1,6 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 
-#. $RepoToolsDir\PxProxy.ps1
+. $RepoToolsDir\PxProxy.ps1
 
 . $RepoToolsDir\AutoDarkMode.ps1
 . $RepoToolsDir\GoogleChrome.ps1
@@ -25,6 +25,9 @@
 #. $RepoToolsDir\Precommit.ps1
 
 . $RepoToolsDir\AwsCli.ps1
+
+. $RepoToolsDir\JetbrainsToolbox.ps1
+. $RepoToolsDir\PycharmProfessional.ps1
 
 #. $RepoToolsDir\MSOfficeConfig.ps1
 . $RepoToolsDir\LongPathsEnabled.ps1

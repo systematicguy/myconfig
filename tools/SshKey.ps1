@@ -1,13 +1,15 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
+. $PSScriptRoot\..\windows\CredentialProvider.ps1
+
 $sshKeyFilePath = "$UserDir\.ssh\id_$($UserConfig.SshKey.Type)"
 Write-Output "Checking existence of $sshKeyFilePath..."
 $outputFile = "$DscWorkDir\ssh_key.txt"
 if (! (Test-Path $sshKeyFilePath)) {
     . $RepoRoot\windows\UserCredential.ps1
 
-    $sshKeyPasswordCredential = Get-Credential -Message "Specify password for ssh key" -User "n.a."
+    $sshKeyPasswordCredential = ProvideCredential -Purpose "ssh_key_passphrase" -Message "Specify password for ssh key" -User "n.a."
 
     Configuration SshKey
     {

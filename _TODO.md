@@ -25,8 +25,8 @@ powershell 5-7 profile interop
 
 aws session manager plugin
 jetbrains toolbox
-pycharm https://www.jetbrains.com/help/pycharm/installation-guide.html#silent
 tfswitch
+    check out tfenv
 kubectl and completion
 azure cli
 nodejs
@@ -57,6 +57,7 @@ cisco webex meetings
 productivity tools
 ###############
 adobe acrobat
+    https://community.chocolatey.org/packages/adobereader
 ms office
 onenote
 snagit
@@ -66,6 +67,7 @@ personal tools
 ###############
 bitwarden
 adguard
+adguard vpn
 spotify
 firefox
 pdfsam
@@ -74,7 +76,6 @@ pdfsam
 google chrome settings
 CopyTrans HEIC for Windows
 google drive
-expressvpn
 vlc
 handbrake
 logitech options

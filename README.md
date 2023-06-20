@@ -61,9 +61,9 @@ some storage provider so you sync it everywhere.
 - Unzip to somewhere (e.g. in your userfolder)
 - Copy [local_config/UserConfig.template.psd1](./local_config/UserConfig.template.psd1) to `local_config/UserConfig.psd1`, edit it, remove the `Draft` entry.
 - Start powershell 5 as Administrator
-- Prepare your environment running [windows/DscPrepare.ps1](./windows/DscPrepare.ps1)
+- Prepare your environment running [windows/OneTimeDscPrepare.ps1](./windows/OneTimeDscPrepare.ps1)
     ```
-    windows\DscPrepare.ps1
+    windows\OneTimeDscPrepare.ps1
     ```
 - Run
   - any of the tools ps1 script in the [tools](./tools/) folder in any order
@@ -95,7 +95,7 @@ The following might be needed even if we only do everything only locally:
 ```
 PS > Set-WsManQuickConfig -Force
 ```
-See [windows/DscPrepare.ps1](./windows/DscPrepare.ps1)
+See [windows/OneTimeDscPrepare.ps1](./windows/OneTimeDscPrepare.ps1)
 
 ## DSC Powershell version lesson learned
 https://learn.microsoft.com/en-us/powershell/scripting/dsc/overview?view=powershell-7.2
