@@ -25,8 +25,17 @@ Configuration AwsCli
     {
         cChocoPackageInstaller AwsCli
         {
-            Name                 = "awscli"
             PsDscRunAsCredential = $UserCredentialAtComputerDomain  # needed to be able to download the msi in some hardened corporate environments
+
+            Name = "awscli"
+        }
+
+        cChocoPackageInstaller AwsSessionManagerPlugin
+        {
+            DependsOn = "[cChocoPackageInstaller]AwsCli"
+            PsDscRunAsCredential = $UserCredentialAtComputerDomain  # needed to be able to download the msi in some hardened corporate environments
+
+            Name = "awscli-session-manager"
         }
 
         Script EnsureProfileContent
