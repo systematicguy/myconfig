@@ -7,9 +7,11 @@
     NoProxy    = "localhost"
 
     PxProxy = @{
+        Version = "0.8.3"  # https://github.com/genotrance/px/issues/182
         PxIni = @{
             proxy = @{
                 #server   = 
+                #auth     = "BASIC"
                 #username = 
                 gateway  = 1
                 # make sure there are no localhost, 127.0.0.* in the following list:

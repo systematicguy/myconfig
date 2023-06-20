@@ -5,7 +5,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\windows\CredentialProvider.ps1
 Import-Module CredentialManager
 
-$pxVersion = "0.8.3"
+$pxVersion = $UserConfig.PxProxy.Version
 $pxZipFile = "px-v$pxVersion-windows.zip"
 $startScriptPath = "$UserBinDir\StartPxProxy.ps1"
 $schTaskName = "Start Px Proxy"
