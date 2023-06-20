@@ -44,7 +44,7 @@ Configuration InternationalConfig
             {
                 PsDscRunAsCredential = $UserCredentialAtComputerDomain
                 
-                Key       = "Computer\HKEY_CURRENT_USER\Control Panel\International"
+                Key       = "HKEY_CURRENT_USER\Control Panel\International"
                 ValueName = $valueName
                 ValueType = "String"
                 ValueData = $internationalSettings[$valueName]
@@ -61,7 +61,7 @@ Configuration InternationalConfig
             {
                 PsDscRunAsCredential = $UserCredentialAtComputerDomain
                 
-                Key       = "Computer\HKEY_CURRENT_USER\Control Panel\International\Geo"
+                Key       = "HKEY_CURRENT_USER\Control Panel\International\Geo"
                 ValueName = $valueName
                 ValueType = "String"
                 ValueData = $internationalGeoSettings[$valueName]

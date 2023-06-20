@@ -22,7 +22,7 @@ Configuration WinExplorerConfig
             {
                 PsDscRunAsCredential = $UserCredentialAtComputerDomain
                 
-                Key       = "Computer\HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
+                Key       = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
                 ValueName = $valueName
                 ValueType = "Dword"
                 ValueData = $explorerSettings[$valueName]
