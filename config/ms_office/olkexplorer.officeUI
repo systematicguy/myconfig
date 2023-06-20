@@ -17,6 +17,7 @@
                 <mso:control idQ="mso:MinimizeRibbon" visible="false"/>
                 <mso:control idQ="mso:SignaturesStationeryDialog" visible="true"/>
                 <mso:control idQ="mso:OutOfOffice" visible="true"/>
+                <mso:control idQ="mso:TakeMeetingNotes" visible="true"/>
             </mso:sharedControls>
         </mso:qat>
     </mso:ribbon>

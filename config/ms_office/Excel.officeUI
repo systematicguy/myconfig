@@ -2,20 +2,22 @@
     <mso:ribbon>
         <mso:qat>
             <mso:sharedControls>
-                <mso:control idQ="mso:AutoSaveSwitch" visible="false"/>
+                <mso:control idQ="mso:AutoSaveSwitch" visible="true"/>
                 <mso:control idQ="mso:FileNewDefault" visible="false"/>
                 <mso:control idQ="mso:FileOpenUsingBackstage" visible="false"/>
-                <mso:control idQ="mso:FileSave" visible="false"/>
+                <mso:control idQ="mso:FileSave" visible="true"/>
                 <mso:control idQ="mso:FileSendAsAttachment" visible="false"/>
                 <mso:control idQ="mso:FilePrintQuick" visible="false"/>
                 <mso:control idQ="mso:PrintPreviewAndPrint" visible="false"/>
                 <mso:control idQ="mso:Spelling" visible="false"/>
-                <mso:control idQ="mso:Undo" visible="false"/>
-                <mso:control idQ="mso:Redo" visible="false"/>
+                <mso:control idQ="mso:Undo" visible="true"/>
+                <mso:control idQ="mso:Redo" visible="true"/>
                 <mso:control idQ="mso:SortAscendingExcel" visible="false"/>
                 <mso:control idQ="mso:SortDescendingExcel" visible="false"/>
                 <mso:control idQ="mso:PointerModeOptions" visible="false"/>
                 <mso:control idQ="mso:FormatPainter" visible="true"/>
+                <mso:control idQ="mso:ViewFreezePanesGallery" visible="true"/>
+                <mso:control idQ="mso:Filter" visible="true"/>
             </mso:sharedControls>
         </mso:qat>
         <mso:tabs>

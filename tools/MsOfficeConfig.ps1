@@ -62,7 +62,7 @@ Configuration MSOfficeConfig
             Key       = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Common\LanguageResources"
             ValueName = "NotificationsNeverShowAgainLanguages"
             ValueType = "String"
-            ValueData = "hu-HU"
+            ValueData = "hu-HU"  # TODO make configurable
         }
 
         # Outlook Calendar
@@ -74,6 +74,7 @@ Configuration MSOfficeConfig
             "FirstDOW"               = 0x00000001
             "SelectCalendarViewType" = 0x00000000
             "WorkDay"                = 0x0000007c  #  (124)
+            "WeekNum"                = 0x00000001  #  (1)
         }
         foreach ($valueName in $outlookCalendar.Keys)
         {
@@ -98,14 +99,25 @@ Configuration MSOfficeConfig
             ValueData = 0x00000003
         }
 
-        Registry "Outlook_DatePickerMonths"
+        # Outlook Preferences
+        $outlookPreferences = @{
+            "DatePickerMonths"       = 0x00000001
+            "UseNewOutlook"          = 0x00000000
+            "EnableSingleLineRibbon" = 0x00000000
+            "EnablePreviewPlace"     = 0x00000000
+            "DefaultLayoutApplied"   = 0x00000020
+        }
+        foreach ($valueName in $outlookPreferences.Keys)
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
-            
-            Key       = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Outlook\Preferences"
-            ValueName = "DatePickerMonths"
-            ValueType = "Dword"
-            ValueData = 0x00000001
+            Registry "OutlookPreferences_$valueName"
+            {
+                PsDscRunAsCredential = $UserCredentialAtComputerDomain
+                
+                Key       = "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Outlook\Preferences"
+                ValueName = $valueName
+                ValueType = "Dword"
+                ValueData = $outlookPreferences[$valueName]
+            }
         }
     }
 }

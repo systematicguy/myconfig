@@ -3,24 +3,20 @@
         <mso:qat>
             <mso:sharedControls>
                 <mso:control idQ="mso:ViewGoBack" visible="true"/>
-                <mso:control idQ="mso:RedoButton" visible="false" insertBeforeQ="mso:ViewGoForward"/>
-                <mso:control idQ="mso:FavoritePen1" visible="false" insertBeforeQ="mso:ViewGoForward"/>
-                <mso:control idQ="mso:FavoritePen2" visible="false" insertBeforeQ="mso:ViewGoForward"/>
-                <mso:control idQ="mso:FavoritePen3" visible="false" insertBeforeQ="mso:ViewGoForward"/>
-                <mso:control idQ="mso:FavoritePen4" visible="false" insertBeforeQ="mso:ViewGoForward"/>
-                <mso:control idQ="mso:FavoriteHighlighter1" visible="false" insertBeforeQ="mso:ViewGoForward"/>
-                <mso:control idQ="mso:PointerModeOptions" visible="false" insertBeforeQ="mso:ViewGoForward"/>
-                <mso:control idQ="mso:NewSideNote" visible="true" insertBeforeQ="mso:ViewGoForward"/>
-                <mso:control idQ="mso:FilePrint" visible="false" insertBeforeQ="mso:ViewGoForward"/>
-                <mso:control idQ="mso:FilePrintPreview" visible="false" insertBeforeQ="mso:ViewGoForward"/>
-                <mso:control idQ="mso:UndoButton" visible="true" insertBeforeQ="mso:ViewGoForward"/>
                 <mso:control idQ="mso:ViewGoForward" visible="false"/>
+                <mso:control idQ="mso:UndoButton" visible="true"/>
+                <mso:control idQ="mso:RedoButton" visible="false"/>
+                <mso:control idQ="mso:FilePrint" visible="false"/>
+                <mso:control idQ="mso:FilePrintPreview" visible="false"/>
+                <mso:control idQ="mso:PointerModeOptions" visible="false"/>
                 <mso:control idQ="mso:TableInsertColumnsLeft" visible="true"/>
                 <mso:control idQ="mso:TableInsertColumnsRight" visible="true"/>
                 <mso:control idQ="mso:TableInsertRowsAbove" visible="true"/>
                 <mso:control idQ="mso:TableInsertRowsBelow" visible="true"/>
                 <mso:control idQ="mso:DeleteColumnsOneNote" visible="true"/>
                 <mso:control idQ="mso:DeleteRowsOneNote" visible="true"/>
+                <mso:control idQ="mso:PasteAsPicture" visible="true"/>
+                <mso:control idQ="mso:TableBordersHide" visible="true"/>
             </mso:sharedControls>
         </mso:qat>
     </mso:ribbon>

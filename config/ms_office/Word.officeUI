@@ -2,17 +2,17 @@
     <mso:ribbon>
         <mso:qat>
             <mso:sharedControls>
-                <mso:control idQ="mso:AutoSaveSwitch" visible="false"/>
+                <mso:control idQ="mso:AutoSaveSwitch" visible="true"/>
                 <mso:control idQ="mso:FileNewDefault" visible="false"/>
                 <mso:control idQ="mso:FileOpenUsingBackstage" visible="false"/>
-                <mso:control idQ="mso:FileSave" visible="false"/>
+                <mso:control idQ="mso:FileSave" visible="true"/>
                 <mso:control idQ="mso:FileSendAsAttachment" visible="false"/>
                 <mso:control idQ="mso:FilePrintQuick" visible="false"/>
                 <mso:control idQ="mso:PrintPreviewAndPrint" visible="false"/>
                 <mso:control idQ="mso:WritingAssistanceCheckDocument" visible="false"/>
                 <mso:control idQ="mso:ReadAloud" visible="false"/>
-                <mso:control idQ="mso:Undo" visible="false"/>
-                <mso:control idQ="mso:RedoOrRepeat" visible="false"/>
+                <mso:control idQ="mso:Undo" visible="true"/>
+                <mso:control idQ="mso:RedoOrRepeat" visible="true"/>
                 <mso:control idQ="mso:TableDrawTable" visible="false"/>
                 <mso:control idQ="mso:PointerModeOptions" visible="false"/>
                 <mso:control idQ="mso:ParagraphMarks" visible="true"/>
