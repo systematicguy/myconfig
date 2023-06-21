@@ -63,6 +63,16 @@ $totalCmdIniConfig = @{
         HistoryHotlistButtons = "1";
         BreadCrumbBar         = "1";
     };
+    searches = @{
+        not_older_than_1_hour_SearchFor   = ""
+        not_older_than_1_hour_SearchIn    = "c:\"
+        not_older_than_1_hour_SearchText  = ""
+        not_older_than_1_hour_SearchFlags = "0|002002000020|||1|0|||||0000|"
+    }
+    Colors = @{
+        ColorFilter1      = ">not_older_than_1_hour"
+        ColorFilter1Color = "16711680"
+    }
 }
 
 Configuration TotalCommanderInstallation
@@ -166,9 +176,13 @@ ApplyDscConfiguration "TCmdContentPlugins"
 EnsureExtractedUrl `
     -Url "https://www.totalcommander.ch/win/fs/cloudplugin2.50.zip" `
     -ExtractedDir "$totalCmdPluginDir\wfx\cloudplugin"
+EnsureExtractedUrl `
+    -Url "https://ghisler.fileburst.com/fsplugins/wfx_registry.zip" `
+    -ExtractedDir "$totalCmdPluginDir\wfx\Registry"
 $fsPluginSettings = @{
     FileSystemPlugins = @{
-        "Cloud" = "$totalCmdPluginDir\wfx\cloudplugin\cloudplugin.wfx"
+        "Cloud"    = "$totalCmdPluginDir\wfx\cloudplugin\cloudplugin.wfx";
+        "Registry" = "$totalCmdPluginDir\wfx\Registry\registry.wfx";
     }
 }
 Configuration TCmdFileSystemPlugins
