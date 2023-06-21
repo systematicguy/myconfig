@@ -35,6 +35,7 @@ windirstat
 procexp
 registry exporter and differ
 notepad++
+beyond compare
 
 vmware horizon client
 citrix workspace
@@ -86,3 +87,9 @@ speedtest by Okla
 duplicati via docker
 apple mobile device support
 winx dvd copy pro 3.9.6
+cyberlink powerdirector
+
+# games
+Audiosurf 2
+Badland
+Factorio
