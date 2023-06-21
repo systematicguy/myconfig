@@ -2,13 +2,16 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoToolsDir\Chocolatey.ps1
+. $RepoRoot\windows\Downloader.ps1
+
+. $RepoToolsDir\VsCode.ps1
 
 # existing ini file location: https://ghisler.ch/board/viewtopic.php?t=26830
 $winCmdParentDir = "$UserDir\AppData\Roaming\GHISLER"
 $winCmdPath = "$winCmdParentDir\wincmd.ini"
+$totalCmdPluginDir = "$UserBinDir\total_commander\plugins"
 
-. $PSScriptRoot\VsCode.ps1
-
+# https://www.ghisler.ch/wiki/index.php?title=Wincmd.ini
 $totalCmdIniConfig = @{
     Configuration = @{
         Editor                    = "`"$VsCodeExePath`" `"%1`"";
@@ -29,6 +32,8 @@ $totalCmdIniConfig = @{
         DirTabRevert              = "1";
         DirTabFilters             = "1";
         WatchDirs                 = "51";
+        PluginBaseDir             = $totalCmdPluginDir;
+        # AutoInstallPlugins        = "1";
     };
     Confirmation = @{
         deleteDirs        = "0";
@@ -73,6 +78,7 @@ Configuration TotalCommanderInstallation
         }
     }
 }
+ApplyDscConfiguration "TotalCommanderInstallation"
 
 Configuration TotalCommanderConfiguration
 {
@@ -104,12 +110,61 @@ Configuration TotalCommanderConfiguration
         }
     }
 }
+#ApplyDscConfiguration "TotalCommanderConfiguration"
 
-
-# TODO: plugins
+# plugins: https://www.ghisler.com/plugins.htm
 # https://www.ghisler.ch/board/viewtopic.php?t=42019
 
+EnsureExtractedUrl `
+    -Url "https://ghisler.fileburst.com/content/wdx_exif.zip" `
+    -ExtractedDir "$totalCmdPluginDir\wdx\wdx_exif"
+$contentPluginSettings = @{
+    ContentPlugins = @{
+        "0"        = "$totalCmdPluginDir\wdx\wdx_exif\exif.wdx"
+        "0_detect" = "`"EXT=`"JPG`" | EXT=`"JPEG`" | EXT=`"TIFF`" | EXT=`"TIF`" | EXT=`"JPE`" | EXT=`"CRW`" | EXT=`"THM`" | EXT=`"CR2`" | EXT=`"CR3`" | EXT=`"DNG`" | EXT=`"NEF`"`""
+        "0_flags"  = "0"
+    }
+    CustomFields = @{
+        Titles      = "Pictures|Videos";
+        AutoLoad    = "1";
 
-ApplyDscConfiguration "TotalCommanderInstallation"
-ApplyDscConfiguration "TotalCommanderConfiguration"
+        Widths1     = "181,30,-80,80,62,50,80";
+        Headers1    = "Size\nCreation\nModDate\nCamMaker\nCamModel";
+        Contents1   = "[=tc.size]\n[=tc.creationdate]\n[=tc.writedate]\n[=exif.Make]\n[=exif.Model]";
+        Options1    = "-1|0|96";
+
+        Widths2     = "181,30,-80,80,62";
+        Headers2    = "Size\nCreation\nModDate";
+        Contents2   = "[=tc.size]\n[=tc.creationdate]\n[=tc.writedate]";
+        Options2    = "-1|0|96";
+    }
+}
+Configuration TCmdContentPlugins
+{
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+    Import-DSCResource -ModuleName FileContentDsc
+
+    Node "localhost"
+    {
+        foreach ($sectionKey in $contentPluginSettings.Keys)
+        {
+            foreach ($key in $contentPluginSettings[$sectionKey].Keys)
+            {
+                IniSettingsFile "TCmd_$sectionKey_$key"
+                {
+                    Path    = $winCmdPath
+                    Section = "$sectionKey"
+                    Key     = "$key"
+                    Text    = $contentPluginSettings[$sectionKey][$key]
+                }
+            }
+        }
+    }
+}
+ApplyDscConfiguration "TCmdContentPlugins"
+
+EnsureExtractedUrl `
+    -Url "https://www.totalcommander.ch/win/fs/cloudplugin2.50.zip" `
+    -ExtractedDir "$totalCmdPluginDir\wfx\cloudplugin"
+
 LogTodo -Message "Total Commander activation: place the wincmd.key file into the installation dir"
