@@ -3,6 +3,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 
 . $RepoRoot\windows\UserCredential.ps1
 . $RepoRoot\windows\CredentialProvider.ps1
+. $RepoRoot\windows\Downloader.ps1
 Import-Module CredentialManager
 
 $pxVersion = $UserConfig.PxProxy.Version
@@ -37,6 +38,10 @@ if (($pxIniConfig.Count -gt 0) -and ($pxIniConfig.proxy.Count -gt 0) -and ($pxIn
     $pxIniConfig.proxy.noproxy = $UserConfig.NoProxy
 }
 
+EnsureExtractedUrl `
+    -Url "https://github.com/genotrance/px/releases/download/v$pxVersion/$pxZipFile" `
+    -ExtractedDir "$UserBinDir\px_proxy"
+
 Configuration PxProxy
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
@@ -46,24 +51,6 @@ Configuration PxProxy
 
     Node localhost 
     {
-        if (! (Test-Path $DscWorkDir/$pxZipFile)) {
-            xRemoteFile DownloadPxProxy
-            {
-                DestinationPath = $DscWorkDir
-                Uri             = "https://github.com/genotrance/px/releases/download/v$pxVersion/$pxZipFile"
-            }
-            $unzipDependency = "[xRemoteFile]DownloadPxProxy"
-        } else {
-            $unzipDependency = $null
-        }
-
-        Archive UnZip {
-            DependsOn   = $unzipDependency
-            Ensure      = "Present"
-            Path        = "$DscWorkDir\$pxZipFile"
-            Destination = "$UserBinDir\px_proxy"
-        }
-
         foreach ($sectionKey in $pxIniConfig.Keys)
         {
             foreach ($key in $pxIniConfig[$sectionKey].Keys)
@@ -82,11 +69,17 @@ Configuration PxProxy
 
         File StartPxProxy
         {
-            DependsOn   = $unzipDependency
-
             Type            = 'File'
             Contents        = "$UserBinDir\px_proxy\px.exe --config=$pxConfigPath"
             DestinationPath = $startScriptPath
+            Ensure          = "Present"
+        }
+
+        File StopPxProxy
+        {
+            Type            = 'File'
+            Contents        = "$UserBinDir\px_proxy\px.exe --quit"
+            DestinationPath = "$UserBinDir\StopPxProxy.ps1"
             Ensure          = "Present"
         }
 

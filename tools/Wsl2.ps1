@@ -3,6 +3,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 
 . $RepoRoot\windows\UserCredential.ps1
 . $RepoRoot\windows\MsiTools.ps1
+. $RepoRoot\windows\Downloader.ps1
 
 # https://learn.microsoft.com/en-us/windows/wsl/install-manual
 # https://github.com/microsoft/WSL/issues/3369
@@ -12,25 +13,7 @@ $wslKernelUpdater = "wsl_update_x64.msi"
 $wslKernelUpdaterUrl = "https://wslstorestorage.blob.core.windows.net/wslblob/$wslKernelUpdater"
 $downloadedWslKernelUpdaterInstallerPath = "$DscWorkDir\$wslKernelUpdater"
 
-if (! (Test-Path $downloadedWslKernelUpdaterInstallerPath)) {
-    Configuration GetWslKernelUpdaterMsi
-    {
-        Import-DscResource -ModuleName xPSDesiredStateConfiguration
-
-        Node "localhost" 
-        {
-            xRemoteFile DownloadWslKernelUpdater
-            {
-                PsDscRunAsCredential = $UserCredentialAtComputerDomain
-                DestinationPath      = $downloadedWslKernelUpdaterInstallerPath
-                Uri                  = $wslKernelUpdaterUrl
-            }
-        }
-    }
-    ApplyDscConfiguration "GetWslKernelUpdaterMsi"
-}
-
-# immediately apply config so we can get GUID
+EnsureDownloadedUrl -Url $wslKernelUpdaterUrl -DownloadedPath $downloadedWslKernelUpdaterInstallerPath
 $wslKernelUpdaterProductName = $msiTools::GetProductName($downloadedWslKernelUpdaterInstallerPath)
 $wslKernelUpdaterProductGuid = $msiTools::GetProductCode($downloadedWslKernelUpdaterInstallerPath)
 
@@ -96,56 +79,11 @@ if ($rebootPending) {
 }
 
 $wslDistroName = Split-Path -Path $userConfig.Wsl.Distro -Leaf
-$downloadedWslDistroBundlePath = "$DscWorkDir\$wslDistroName.appxbundle"
-if (! (Test-Path $downloadedWslDistroBundlePath)) {
-    Configuration DownloadWslDistroBundle
-    {
-        Import-DscResource -ModuleName xPSDesiredStateConfiguration
-
-        Node "localhost" 
-        {
-            xRemoteFile DownloadWslDistroBundle
-            {
-                PsDscRunAsCredential = $UserCredentialAtComputerDomain
-                DestinationPath      = $downloadedWslDistroBundlePath
-                Uri                  = $userConfig.Wsl.Distro
-            }
-        }
-    }
-    ApplyDscConfiguration "DownloadWslDistroBundle"
-}
-
-$wslDistroBundleZipPath = "$downloadedWslDistroBundlePath.zip"
 $wslDistroBundleDir = "$DscWorkDir\$wslDistroName"
-Configuration "ExtractWslDistroBundle"
-{
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-
-    Node "localhost"
-    {
-        File WslDistroBundleZip
-        {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
-
-            Type            = "File"
-            SourcePath      = $downloadedWslDistroBundlePath
-            DestinationPath = $wslDistroBundleZipPath
-            Ensure          = "Present"
-            Checksum        = "SHA-1"
-        }
-
-        Archive WslDistroBundleUnzipped
-        {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
-            DependsOn = "[File]WslDistroBundleZip"
-
-            Ensure      = "Present"
-            Path        = $wslDistroBundleZipPath
-            Destination = $wslDistroBundleDir
-        }
-    }
-}
-ApplyDscConfiguration "ExtractWslDistroBundle"
+EnsureExtractedUrl `
+    -Url $userConfig.Wsl.Distro `
+    -DownloadedPath "$DscWorkDir\$wslDistroName.appxbundle.zip" `
+    -ExtractedDir $wslDistroBundleDir
 
 $wslDistroAppx = Get-ChildItem -Path $wslDistroBundleDir -Filter "*_x64.appx" | Select-Object -Last 1
 $wslDistroAppxPath = $wslDistroAppx.FullName

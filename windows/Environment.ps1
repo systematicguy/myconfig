@@ -98,6 +98,7 @@ function ApplyDscConfiguration {
 
     & $ConfigurationName -Output "$DscMofDir\$ConfigurationName" -ConfigurationData $DscConfigPath
     Start-DscConfiguration -Path "$DscMofDir\$ConfigurationName" -Wait -Force -Verbose
+    return $null
 }
 
 
