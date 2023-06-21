@@ -73,6 +73,20 @@ $totalCmdIniConfig = @{
         ColorFilter1      = ">not_older_than_1_hour"
         ColorFilter1Color = "16711680"
     }
+    DirMenu = @{
+        menu1 = "dev"
+        cmd1  = "cd $UserDir\dev"
+        
+        menu2 = "Downloads"
+        cmd2  = "cd $UserDir\Downloads"
+        
+        menu3 = "myconfig"
+        cmd3  = "cd $RepoRoot"
+        
+        menu4 = "Registry"
+        cmd4  = "cd \\\Registry"
+    }
+
 }
 
 Configuration TotalCommanderInstallation
