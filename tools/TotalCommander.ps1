@@ -110,7 +110,7 @@ Configuration TotalCommanderConfiguration
         }
     }
 }
-#ApplyDscConfiguration "TotalCommanderConfiguration"
+ApplyDscConfiguration "TotalCommanderConfiguration"
 
 # plugins: https://www.ghisler.com/plugins.htm
 # https://www.ghisler.ch/board/viewtopic.php?t=42019
@@ -166,5 +166,33 @@ ApplyDscConfiguration "TCmdContentPlugins"
 EnsureExtractedUrl `
     -Url "https://www.totalcommander.ch/win/fs/cloudplugin2.50.zip" `
     -ExtractedDir "$totalCmdPluginDir\wfx\cloudplugin"
+$fsPluginSettings = @{
+    FileSystemPlugins = @{
+        "Cloud" = "$totalCmdPluginDir\wfx\cloudplugin\cloudplugin.wfx"
+    }
+}
+Configuration TCmdFileSystemPlugins
+{
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+    Import-DSCResource -ModuleName FileContentDsc
+
+    Node "localhost"
+    {
+        foreach ($sectionKey in $fsPluginSettings.Keys)
+        {
+            foreach ($key in $fsPluginSettings[$sectionKey].Keys)
+            {
+                IniSettingsFile "TCmd_$sectionKey_$key"
+                {
+                    Path    = $winCmdPath
+                    Section = "$sectionKey"
+                    Key     = "$key"
+                    Text    = $fsPluginSettings[$sectionKey][$key]
+                }
+            }
+        }
+    }
+}
+ApplyDscConfiguration "TCmdFileSystemPlugins"
 
 LogTodo -Message "Total Commander activation: place the wincmd.key file into the installation dir"

@@ -6,6 +6,6 @@
 
 . $PSScriptRoot\..\windows\Environment.ps1
 
-. $RepoToolsDir\PxProxy.ps1
+. $RepoToolsDir\TotalCommander.ps1
 
 #ShowTodo
