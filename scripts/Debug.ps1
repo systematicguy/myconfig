@@ -6,6 +6,6 @@
 
 . $PSScriptRoot\..\windows\Environment.ps1
 
-. $RepoToolsDir\TotalCommander.ps1
+. $RepoToolsDir\LanguageConfig.ps1
 
 #ShowTodo
