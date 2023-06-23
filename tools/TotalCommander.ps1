@@ -2,6 +2,7 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\helpers\Downloader.ps1
+. $RepoRott\helpers\Ini.ps1
 
 . $RepoToolsDir\Chocolatey.ps1
 . $RepoToolsDir\VsCode.ps1
@@ -10,6 +11,39 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 $winCmdParentDir = "$UserDir\AppData\Roaming\GHISLER"
 $winCmdPath = "$winCmdParentDir\wincmd.ini"
 $totalCmdPluginDir = "$UserBinDir\total_commander\plugins"
+
+Configuration TotalCommanderInstallation
+{
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+    Import-DscResource -ModuleName cChoco
+
+    Node "localhost"
+    {
+        cChocoPackageInstaller TotalCommander
+        {
+            Name = "totalcommander"
+        }
+    }
+}
+ApplyDscConfiguration "TotalCommanderInstallation"
+
+Configuration TotalCommanderConfigDir
+{
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+    Import-DSCResource -ModuleName FileContentDsc
+
+    Node "localhost"
+    {
+        File WinCmdParentDir 
+        {
+            #Credential      = $UserCredentialAtComputerDomain
+            Type            = "Directory"
+            DestinationPath = "$winCmdParentDir"
+            Ensure          = "Present"
+        }
+    }
+}
+ApplyDscConfiguration "TotalCommanderConfigDir"
 
 # https://www.ghisler.ch/wiki/index.php?title=Wincmd.ini
 $totalCmdIniConfig = @{
@@ -87,53 +121,7 @@ $totalCmdIniConfig = @{
         cmd4  = "cd \\\Registry"
     }
 }
-
-Configuration TotalCommanderInstallation
-{
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco
-
-    Node "localhost"
-    {
-        cChocoPackageInstaller TotalCommander
-        {
-            Name = "totalcommander"
-        }
-    }
-}
-ApplyDscConfiguration "TotalCommanderInstallation"
-
-Configuration TotalCommanderConfiguration
-{
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DSCResource -ModuleName FileContentDsc
-
-    Node "localhost"
-    {
-        File WinCmdParentDir 
-        {
-            #Credential      = $UserCredentialAtComputerDomain
-            Type            = "Directory"
-            DestinationPath = "$winCmdParentDir"
-            Ensure          = "Present"
-        }
-
-        foreach ($sectionKey in $totalCmdIniConfig.Keys)
-        {
-            foreach ($key in $totalCmdIniConfig[$sectionKey].Keys)
-            {
-                IniSettingsFile "Tcmd_$sectionKey_$key"
-                {
-                    Path    = $winCmdPath
-                    Section = "$sectionKey"
-                    Key     = "$key"
-                    Text    = $totalCmdIniConfig[$sectionKey][$key]
-                }
-            }
-        }
-    }
-}
-ApplyDscConfiguration "TotalCommanderConfiguration"
+EnsureIniConfig -Path $winCmdPath -IniConfig $totalCmdIniConfig
 
 # plugins: https://www.ghisler.com/plugins.htm
 # https://www.ghisler.ch/board/viewtopic.php?t=42019
@@ -141,7 +129,7 @@ ApplyDscConfiguration "TotalCommanderConfiguration"
 EnsureExtractedUrl `
     -Url "https://ghisler.fileburst.com/content/wdx_exif.zip" `
     -ExtractedDir "$totalCmdPluginDir\wdx\wdx_exif"
-$contentPluginSettings = @{
+EnsureIniConfig -Path $winCmdPath -IniConfig @{
     ContentPlugins = @{
         "0"        = "$totalCmdPluginDir\wdx\wdx_exif\exif.wdx"
         "0_detect" = "`"EXT=`"JPG`" | EXT=`"JPEG`" | EXT=`"TIFF`" | EXT=`"TIF`" | EXT=`"JPE`" | EXT=`"CRW`" | EXT=`"THM`" | EXT=`"CR2`" | EXT=`"CR3`" | EXT=`"DNG`" | EXT=`"NEF`"`""
@@ -162,29 +150,6 @@ $contentPluginSettings = @{
         Options2    = "-1|0|96"
     }
 }
-Configuration TCmdContentPlugins
-{
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DSCResource -ModuleName FileContentDsc
-
-    Node "localhost"
-    {
-        foreach ($sectionKey in $contentPluginSettings.Keys)
-        {
-            foreach ($key in $contentPluginSettings[$sectionKey].Keys)
-            {
-                IniSettingsFile "TCmd_$sectionKey_$key"
-                {
-                    Path    = $winCmdPath
-                    Section = "$sectionKey"
-                    Key     = "$key"
-                    Text    = $contentPluginSettings[$sectionKey][$key]
-                }
-            }
-        }
-    }
-}
-ApplyDscConfiguration "TCmdContentPlugins"
 
 EnsureExtractedUrl `
     -Url "https://www.totalcommander.ch/win/fs/cloudplugin2.50.zip" `
@@ -192,35 +157,12 @@ EnsureExtractedUrl `
 EnsureExtractedUrl `
     -Url "https://ghisler.fileburst.com/fsplugins/wfx_registry.zip" `
     -ExtractedDir "$totalCmdPluginDir\wfx\Registry"
-$fsPluginSettings = @{
+EnsureIniConfig -Path $winCmdPath -IniConfig @{
     FileSystemPlugins = @{
         "Cloud"    = "$totalCmdPluginDir\wfx\cloudplugin\cloudplugin.wfx";
         "Registry" = "$totalCmdPluginDir\wfx\Registry\registry.wfx";
     }
 }
-Configuration TCmdFileSystemPlugins
-{
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DSCResource -ModuleName FileContentDsc
-
-    Node "localhost"
-    {
-        foreach ($sectionKey in $fsPluginSettings.Keys)
-        {
-            foreach ($key in $fsPluginSettings[$sectionKey].Keys)
-            {
-                IniSettingsFile "TCmd_$sectionKey_$key"
-                {
-                    Path    = $winCmdPath
-                    Section = "$sectionKey"
-                    Key     = "$key"
-                    Text    = $fsPluginSettings[$sectionKey][$key]
-                }
-            }
-        }
-    }
-}
-ApplyDscConfiguration "TCmdFileSystemPlugins"
 
 #TODO checkout:
 # packer plugins

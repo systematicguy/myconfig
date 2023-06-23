@@ -4,21 +4,19 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\helpers\UserCredential.ps1
 . $RepoRoot\helpers\CredentialProvider.ps1
 . $RepoRoot\helpers\Downloader.ps1
+. $RepoRoot\helpers\EnsureFile.ps1
+. $RepoRoot\helpers\Ini.ps1
 Import-Module CredentialManager
 
 $pxVersion = $UserConfig.PxProxy.Version
 $pxZipFile = "px-v$pxVersion-windows.zip"
+$pxProxyDownloadUrl = "https://github.com/genotrance/px/releases/download/v$pxVersion/$pxZipFile"
+$pxProxyDir = "$UserBinDir\px_proxy"
 $startScriptPath = "$UserBinDir\StartPxProxy.ps1"
 $schTaskName = "Start Px Proxy"
 $pxConfigPath = "$UserDir\px.ini"
 $pxIniConfig = $UserConfig.PxProxy.PxIni
 $pxCredentialTarget = "Px"
-$pxIniDependencies = [System.Collections.ArrayList]@()
-
-if (-not (Test-Path -Path $pxConfigPath)) {
-    # need to ensure ASCII encoding for px proxy
-    [Environment]::NewLine | Out-File -FilePath $pxConfigPath -Encoding ASCII
-}
 
 # store password for proxy in windows credential manager if server:username has been configured
 $pxIniProxyUsername = $pxIniConfig.proxy.username
@@ -38,39 +36,25 @@ if (($pxIniConfig.Count -gt 0) -and ($pxIniConfig.proxy.Count -gt 0) -and ($pxIn
     $pxIniConfig.proxy.noproxy = $UserConfig.NoProxy
 }
 
+EnsureFile -Path $pxConfigPath -EncodingIfMissing ASCII
+EnsureIniConfig -Path $pxConfigPath -IniConfig $pxIniConfig
+
 EnsureExtractedUrl `
-    -Url "https://github.com/genotrance/px/releases/download/v$pxVersion/$pxZipFile" `
-    -ExtractedDir "$UserBinDir\px_proxy"
+    -Url $pxProxyDownloadUrl `
+    -ExtractedDir $pxProxyDir
 
 Configuration PxProxy
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName xPSDesiredStateConfiguration
     Import-DscResource -ModuleName ComputerManagementDsc
     Import-DSCResource -ModuleName FileContentDsc
 
     Node localhost 
     {
-        foreach ($sectionKey in $pxIniConfig.Keys)
-        {
-            foreach ($key in $pxIniConfig[$sectionKey].Keys)
-            {
-                $iniEntry = "PxIni_$sectionKey_$key"
-                $pxIniDependencies.Add("[IniSettingsFile]$iniEntry")
-                IniSettingsFile $iniEntry
-                {
-                    Path    = $pxConfigPath
-                    Section = "$sectionKey"
-                    Key     = "$key"
-                    Text    = $pxIniConfig[$sectionKey][$key]
-                }
-            }
-        }
-
         File StartPxProxy
         {
             Type            = 'File'
-            Contents        = "$UserBinDir\px_proxy\px.exe --config=$pxConfigPath"
+            Contents        = "$pxProxyDir\px.exe --config=$pxConfigPath"
             DestinationPath = $startScriptPath
             Ensure          = "Present"
         }
@@ -78,7 +62,7 @@ Configuration PxProxy
         File StopPxProxy
         {
             Type            = 'File'
-            Contents        = "$UserBinDir\px_proxy\px.exe --quit"
+            Contents        = "$pxProxyDir\px.exe --quit"
             DestinationPath = "$UserBinDir\StopPxProxy.ps1"
             Ensure          = "Present"
         }
@@ -104,9 +88,8 @@ Configuration PxProxy
 
         Script StartPxProxyNow
         {
+            DependsOn  = "[ScheduledTask]ScheduledTaskLogon"
             Credential = $UserCredentialAtComputerDomain
-
-            DependsOn = @("[ScheduledTask]ScheduledTaskLogon") + $pxIniDependencies
 
             GetScript = {
                 #Do Nothing
@@ -126,10 +109,9 @@ Configuration PxProxy
 
         Script SetUserProxyEnvVars
         {
+            DependsOn = "[Script]StartPxProxyNow"
             # Environment resource cannot set an Environment Variable in the User's context
             Credential = $UserCredentialAtComputerDomain
-
-            DependsOn = "[Script]StartPxProxyNow"
 
             GetScript = {
                 #Do Nothing
@@ -146,7 +128,6 @@ Configuration PxProxy
         }
     }
 }
-
 ApplyDscConfiguration "PxProxy"
 
 LogTodo -Message "PxProxy: You may want to review $startScriptPath (and optionally $pxConfigPath) based on https://github.com/genotrance/px#usage"

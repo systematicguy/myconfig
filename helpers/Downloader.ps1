@@ -2,13 +2,7 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\helpers\UserCredential.ps1
-
-function UrlToIdentifier() {
-    param (
-        [string]$Url
-    )
-    return $Url.Replace(":", "_").Replace("/", "_").Replace(".", "_").Replace("-", "_").Replace(" ", "_")
-}
+. $RepoRoot\helpers\ToIdentifier.ps1
 
 function EnsureDownloadedUrl {
     param (
