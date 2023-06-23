@@ -2,7 +2,7 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\helpers\Downloader.ps1
-. $RepoRott\helpers\Ini.ps1
+. $RepoRoot\helpers\Ini.ps1
 
 . $RepoToolsDir\Chocolatey.ps1
 . $RepoToolsDir\VsCode.ps1

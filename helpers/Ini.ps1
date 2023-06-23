@@ -6,7 +6,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 function EnsureIniConfig {
     param (
         [string]$Path,
-        [System.Object[]]$IniConfig
+        [hashtable]$IniConfig
     )
 
     $iniConfigName = "IniConfig_$(PathToIdentifier $Path)"
@@ -21,7 +21,7 @@ function EnsureIniConfig {
             {
                 foreach ($key in $IniConfig[$sectionKey].Keys)
                 {
-                    IniSettingsFile "$iniConfigName_$sectionKey_$key"
+                    IniSettingsFile "$($sectionKey)_$($key)"
                     {
                         Path    = $Path
                         Section = "$sectionKey"
@@ -32,5 +32,6 @@ function EnsureIniConfig {
             }
         }
     }
+    Write-Host "Ensuring ini config is present in [$Path]..."
     ApplyDscConfiguration $iniConfigName
 }
