@@ -39,4 +39,6 @@
 . $RepoToolsDir\WinExplorerShowHidden.ps1
 . $RepoToolsDir\WinExplorerConfig.ps1     # David's personal settings for Windows Explorer
 
+. $RepoToolsDir\PowerConfig.ps1
+
 ShowTodo
