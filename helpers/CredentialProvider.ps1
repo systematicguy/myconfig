@@ -1,5 +1,5 @@
 # to help yourself debugging:
-# . windows\CredentialProvider.ps1
+# . helpers\CredentialProvider.ps1
 if ($CachedCredentials -eq $null) { 
     $CachedCredentials = @{} 
 }

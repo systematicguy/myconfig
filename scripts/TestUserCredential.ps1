@@ -1,4 +1,7 @@
 # this script was born during troubleshooting
+
+. $PSScriptRoot\..\helpers\UserCredential.ps1
+
 Invoke-Command -Credential $UserCredentialAtComputerDomain -ScriptBlock {Write-Output "Invoke-Command with UserCredentialAtComputerDomain: Your credential works"} -ComputerName localhost
 Invoke-Command -Credential $UserCredentialAtAd -ScriptBlock {Write-Output "Invoke-Command with UserCredentialAtAd: Your credential works"} -ComputerName localhost
 

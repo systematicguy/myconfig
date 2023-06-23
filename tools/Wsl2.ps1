@@ -1,9 +1,9 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $RepoRoot\windows\UserCredential.ps1
-. $RepoRoot\windows\MsiTools.ps1
-. $RepoRoot\windows\Downloader.ps1
+. $RepoRoot\helpers\UserCredential.ps1
+. $RepoRoot\helpers\MsiTools.ps1
+. $RepoRoot\helpers\Downloader.ps1
 
 # https://learn.microsoft.com/en-us/windows/wsl/install-manual
 # https://github.com/microsoft/WSL/issues/3369

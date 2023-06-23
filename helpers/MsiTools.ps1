@@ -1,4 +1,4 @@
-. $PSScriptRoot\Environment.ps1
+. $PSScriptRoot\..\windows\Environment.ps1
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 # credit Adam Rushuk

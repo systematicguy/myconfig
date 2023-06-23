@@ -2,7 +2,7 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoToolsDir\Chocolatey.ps1
-. $RepoRoot\windows\UserCredential.ps1
+. $RepoRoot\helpers\UserCredential.ps1
 
 Configuration GoogleChrome
 {

@@ -1,7 +1,7 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $RepoRoot\windows\UserCredential.ps1
+. $RepoRoot\helpers\UserCredential.ps1
 . $RepoToolsDir\Pyenv.ps1
 
 # ensure user pip ini

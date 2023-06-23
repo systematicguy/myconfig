@@ -1,2 +1,2 @@
-. windows\UserCredential.ps1
-. windows\CredentialProvider.ps1
+. $PSScriptRoot\..\helpers\UserCredential.ps1
+. $PSScriptRoot\..\helpers\CredentialProvider.ps1

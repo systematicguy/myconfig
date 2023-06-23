@@ -1,7 +1,7 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $RepoRoot\windows\UserCredential.ps1
+. $RepoRoot\helpers\UserCredential.ps1
 
 $golangVersion = $UserConfig.Golang.Version
 $golangZipFile = "go$golangVersion.windows-amd64.zip"

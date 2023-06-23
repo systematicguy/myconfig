@@ -1,7 +1,7 @@
-$ErrorActionPreference = "Stop"
+. $PSScriptRoot\..\windows\Environment.ps1
+if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $PSScriptRoot\Environment.ps1
-. $PSScriptRoot\UserCredential.ps1
+. $RepoRoot\helpers\UserCredential.ps1
 
 function UrlToIdentifier() {
     param (

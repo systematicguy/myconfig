@@ -1,9 +1,9 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $RepoToolsDir\Chocolatey.ps1
-. $RepoRoot\windows\Downloader.ps1
+. $RepoRoot\helpers\Downloader.ps1
 
+. $RepoToolsDir\Chocolatey.ps1
 . $RepoToolsDir\VsCode.ps1
 
 # existing ini file location: https://ghisler.ch/board/viewtopic.php?t=26830

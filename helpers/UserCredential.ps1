@@ -1,5 +1,5 @@
-# we don't do . $PSScriptRoot\Environment.ps1 here for a reason: 
-# . windows\UserCredential.ps1 can help you ease debugging without the danger of rewriting stuff but still using
+# we don't do . $PSScriptRoot\..\windows\Environment.ps1 here for a reason: 
+# . helpers\UserCredential.ps1 can help you ease debugging without the danger of rewriting stuff but still using
 #  dangling .-sourced left-over stuff from Environment.ps1's AlreadySourced table.
 
 $DomainUser = whoami  # e.g. BIG\horvathda

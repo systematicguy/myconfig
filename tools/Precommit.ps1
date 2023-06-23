@@ -1,7 +1,7 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $RepoRoot\windows\UserCredential.ps1
+. $RepoRoot\helpers\UserCredential.ps1
 . $RepoToolsDir\Pipx.ps1
 . $RepoToolsDir\GitConfig.ps1
 . $RepoToolsDir\Terraform.ps1  # TODO reconsider this dependency in light of potential for modular precommit config

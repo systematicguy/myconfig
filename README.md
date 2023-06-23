@@ -82,7 +82,7 @@ some storage provider so you sync it everywhere.
 
 - Between runs you can avoid multiple prompts for credential via dotsourcing the variable into your scope:
     ```
-    . .\windows\UserCredential.ps1
+    . .\helpers\UserCredential.ps1
     ```
 - DSC generates mof files, containing only encrypted credentials. You can cleanup the certificate after configuration running [windows/DscCleanupCert.ps1](./windows/DscCleanupCert.ps1)
     ```
