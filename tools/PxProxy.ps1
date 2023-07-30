@@ -75,7 +75,7 @@ Configuration PxProxy
             User                       = "$UserName"
             ScheduleType               = 'AtLogOn'
             LogonType                  = "Interactive"
-            ExecuteAsCredential        = $UserCredentialAtAd
+            ExecuteAsCredential        = $UserCredentialAtComputerDomain  # this was $UserCredentialAtAd
             ActionExecutable           = "powershell.exe"
             ActionArguments            = $startScriptPath  
             

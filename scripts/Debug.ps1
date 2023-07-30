@@ -6,6 +6,8 @@
 
 . $PSScriptRoot\..\windows\Environment.ps1
 
-. $RepoToolsDir\LanguageConfig.ps1
+#. $RepoRoot\scripts\TestUserCredential.ps1
+
+. $RepoToolsDir\GitConfig.ps1
 
 #ShowTodo

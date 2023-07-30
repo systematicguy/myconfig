@@ -18,9 +18,11 @@ if ($AlreadySourcedUserCredential -ne $null) {
 
 $UserCredentialAtAd = Get-Credential -Message "Specify your credential" -User $DomainUser
 
-$commonUserPassword = $UserCredentialAtAd.Password
-$ComputerDomain = (Get-CimInstance -ClassName Win32_ComputerSystem).Domain  # e.g. big.ch
-$UserCredentialAtComputerDomain = New-Object System.Management.Automation.PSCredential("$parsedUserName@$ComputerDomain", $commonUserPassword)
+#$commonUserPassword = $UserCredentialAtAd.Password
+#$ComputerDomain = (Get-CimInstance -ClassName Win32_ComputerSystem).Domain  # e.g. big.ch
+#$UserCredentialAtComputerDomain = New-Object System.Management.Automation.PSCredential("$parsedUserName@$ComputerDomain", $commonUserPassword)
+
+$UserCredentialAtComputerDomain = $UserCredentialAtAd
 
 # useful resources for future reference
 # http://woshub.com/convert-sid-to-username-and-vice-versa/
