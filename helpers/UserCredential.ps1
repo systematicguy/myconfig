@@ -11,7 +11,7 @@ if ($AlreadySourcedUserCredential -ne $null) {
         Write-Output "Warning: your UserName coming from your local_config\UserConfig.psd1 is [$UserName] while whoami is [$(whoami)]"
     }
     return 
-} else { $AlreadySourcedUserCredential = $true }
+}
 
 $ComputerDomain = (Get-CimInstance -ClassName Win32_ComputerSystem).Domain  # e.g. big.ch for a domain-joined enterprise computer; WORKGROUP for a BYOD non-domain-joined computer
 if ($ComputerDomain -eq "WORKGROUP") {
@@ -50,3 +50,5 @@ while ($true) {
 
 # useful resources for future reference
 # http://woshub.com/convert-sid-to-username-and-vice-versa/
+
+$AlreadySourcedUserCredential = $true
