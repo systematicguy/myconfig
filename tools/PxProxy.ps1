@@ -75,7 +75,7 @@ Configuration PxProxy
             User                       = "$UserName"
             ScheduleType               = 'AtLogOn'
             LogonType                  = "Interactive"
-            ExecuteAsCredential        = $UserCredentialAtComputerDomain  # this was $UserCredentialAtAd
+            ExecuteAsCredential        = $UserCredential  # this was $UserCredentialAtAd
             ActionExecutable           = "powershell.exe"
             ActionArguments            = $startScriptPath  
             
@@ -89,7 +89,7 @@ Configuration PxProxy
         Script StartPxProxyNow
         {
             DependsOn  = "[ScheduledTask]ScheduledTaskLogon"
-            Credential = $UserCredentialAtComputerDomain
+            Credential = $UserCredential
 
             GetScript = {
                 #Do Nothing
@@ -111,7 +111,7 @@ Configuration PxProxy
         {
             DependsOn = "[Script]StartPxProxyNow"
             # Environment resource cannot set an Environment Variable in the User's context
-            Credential = $UserCredentialAtComputerDomain
+            Credential = $UserCredential
 
             GetScript = {
                 #Do Nothing

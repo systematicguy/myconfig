@@ -41,7 +41,7 @@ Configuration Golang
         Script GolangOnPath
         {
             DependsOn            = "[Script]ExtractGolang"
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
 
             GetScript = {
                 #Do Nothing
@@ -60,7 +60,7 @@ Configuration Golang
         Script SetUserEnvVars
         {
             # Environment resource cannot set an Environment Variable in the User's context
-            Credential = $UserCredentialAtComputerDomain
+            Credential = $UserCredential
 
             DependsOn = "[Script]ExtractGolang"
 

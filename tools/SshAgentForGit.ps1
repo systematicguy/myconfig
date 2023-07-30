@@ -24,7 +24,7 @@ Configuration SshAgent
         # The followings come because of this requirement:
         PSModuleResource PoshGit
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
             Module_Name          = "posh-git"
             InstallScope         = 'currentuser'
             Ensure               = "Present"
@@ -33,7 +33,7 @@ Configuration SshAgent
         # https://github.com/dahlbyk/posh-sshell
         PSModuleResource PoshSshell
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
             Module_Name          = "posh-sshell"
             InstallScope         = 'currentuser'
             Ensure               = "Present"

@@ -14,7 +14,7 @@ Configuration PyCharmCE
     {
         cChocoPackageInstaller PyCharmCE
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
 
             Name = "pycharm-community"
         }

@@ -30,7 +30,7 @@ function EnsureDownloadedUrl {
         {
             xRemoteFile Download
             {
-                PsDscRunAsCredential = $UserCredentialAtComputerDomain
+                PsDscRunAsCredential = $UserCredential
 
                 DestinationPath = $DownloadedPath
                 Uri             = $Url
@@ -66,7 +66,7 @@ function EnsureExtractedUrl {
         {
             Archive Unzip
             {
-                PsDscRunAsCredential = $UserCredentialAtComputerDomain
+                PsDscRunAsCredential = $UserCredential
 
                 Ensure      = "Present"
                 Path        = $DownloadedPath

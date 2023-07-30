@@ -17,7 +17,7 @@ Configuration PreCommit
     {
         Script InstallPrecommit
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
             GetScript = {
                 #Do Nothing
             }
@@ -42,7 +42,7 @@ Configuration PreCommit
         Script ConfigurePrecommitTemplate
         {
             DependsOn = @("[Script]InstallPrecommit", "[File]PreCommitConfig")
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
             GetScript = {
                 #Do Nothing
             }

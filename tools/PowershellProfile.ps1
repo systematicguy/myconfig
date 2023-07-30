@@ -15,7 +15,7 @@ Configuration PowershellProfile
     {        
         Script EnsureProfile
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain  # this was $UserCredentialAtAd
+            PsDscRunAsCredential = $UserCredential  # this was $UserCredentialAtAd
 
             GetScript = {
                 #Do Nothing

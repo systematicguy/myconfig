@@ -19,7 +19,7 @@ if (! (Test-Path $sshKeyFilePath)) {
         {
             File SshDir 
             {
-                Credential      = $UserCredentialAtComputerDomain
+                Credential      = $UserCredential
                 Type            = "Directory"
                 DestinationPath = "$UserDir\.ssh"
                 Ensure          = "Present"
@@ -28,7 +28,7 @@ if (! (Test-Path $sshKeyFilePath)) {
             Script SshKeygen
             {
                 DependsOn = "[File]SshDir"
-                Credential = $UserCredentialAtComputerDomain
+                Credential = $UserCredential
 
                 GetScript = {
                     #Do Nothing

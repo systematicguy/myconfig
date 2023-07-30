@@ -43,7 +43,7 @@ function EnsureRegistry {
 
                     Registry "$($registryConfigName)_$($regKey)_$($valueName)_$($thisValueType)"
                     {
-                        PsDscRunAsCredential = $UserCredentialAtComputerDomain
+                        PsDscRunAsCredential = $UserCredential
                         
                         Key       = $regKey
                         ValueName = $valueName

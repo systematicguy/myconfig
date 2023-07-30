@@ -54,7 +54,7 @@ Configuration Wsl2
         Script SetWslDefaultVersion 
         {
             DependsOn = "[Package]WslKernelUpdater"
-            Credential = $UserCredentialAtComputerDomain
+            Credential = $UserCredential
 
             GetScript = {
                 # Do nothing
@@ -97,7 +97,7 @@ Configuration "ExtractWslDistro"
     {
         File WslDistroZip
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
 
             Type            = "File"
             SourcePath      = $wslDistroAppxPath
@@ -108,7 +108,7 @@ Configuration "ExtractWslDistro"
 
         Archive WslDistroUnzipped
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
             DependsOn = "[File]WslDistroZip"
 
             Ensure      = "Present"
@@ -142,7 +142,7 @@ Configuration "InstallWslDistro"
     {
         cAppxPackage WslDistroAppxPackageInstall
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
 
             Name        = $wslDistroAppxName
             PackagePath = $wslDistroAppxPath
@@ -151,7 +151,7 @@ Configuration "InstallWslDistro"
         Script InstallWslDistro 
         {
             DependsOn = "[cAppxPackage]WslDistroAppxPackageInstall"
-            Credential = $UserCredentialAtComputerDomain
+            Credential = $UserCredential
 
             GetScript = {
                 # do nothing

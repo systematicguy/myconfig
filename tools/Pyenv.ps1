@@ -24,7 +24,7 @@ Configuration PyenvConfig
     {
         cChocoPackageInstaller Pyenv
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain  # need to set for proper PATH
+            PsDscRunAsCredential = $UserCredential  # need to set for proper PATH
             Name                 = "pyenv-win"
         }
 
@@ -49,7 +49,7 @@ Configuration PyenvConfig
             xRemoteFile DownloadGlobalPython
             {
                 DependsOn            = "[cChocoPackageInstaller]Pyenv"
-                PsDscRunAsCredential = $UserCredentialAtComputerDomain
+                PsDscRunAsCredential = $UserCredential
                 DestinationPath      = $cachedPythonInstallerPath
                 Uri                  = $pythonInstallerUrl
             }
@@ -61,7 +61,7 @@ Configuration PyenvConfig
         Script InstallGlobalPythonVersion
         {
             DependsOn = @("[cChocoPackageInstaller]Pyenv") + $installGlobalPythonDependency
-            Credential = $UserCredentialAtComputerDomain
+            Credential = $UserCredential
             GetScript = {
                 #Do Nothing
             }

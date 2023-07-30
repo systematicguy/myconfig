@@ -16,27 +16,27 @@ Configuration TerraformTooling
         cChocoPackageInstaller Terraform
         {
             Name                 = "terraform"
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain  # needed to be able to download in some hardened corporate environments
+            PsDscRunAsCredential = $UserCredential  # needed to be able to download in some hardened corporate environments
             Version              = $UserConfig.Terraform.Version
         }
 
         cChocoPackageInstaller TfLint
         {
             Name                 = "tflint"
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain  # needed to be able to download in some hardened corporate environments
+            PsDscRunAsCredential = $UserCredential  # needed to be able to download in some hardened corporate environments
             Version              = $UserConfig.Terraform.TfLintVersion
         }
 
         cChocoPackageInstaller TerraformDocs
         {
             Name                 = "terraform-docs"
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain  # needed to be able to download in some hardened corporate environments
+            PsDscRunAsCredential = $UserCredential  # needed to be able to download in some hardened corporate environments
         }
 
         Script SetUserEnvVars
         {
             # Environment resource cannot set an Environment Variable in the User's context
-            Credential = $UserCredentialAtComputerDomain
+            Credential = $UserCredential
 
             GetScript = {
                 #Do Nothing

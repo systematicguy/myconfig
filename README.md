@@ -456,7 +456,7 @@ Sometimes your corporate environment just won't let random connections go outbou
 ```
 Script InstallPoetry
 {
-    PsDscRunAsCredential = $UserCredentialAtComputerDomain
+    PsDscRunAsCredential = $UserCredential
     GetScript = {
         #Do Nothing
     }

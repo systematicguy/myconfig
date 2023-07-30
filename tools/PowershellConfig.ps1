@@ -11,7 +11,7 @@ Configuration PowershellConfig
     {        
         xPowerShellExecutionPolicy RemoteSigned
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
             ExecutionPolicy = "RemoteSigned"
         }
     }

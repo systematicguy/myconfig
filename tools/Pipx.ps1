@@ -14,7 +14,7 @@ Configuration PipxConfig
     {
         Script InstallPipx
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
             GetScript = {
                 #Do Nothing
             }

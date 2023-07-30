@@ -36,7 +36,7 @@ Configuration TotalCommanderConfigDir
     {
         File WinCmdParentDir 
         {
-            #Credential      = $UserCredentialAtComputerDomain
+            #Credential      = $UserCredential
             Type            = "Directory"
             DestinationPath = "$winCmdParentDir"
             Ensure          = "Present"

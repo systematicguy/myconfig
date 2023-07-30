@@ -14,7 +14,7 @@ Configuration JetbrainsToolbox
     {
         cChocoPackageInstaller JetbrainsToolbox
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
 
             Name = "jetbrainstoolbox"
         }

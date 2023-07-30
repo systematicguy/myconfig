@@ -15,7 +15,7 @@ Configuration PythonPoetry
     {
         Script InstallPoetry
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain
+            PsDscRunAsCredential = $UserCredential
             GetScript = {
                 #Do Nothing
             }

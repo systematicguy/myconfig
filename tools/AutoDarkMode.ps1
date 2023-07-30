@@ -15,7 +15,7 @@ Configuration AutoDarkMode
         cChocoPackageInstaller InstallAutoDarkMode
         {
             Name                 = "auto-dark-mode"
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain  # need to install to user
+            PsDscRunAsCredential = $UserCredential  # need to install to user
         }
 
         # the installer does not ensure config, config will be generated upon first start,

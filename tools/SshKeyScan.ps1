@@ -14,7 +14,7 @@ if (! (Test-Path $SshKnownHostsFile)) {
         {
             File SshKnownHosts
             {
-                Credential      = $UserCredentialAtComputerDomain
+                Credential      = $UserCredential
                 Type            = "File"
                 DestinationPath = $SshKnownHostsFile
                 Ensure          = "Present"
@@ -37,7 +37,7 @@ Configuration SshKeyScan
         {
             Script "SshKeyScan_$hostName"
             {
-                Credential = $UserCredentialAtComputerDomain
+                Credential = $UserCredential
 
                 GetScript = {
                     #Do Nothing

@@ -25,7 +25,7 @@ Configuration AwsCli
     {
         cChocoPackageInstaller AwsCli
         {
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain  # needed to be able to download the msi in some hardened corporate environments
+            PsDscRunAsCredential = $UserCredential  # needed to be able to download the msi in some hardened corporate environments
 
             Name = "awscli"
         }
@@ -33,7 +33,7 @@ Configuration AwsCli
         cChocoPackageInstaller AwsSessionManagerPlugin
         {
             DependsOn = "[cChocoPackageInstaller]AwsCli"
-            PsDscRunAsCredential = $UserCredentialAtComputerDomain  # needed to be able to download the msi in some hardened corporate environments
+            PsDscRunAsCredential = $UserCredential  # needed to be able to download the msi in some hardened corporate environments
 
             Name = "awscli-session-manager"
         }
@@ -64,7 +64,7 @@ Configuration AwsCli
         if (! (Test-Path "$AwsConfigDir\config")) {
             File AwsConfig
             {
-                Credential      = $UserCredentialAtComputerDomain
+                Credential      = $UserCredential
                 Type            = "File"
                 DestinationPath = "$AwsConfigDir\config"
                 Ensure          = "Present"
@@ -75,7 +75,7 @@ Configuration AwsCli
         if (! (Test-Path "$AwsConfigDir\credentials")) {
             File AwsCredentials
             {
-                Credential      = $UserCredentialAtComputerDomain
+                Credential      = $UserCredential
                 Type            = "File"
                 DestinationPath = "$AwsConfigDir\credentials"
                 Ensure          = "Present"
