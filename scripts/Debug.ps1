@@ -6,8 +6,6 @@
 
 . $PSScriptRoot\..\windows\Environment.ps1
 
-#. $RepoRoot\scripts\TestUserCredential.ps1
-
-. $RepoToolsDir\GitConfig.ps1
+. $RepoToolsDir\Wsl2.ps1
 
 #ShowTodo

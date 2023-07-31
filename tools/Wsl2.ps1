@@ -4,6 +4,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\helpers\UserCredential.ps1
 . $RepoRoot\helpers\MsiTools.ps1
 . $RepoRoot\helpers\Downloader.ps1
+. $RepoRoot\helpers\Ini.ps1
 
 # https://learn.microsoft.com/en-us/windows/wsl/install-manual
 # https://github.com/microsoft/WSL/issues/3369
@@ -49,6 +50,11 @@ Configuration Wsl2
             Path      = $downloadedWslKernelUpdaterInstallerPath
             ProductId = $wslKernelUpdaterProductGuid
             Ensure    = "Present"
+
+            # You might encounter the following error: The return code 1603 was not expected. Configuration is likely not correct
+            # This is most probably the case if you have already installed the WSL2 kernel update manually.
+            # In this case you can ignore this error.
+            # https://learn.microsoft.com/en-us/troubleshoot/windows-server/application-management/msi-installation-error-1603
         }
 
         Script SetWslDefaultVersion 
@@ -77,6 +83,8 @@ if ($rebootPending) {
     Write-Host "Reboot is pending."
     throw "Reboot is pending"
 }
+
+EnsureIniConfig -Path "$UserDir\.wslconfig" -IniConfig $UserConfig.Wsl[".wslconfig"]
 
 $wslDistroName = Split-Path -Path $userConfig.Wsl.Distro -Leaf
 $wslDistroBundleDir = "$DscWorkDir\$wslDistroName"
@@ -126,6 +134,7 @@ $nsMgr.AddNamespace("ns", "http://schemas.microsoft.com/appx/manifest/foundation
 $wslDistroAppxName = $wslDistroAppxManifestXmlDoc.SelectSingleNode("//ns:Identity", $nsMgr).Name
 Write-Host "Parsed wsl distro appx identity name: $wslDistroAppxName"
 $wslDistroShortName = $wslDistroAppxName -split '\.' | Select-Object -Last 1
+Write-Host "Parsed wsl distro short name: $wslDistroShortName"
 
 $wslCredential = ProvideCredential -Purpose "wsl_password_$wslDistroShortName" -Message "Specify password for wsl distro" -User $userConfig.Wsl.UserName
 $wslDistroExe = "$wslDistroDir\$wslDistroShortName"
@@ -176,6 +185,7 @@ Configuration "InstallWslDistro"
                 $wslCredential = $using:wslCredential
                 $userName = $wslCredential.GetNetworkCredential().UserName
                 $password = $wslCredential.GetNetworkCredential().Password
+                
 
                 & $distro install --root | Out-File $using:outputFile -Append
                 if ($LASTEXITCODE -ne 0) {
@@ -185,20 +195,23 @@ Configuration "InstallWslDistro"
                 # TODO detect if not Ubuntu and skip followings
 
                 # create user account
-                & $distro run useradd -m "$username" | Out-File $using:outputFile -Append
-                # wrapped in sh -c to get the pipe to work:
-                & $distro run sh -c "echo "${username}:${password}" | chpasswd" | Out-File $using:outputFile -Append
-                & $distro run chsh -s /bin/bash "$username" | Out-File $using:outputFile -Append
-                & $distro run usermod -aG adm,cdrom,sudo,dip,plugdev "$username" | Out-File $using:outputFile -Append
+                & $distro run useradd -m "$userName" | Out-File $using:outputFile -Append
+                
+                # following wizardry is required to get the pipe to work druing & $distro run:
+                $commandString = "echo ""${userName}:${password}"" | chpasswd"
+                $commandBytes = [System.Text.Encoding]::UTF8.GetBytes($commandString)
+                $base64Command = [System.Convert]::ToBase64String($commandBytes)
+                & $distro run "echo $base64Command | base64 --decode | sh" | Out-File $using:outputFile -Append
 
-                & $distro config --default-user "$username" | Out-File $using:outputFile -Append
+                & $distro run chsh -s /bin/bash "$userName" | Out-File $using:outputFile -Append
+                & $distro run usermod -aG adm,cdrom,sudo,dip,plugdev "$userName" | Out-File $using:outputFile -Append
+                & $distro config --default-user "$userName" | Out-File $using:outputFile -Append
 
                 # initial system update
                 $env:DEBIAN_FRONTEND = "noninteractive"
                 $env:WSLENV += ":DEBIAN_FRONTEND"
-                & $distro config --default-user "root" | Out-File $using:outputFile -Append
-                & $distro run sh -c 'apt-get update && apt-get full-upgrade -y && apt-get autoremove -y && apt-get autoclean' | Out-File $using:outputFile -Append
-                & $distro config --default-user "$username" | Out-File $using:outputFile -Append
+                $updateOutput = (wsl -u root -d $using:wslDistroShortName sh -c 'apt-get update && apt-get full-upgrade -y && apt-get autoremove -y && apt-get autoclean') -replace "\x00",""
+                $updateOutput | Out-File $using:outputFile -Append
                 
                 # https://github.com/microsoft/WSL/issues/7749
                 #Restart-Service -Name vmcompute
@@ -209,3 +222,5 @@ Configuration "InstallWslDistro"
 }
 ApplyDscConfiguration "InstallWslDistro"
 Get-Content $outputFile | Write-Verbose
+
+# TODO $RepoRoot\scripts\excludeWSLfromDefender\excludeWSL.ps1

@@ -7,6 +7,8 @@
 
 . $RepoToolsDir\VsCode.ps1
 
+. $RepoToolsDir\PsTools.ps1
+
 . $RepoToolsDir\GitConfig.ps1
 . $RepoToolsDir\SshKey.ps1
 . $RepoToolsDir\SshKeyScan.ps1
@@ -25,6 +27,9 @@
 #. $RepoToolsDir\Precommit.ps1
 
 . $RepoToolsDir\AwsCli.ps1
+
+. $RepoToolsDir\Wsl2.ps1
+. $RepoToolsDir\Docker.ps1
 
 . $RepoToolsDir\JetbrainsToolbox.ps1
 . $RepoToolsDir\PycharmProfessional.ps1
