@@ -181,6 +181,7 @@ Configuration "InstallWslDistro"
             }
             SetScript = {
                 $distro = $using:wslDistroExe
+                $distroName = $using:wslDistroShortName
                 # https://github.com/microsoft/WSL/issues/3369
                 $wslCredential = $using:wslCredential
                 $userName = $wslCredential.GetNetworkCredential().UserName
@@ -192,8 +193,9 @@ Configuration "InstallWslDistro"
                     throw "Exited with $LASTEXITCODE"
                 }
 
-                # TODO detect if not Ubuntu and skip followings
+                # TODO detect if not Ubuntu and skip user creation and initial update
 
+                # =============================================================================================================
                 # create user account
                 & $distro run useradd -m "$userName" | Out-File $using:outputFile -Append
                 
@@ -207,11 +209,31 @@ Configuration "InstallWslDistro"
                 & $distro run usermod -aG adm,cdrom,sudo,dip,plugdev "$userName" | Out-File $using:outputFile -Append
                 & $distro config --default-user "$userName" | Out-File $using:outputFile -Append
 
-                # initial system update
+                # =============================================================================================================
+                # initial system update of the distro
                 $env:DEBIAN_FRONTEND = "noninteractive"
                 $env:WSLENV += ":DEBIAN_FRONTEND"
-                $updateOutput = (wsl -u root -d $using:wslDistroShortName sh -c 'apt-get update && apt-get full-upgrade -y && apt-get autoremove -y && apt-get autoclean') -replace "\x00",""
+                $updateOutput = (wsl -u root -d $distroName sh -c 'apt-get update && apt-get full-upgrade -y && apt-get autoremove -y && apt-get autoclean') -replace "\x00",""
                 $updateOutput | Out-File $using:outputFile -Append
+                
+                # =============================================================================================================
+                # /etc/wsl.conf inside the distro
+
+                # TODO make configurable
+                # use git to manage the ini-formatted /etc/wsl.conf
+                wsl -u root -d $distroName sh -c 'git config --file=/etc/wsl.conf interop.enabled "false"'
+                wsl -u root -d $distroName sh -c 'git config --file=/etc/wsl.conf interop.appendWindowsPath "false"'
+                
+                # following wizardry is required to make quotes land in /etc/wsl.conf
+                $commandString = 'git config --file=/etc/wsl.conf automount.options "''metadata,umask=22,fmask=111''"'
+                $commandBytes = [System.Text.Encoding]::UTF8.GetBytes($commandString)
+                $base64Command = [System.Convert]::ToBase64String($commandBytes)
+                wsl -u root -d $distroName sh -c "echo $base64Command | base64 --decode | sh"
+
+                wsl --shutdown $distroName
+                
+                # as seen on https://learn.microsoft.com/en-us/windows/wsl/wsl-config#the-8-second-rule
+                Start-Sleep -Seconds 8
                 
                 # https://github.com/microsoft/WSL/issues/7749
                 #Restart-Service -Name vmcompute
