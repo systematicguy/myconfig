@@ -287,4 +287,5 @@ Configuration "InstallWslDistro"
 ApplyDscConfiguration "InstallWslDistro"
 Get-Content $outputFile | Write-Verbose
 
-# TODO $RepoRoot\scripts\excludeWSLfromDefender\excludeWSL.ps1
+Write-Output "### Excluding WSL from Windows Defender ..." | Out-File $outputFile -Append
+& "$RepoRoot\scripts\excludeWSLfromDefender\excludeWSLfromDefender.ps1" | Out-File $outputFile -Append
