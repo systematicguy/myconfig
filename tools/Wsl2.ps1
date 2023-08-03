@@ -211,10 +211,20 @@ Configuration "InstallWslDistro"
 
                 # =============================================================================================================
                 # initial system update of the distro
+                Write-Output "### Performing initial system update ..." | Out-File $using:outputFile -Append
                 $env:DEBIAN_FRONTEND = "noninteractive"
                 $env:WSLENV += ":DEBIAN_FRONTEND"
-                $updateOutput = (wsl -u root -d $distroName sh -c 'apt-get update && apt-get full-upgrade -y && apt-get autoremove -y && apt-get autoclean') -replace "\x00",""
-                $updateOutput | Out-File $using:outputFile -Append
+                Write-Output "### apt-get update ..." | Out-File $using:outputFile -Append
+                wsl -u root -d $distroName sh -c 'apt-get update -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
+                
+                Write-Output "### apt-get upgrade ..." | Out-File $using:outputFile -Append
+                wsl -u root -d $distroName sh -c 'apt-get full-upgrade -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
+                
+                Write-Output "### apt-get autoremove ..." | Out-File $using:outputFile -Append
+                wsl -u root -d $distroName sh -c 'apt-get autoremove -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
+                
+                Write-Output "### apt-get autoclean ..." | Out-File $using:outputFile -Append
+                wsl -u root -d $distroName sh -c 'apt-get autoclean -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
                 
                 # =============================================================================================================
                 # /etc/wsl.conf inside the distro
