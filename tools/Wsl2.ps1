@@ -186,7 +186,9 @@ Configuration "InstallWslDistro"
                 $wslCredential = $using:wslCredential
                 $userName = $wslCredential.GetNetworkCredential().UserName
                 $password = $wslCredential.GetNetworkCredential().Password
+                $RepoRoot = $using:RepoRoot
                 
+                . $RepoRoot\helpers\ExecuteWithTimeout.ps1
 
                 & $distro install --root | Out-File $using:outputFile -Append
                 if ($LASTEXITCODE -ne 0) {
@@ -242,7 +244,12 @@ Configuration "InstallWslDistro"
                 Write-Output "### cat /etc/wsl.conf ..."
                 wsl -u root -d $distroName sh -c 'cat /etc/wsl.conf' | Out-File $using:outputFile -Append
 
-                wsl --shutdown $distroName
+                Write-Output "### Shutting down distro to take effect ..." | Out-File $using:outputFile -Append
+                ExecuteWithTimeout `
+                    -CommandScriptBlock { wsl --shutdown $using:distroName } `
+                    -TimeoutSeconds 10 `
+                    -OnTimeoutScriptBlock { & "$using:RepoRoot\scripts\killWsl.ps1" } `
+                    | Out-File $using:outputFile -Append
                 
                 # as seen on https://learn.microsoft.com/en-us/windows/wsl/wsl-config#the-8-second-rule
                 Start-Sleep -Seconds 8
