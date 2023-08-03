@@ -190,6 +190,7 @@ Configuration "InstallWslDistro"
                 
                 . $RepoRoot\helpers\ExecuteWithTimeout.ps1
 
+                Write-Output "### Installing [$distroName] using [$distro] ..." | Out-File $using:outputFile -Append
                 & $distro install --root | Out-File $using:outputFile -Append
                 if ($LASTEXITCODE -ne 0) {
                     throw "Exited with $LASTEXITCODE"
@@ -199,6 +200,7 @@ Configuration "InstallWslDistro"
 
                 # =============================================================================================================
                 # create user account
+                Write-Output "### Setting up [${userName}] user account and password ..." | Out-File $using:outputFile -Append
                 & $distro run useradd -m "$userName" | Out-File $using:outputFile -Append
                 
                 # following wizardry is required to get the pipe to work druing & $distro run:
@@ -252,6 +254,7 @@ Configuration "InstallWslDistro"
                     | Out-File $using:outputFile -Append
                 
                 # as seen on https://learn.microsoft.com/en-us/windows/wsl/wsl-config#the-8-second-rule
+                Write-Output "### Waiting 8 seconds ..." | Out-File $using:outputFile -Append
                 Start-Sleep -Seconds 8
                 
                 # https://github.com/microsoft/WSL/issues/7749
