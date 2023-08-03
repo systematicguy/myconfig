@@ -229,11 +229,18 @@ Configuration "InstallWslDistro"
                 # =============================================================================================================
                 # /etc/wsl.conf inside the distro
 
-                # TODO make configurable
-                # use git to manage the ini-formatted /etc/wsl.conf
-                wsl -u root -d $distroName sh -c 'git config --file=/etc/wsl.conf interop.enabled "false"'
-                wsl -u root -d $distroName sh -c 'git config --file=/etc/wsl.conf interop.appendWindowsPath "false"'
-                wsl -u root -d $distroName sh -c 'git config --file=/etc/wsl.conf automount.options "metadata,umask=22,fmask=111"'
+                Write-Output "### Configuring /etc/wsl.conf ..." | Out-File $using:outputFile -Append
+                $wslConf = $using:UserConfig.Wsl["/etc/wsl.conf"]
+                foreach ($sectionKey in $wslConf.Keys) {
+                    foreach ($key in $wslConf[$sectionKey].Keys) {
+                        $value = $wslConf[$sectionKey][$key]
+                        $iniCommand = "git config --file=/etc/wsl.conf $sectionKey.$key `"$value`""
+                        Write-Output "### will perform: $iniCommand" | Out-File $using:outputFile -Append
+                        wsl -u root -d $distroName sh -c $iniCommand
+                    }
+                }
+                Write-Output "### cat /etc/wsl.conf ..."
+                wsl -u root -d $distroName sh -c 'cat /etc/wsl.conf' | Out-File $using:outputFile -Append
 
                 wsl --shutdown $distroName
                 

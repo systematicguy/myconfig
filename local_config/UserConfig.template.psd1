@@ -54,6 +54,26 @@
     Wsl = @{
         Distro   = "https://aka.ms/wslubuntu2204"  # https://learn.microsoft.com/en-us/windows/wsl/install-manual#downloading-distributions
         UserName = "david"
+
+        # https://learn.microsoft.com/en-us/windows/wsl/wsl-config
+        ".wslconfig" = @{
+            wsl2 = @{
+                # https://joe.blog.freemansoft.com/2022/01/setting-your-memory-and-swap-for-wsl2.html
+                memory     = "2GB"
+                swap       = "4GB"
+                # processors = 4
+                # guiApplications = "false"
+            }
+        }
+        "/etc/wsl.conf" = @{
+            interop = @{
+                enabled = "false"
+                appendWindowsPath = "false"
+            }
+            automount = @{
+                options = "metadata,umask=22,fmask=111"
+            }
+        }
     }
 
     KeyboardLanguagesInOrder = @("DE-ch", "EN-us", "HU-hu")
