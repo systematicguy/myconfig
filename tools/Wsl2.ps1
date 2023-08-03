@@ -6,6 +6,11 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\helpers\Downloader.ps1
 . $RepoRoot\helpers\Ini.ps1
 
+. $RepoToolsDir\PsTools.ps1
+
+$outputFile = "$DscWorkDir\wsl_install.txt"
+Write-Output "-----------------" | Out-File $outputFile -Append
+
 # https://learn.microsoft.com/en-us/windows/wsl/install-manual
 # https://github.com/microsoft/WSL/issues/3369
 # https://learn.microsoft.com/en-us/windows/wsl/install-on-server
@@ -40,6 +45,8 @@ Configuration Wsl2
         {
             Name      = "BeforeWsl2KernelUpdater"
             DependsOn = "[xWindowsOptionalFeatureSet]WslFeatureSet"
+
+            SkipPendingFileRename = $true
         }
 
         Package WslKernelUpdater
@@ -138,8 +145,6 @@ Write-Host "Parsed wsl distro short name: $wslDistroShortName"
 
 $wslCredential = ProvideCredential -Purpose "wsl_password_$wslDistroShortName" -Message "Specify password for wsl distro" -User $userConfig.Wsl.UserName
 $wslDistroExe = "$wslDistroDir\$wslDistroShortName"
-$outputFile = "$DscWorkDir\wsl_install.txt"
-Write-Output "-----------------" | Out-File $outputFile -Append
 
 # https://github.com/microsoft/WSL/issues/3369#issuecomment-803515113
 Configuration "InstallWslDistro"
@@ -187,7 +192,7 @@ Configuration "InstallWslDistro"
                 $userName = $wslCredential.GetNetworkCredential().UserName
                 $password = $wslCredential.GetNetworkCredential().Password
                 $RepoRoot = $using:RepoRoot
-                
+
                 . $RepoRoot\helpers\ExecuteWithTimeout.ps1
 
                 Write-Output "### Installing [$distroName] using [$distro] ..." | Out-File $using:outputFile -Append
@@ -256,6 +261,21 @@ Configuration "InstallWslDistro"
                 # as seen on https://learn.microsoft.com/en-us/windows/wsl/wsl-config#the-8-second-rule
                 Write-Output "### Waiting 8 seconds ..." | Out-File $using:outputFile -Append
                 Start-Sleep -Seconds 8
+
+                # =============================================================================================================
+                # ansible enablement - a mvp-bootstrap that will do the rest of the setup from inside the distro
+                #  This compromise is the least intrusive way to get ansible installed and configured
+                
+                Write-Output "### Bootstrapping ansible ..." | Out-File $using:outputFile -Append
+                wsl -u root -d $distroName sh -c 'apt-get install -y python3-pip' | Out-File $using:outputFile -Append
+                
+                # python3-venv is needed for pipx as ensurepip is not enabled for the system python on Ubuntu:
+                wsl -u root -d $distroName sh -c 'apt-get install -y python3-venv' | Out-File $using:outputFile -Append
+                wsl -d $distroName sh -c 'python3 -m pip install --user --progress-bar off pipx' | Out-File $using:outputFile -Append
+                wsl -d $distroName sh -c 'python3 -m pipx ensurepath' | Out-File $using:outputFile -Append
+                
+                wsl -d $distroName sh -lc 'pipx install --include-deps ansible' | Out-File $using:outputFile -Append
+                wsl -d $distroName sh -lc 'ansible --version' | Out-File $using:outputFile -Append
                 
                 # https://github.com/microsoft/WSL/issues/7749
                 #Restart-Service -Name vmcompute
