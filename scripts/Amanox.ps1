@@ -34,6 +34,7 @@
 . $RepoToolsDir\JetbrainsToolbox.ps1
 . $RepoToolsDir\PycharmProfessional.ps1
 
+. $RepoToolsDir\MsTeams.ps1
 . $RepoToolsDir\MSOfficeConfig.ps1        # David's personal settings for MS Office
 . $RepoToolsDir\LongPathsEnabled.ps1
 . $RepoToolsDir\LanguageConfig.ps1
