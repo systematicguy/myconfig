@@ -13,6 +13,8 @@ Configuration PsTools
     {
         cChocoPackageInstaller PsTools
         {
+            PsDscRunAsCredential = $UserCredential
+            
             Name     = "pstools"
         }
     }

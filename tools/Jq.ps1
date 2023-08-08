@@ -13,6 +13,8 @@ Configuration Jq
     {
         cChocoPackageInstaller Jq
         {
+            PsDscRunAsCredential = $UserCredential
+            
             Name     = "jq"
         }
     }
