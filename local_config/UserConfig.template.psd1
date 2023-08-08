@@ -76,6 +76,99 @@
         }
     }
 
+    DockerDesktop = @{
+        mayStopDockerDesktop = $false  # if $false, the script will throw an error if docker desktop is running 
+        fallbackSettingsVersion = 29  # if no settings.json present, this will be the default value of "settingsVersion"
+        "settings.json" = @{
+            # warning: @() list entries have not been tested: one-element lists @("example") would be converted to "example" instead of ["example"] due to PS 5.1's limitation
+            #  https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/convertfrom-json?view=powershell-7.3#-noenumerate
+
+            #integratedWslDistros = @()
+            enableIntegrationWithDefaultWslDistro = $true
+            #displaySwitchWinLinContainers = $true
+            
+            autoStart = $false
+            #activeOrganizationName = ""
+            #useCredentialHelper = $true
+            #credentialHelper = "docker-credential-wincred.exe"
+            disableTips = $true
+            disableUpdate = $false
+            #openUIOnStartupDisabled = $false
+            analyticsEnabled = $true
+            
+            disableHardwareAcceleration = $false
+            displayRestartDialog = $true
+            #displayedElectronPopup = @()
+            
+            acceptCanaryUpdates = $false
+            useNightlyBuildUpdates = $false
+            autoDownloadUpdates = $true
+            
+            themeSource = "system"
+            #containerTerminal = "integrated"
+            #allowExperimentalFeatures = $true
+            
+            # this contains merely logs:
+            #dataFolder = "C:\\ProgramData\\DockerDesktop\\vm-data"
+            
+            # these are ineffective if turning on WSL integration (enableIntegrationWithDefaultWslDistro):
+            #memoryMiB = 2048
+            #swapMiB = 1024
+            #cpus = 2
+            #diskSizeMiB = 65536
+            #diskTRIM = $true
+            
+            #vpnkitCIDR = "192.168.65.0/24"
+            #socksProxyPort = 0
+            #proxyHttpMode = "system"
+            #overrideProxyHttp = ""
+            #overrideProxyHttps = ""
+            #overrideProxyExclude = ""
+
+            #filesharingDirectories = @()
+            
+            #kubernetesEnabled = $false
+            #showKubernetesSystemContainers = $false
+            #kubernetesInitialInstallPerformed = $false
+            
+            #useGrpcfuse = $true
+            #networkType = "gvisor"
+            #useVpnkit = $true
+            #vpnKitMaxPortIdleTime = 300
+            #vpnKitTransparentProxy = $false
+            
+            useWindowsContainers = $false
+            noWindowsContainers = $false
+            
+            wslEngineEnabled = $true
+            #wslEnableGrpcfuse = $false
+            runWinServiceInWslMode = $false
+            #customWslDistroDir = ""
+            
+            licenseTermsVersion = 2
+            
+            #useContainerdSnapshotter = $false
+            #lifecycleTimeoutSeconds = 600
+            
+            #enhancedContainerIsolation = $false
+            
+            #showMacInstall = $false
+            
+            #extensionsEnabled = $true
+            #onlyMarketplaceExtensions = $false
+            #showExtensionsSystemContainers = $false
+            
+            #useBackgroundIndexing = $true
+            
+            #dockerBinInstallPath = "system"
+            
+            #enableDefaultDockerSocket = $true
+            
+            #updateHostsFile = $false
+            #requireVmnetd = $false
+        }
+    }
+
     KeyboardLanguagesInOrder = @("DE-ch", "EN-us", "HU-hu")
 
     Draft = $true

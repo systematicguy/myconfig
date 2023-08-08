@@ -23,7 +23,7 @@ EnsureDownloadedUrl -Url $wslKernelUpdaterUrl -DownloadedPath $downloadedWslKern
 $wslKernelUpdaterProductName = $msiTools::GetProductName($downloadedWslKernelUpdaterInstallerPath)
 $wslKernelUpdaterProductGuid = $msiTools::GetProductCode($downloadedWslKernelUpdaterInstallerPath)
 
-Configuration Wsl2 
+Configuration Wsl
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName ComputerManagementDsc  # needed for PendingReboot
@@ -43,7 +43,7 @@ Configuration Wsl2
 
         PendingReboot WinFeatureReboot
         {
-            Name      = "BeforeWsl2KernelUpdater"
+            Name      = "BeforeWslKernelUpdater"
             DependsOn = "[xWindowsOptionalFeatureSet]WslFeatureSet"
 
             SkipPendingFileRename = $true
@@ -84,7 +84,7 @@ Configuration Wsl2
         }
     }
 }
-ApplyDscConfiguration "Wsl2"
+ApplyDscConfiguration "Wsl"
 $rebootPending = (Get-DscLocalConfigurationManager).RebootPending
 if ($rebootPending) {
     Write-Host "Reboot is pending."

@@ -28,7 +28,7 @@
 
 . $RepoToolsDir\AwsCli.ps1
 
-. $RepoToolsDir\Wsl2.ps1
+. $RepoToolsDir\Wsl.ps1
 . $RepoToolsDir\Docker.ps1
 
 . $RepoToolsDir\JetbrainsToolbox.ps1
