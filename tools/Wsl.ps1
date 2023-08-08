@@ -143,149 +143,159 @@ Write-Host "Parsed wsl distro appx identity name: $wslDistroAppxName"
 $wslDistroShortName = $wslDistroAppxName -split '\.' | Select-Object -Last 1
 Write-Host "Parsed wsl distro short name: $wslDistroShortName"
 
-$wslCredential = ProvideCredential -Purpose "wsl_password_$wslDistroShortName" -Message "Specify password for wsl distro" -User $userConfig.Wsl.UserName
-$wslDistroExe = "$wslDistroDir\$wslDistroShortName"
-
-# https://github.com/microsoft/WSL/issues/3369#issuecomment-803515113
-Configuration "InstallWslDistro"
-{
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName DSCR_AppxPackage
-
-    Node "localhost"
-    {
-        cAppxPackage WslDistroAppxPackageInstall
-        {
-            PsDscRunAsCredential = $UserCredential
-
-            Name        = $wslDistroAppxName
-            PackagePath = $wslDistroAppxPath
-        }
-
-        Script InstallWslDistro 
-        {
-            DependsOn = "[cAppxPackage]WslDistroAppxPackageInstall"
-            Credential = $UserCredential
-
-            GetScript = {
-                # do nothing
-            }
-            TestScript = {
-                $output = (wsl -l) -replace "\x00",""
-                $noInstalledDistributions = $output.Contains("Windows Subsystem for Linux has no installed distributions.")
-                if ($noInstalledDistributions) {
-                    return $false
-                }
-                $distro = "$using:wslDistroShortName"
-                foreach ($line in $output -split '\r?\n') {
-                    if ($line.StartsWith($distro)) {
-                        return $true
-                    }
-                }
-                return $false
-            }
-            SetScript = {
-                $distro = $using:wslDistroExe
-                $distroName = $using:wslDistroShortName
-                # https://github.com/microsoft/WSL/issues/3369
-                $wslCredential = $using:wslCredential
-                $userName = $wslCredential.GetNetworkCredential().UserName
-                $password = $wslCredential.GetNetworkCredential().Password
-                $RepoRoot = $using:RepoRoot
-
-                . $RepoRoot\helpers\ExecuteWithTimeout.ps1
-
-                Write-Output "### Installing [$distroName] using [$distro] ..." | Out-File $using:outputFile -Append
-                & $distro install --root | Out-File $using:outputFile -Append
-                if ($LASTEXITCODE -ne 0) {
-                    throw "Exited with $LASTEXITCODE"
-                }
-
-                # TODO detect if not Ubuntu and skip user creation and initial update
-
-                # =============================================================================================================
-                # create user account
-                Write-Output "### Setting up [${userName}] user account and password ..." | Out-File $using:outputFile -Append
-                & $distro run useradd -m "$userName" | Out-File $using:outputFile -Append
-                
-                # following wizardry is required to get the pipe to work druing & $distro run:
-                $commandString = "echo ""${userName}:${password}"" | chpasswd"
-                $commandBytes = [System.Text.Encoding]::UTF8.GetBytes($commandString)
-                $base64Command = [System.Convert]::ToBase64String($commandBytes)
-                & $distro run "echo $base64Command | base64 --decode | sh" | Out-File $using:outputFile -Append
-
-                & $distro run chsh -s /bin/bash "$userName" | Out-File $using:outputFile -Append
-                & $distro run usermod -aG adm,cdrom,sudo,dip,plugdev "$userName" | Out-File $using:outputFile -Append
-                & $distro config --default-user "$userName" | Out-File $using:outputFile -Append
-
-                # =============================================================================================================
-                # initial system update of the distro
-                Write-Output "### Performing initial system update ..." | Out-File $using:outputFile -Append
-                $env:DEBIAN_FRONTEND = "noninteractive"
-                $env:WSLENV += ":DEBIAN_FRONTEND"
-                Write-Output "### apt-get update ..." | Out-File $using:outputFile -Append
-                wsl -u root -d $distroName sh -c 'apt-get update -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
-                
-                Write-Output "### apt-get upgrade ..." | Out-File $using:outputFile -Append
-                wsl -u root -d $distroName sh -c 'apt-get full-upgrade -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
-                
-                Write-Output "### apt-get autoremove ..." | Out-File $using:outputFile -Append
-                wsl -u root -d $distroName sh -c 'apt-get autoremove -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
-                
-                Write-Output "### apt-get autoclean ..." | Out-File $using:outputFile -Append
-                wsl -u root -d $distroName sh -c 'apt-get autoclean -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
-                
-                # =============================================================================================================
-                # /etc/wsl.conf inside the distro
-
-                Write-Output "### Configuring /etc/wsl.conf ..." | Out-File $using:outputFile -Append
-                $wslConf = $using:UserConfig.Wsl["/etc/wsl.conf"]
-                foreach ($sectionKey in $wslConf.Keys) {
-                    foreach ($key in $wslConf[$sectionKey].Keys) {
-                        $value = $wslConf[$sectionKey][$key]
-                        $iniCommand = "git config --file=/etc/wsl.conf $sectionKey.$key `"$value`""
-                        Write-Output "### will perform: $iniCommand" | Out-File $using:outputFile -Append
-                        wsl -u root -d $distroName sh -c $iniCommand
-                    }
-                }
-                Write-Output "### cat /etc/wsl.conf ..."
-                wsl -u root -d $distroName sh -c 'cat /etc/wsl.conf' | Out-File $using:outputFile -Append
-
-                Write-Output "### Shutting down distro to take effect ..." | Out-File $using:outputFile -Append
-                ExecuteWithTimeout `
-                    -CommandScriptBlock { wsl --shutdown $using:distroName } `
-                    -TimeoutSeconds 10 `
-                    -OnTimeoutScriptBlock { & "$using:RepoRoot\scripts\killWsl.ps1" } `
-                    | Out-File $using:outputFile -Append
-                
-                # as seen on https://learn.microsoft.com/en-us/windows/wsl/wsl-config#the-8-second-rule
-                Write-Output "### Waiting 8 seconds ..." | Out-File $using:outputFile -Append
-                Start-Sleep -Seconds 8
-
-                # =============================================================================================================
-                # ansible enablement - a mvp-bootstrap that will do the rest of the setup from inside the distro
-                #  This compromise is the least intrusive way to get ansible installed and configured
-                
-                Write-Output "### Bootstrapping ansible ..." | Out-File $using:outputFile -Append
-                wsl -u root -d $distroName sh -c 'apt-get install -y python3-pip' | Out-File $using:outputFile -Append
-                
-                # python3-venv is needed for pipx as ensurepip is not enabled for the system python on Ubuntu:
-                wsl -u root -d $distroName sh -c 'apt-get install -y python3-venv' | Out-File $using:outputFile -Append
-                wsl -d $distroName sh -c 'python3 -m pip install --user --progress-bar off pipx' | Out-File $using:outputFile -Append
-                wsl -d $distroName sh -c 'python3 -m pipx ensurepath' | Out-File $using:outputFile -Append
-                
-                wsl -d $distroName sh -lc 'pipx install --include-deps ansible' | Out-File $using:outputFile -Append
-                wsl -d $distroName sh -lc 'ansible --version' | Out-File $using:outputFile -Append
-                
-                # https://github.com/microsoft/WSL/issues/7749
-                #Restart-Service -Name vmcompute
-                #gpupdate /force
-            }
+# ================================================================================================
+# detect if wsl distro install is needed
+$wslOutput = (wsl.exe -l) -replace "\x00",""
+$noInstalledDistributions = $wslOutput.Contains("Windows Subsystem for Linux has no installed distributions.")
+$wslDistroInstallNeeded = $false
+if ($noInstalledDistributions) {
+    Write-Host "No installed wsl distros detected."
+    $wslDistroInstallNeeded = $true
+} else {
+    foreach ($line in $wslOutput -split '\r?\n') {
+        if ($line.StartsWith($wslDistroShortName)) {
+            Write-Host "[$wslDistroShortName] detected in line: [$line]"
+            $wslDistroInstallNeeded = $false
+            break
         }
     }
 }
-ApplyDscConfiguration "InstallWslDistro"
-Get-Content $outputFile | Write-Verbose
+if ($wslDistroInstallNeeded) {
+    Write-Host "wsl distro install is needed."
+
+    $wslCredential = ProvideCredential -Purpose "wsl_password_$wslDistroShortName" -Message "Specify password for wsl distro" -User $userConfig.Wsl.UserName
+    $wslDistroExe = "$wslDistroDir\$wslDistroShortName"
+
+    # https://github.com/microsoft/WSL/issues/3369#issuecomment-803515113
+    Configuration "InstallWslDistro"
+    {
+        Import-DscResource -ModuleName PSDesiredStateConfiguration
+        Import-DscResource -ModuleName DSCR_AppxPackage
+
+        Node "localhost"
+        {
+            cAppxPackage WslDistroAppxPackageInstall
+            {
+                PsDscRunAsCredential = $UserCredential
+
+                Name        = $wslDistroAppxName
+                PackagePath = $wslDistroAppxPath
+            }
+
+            Script InstallWslDistro 
+            {
+                DependsOn = "[cAppxPackage]WslDistroAppxPackageInstall"
+                Credential = $UserCredential
+
+                GetScript = {
+                    # do nothing
+                }
+                TestScript = {
+                    $false
+                }
+                SetScript = {
+                    $distro = $using:wslDistroExe
+                    $distroName = $using:wslDistroShortName
+                    # https://github.com/microsoft/WSL/issues/3369
+                    $wslCredential = $using:wslCredential
+                    $userName = $wslCredential.GetNetworkCredential().UserName
+                    $password = $wslCredential.GetNetworkCredential().Password
+                    $RepoRoot = $using:RepoRoot
+
+                    . $RepoRoot\helpers\ExecuteWithTimeout.ps1
+
+                    Write-Output "### Installing [$distroName] using [$distro] ..." | Out-File $using:outputFile -Append
+                    & $distro install --root | Out-File $using:outputFile -Append
+                    if ($LASTEXITCODE -ne 0) {
+                        throw "Exited with $LASTEXITCODE"
+                    }
+
+                    # TODO detect if not Ubuntu and skip user creation and initial update
+
+                    # =============================================================================================================
+                    # create user account
+                    Write-Output "### Setting up [${userName}] user account and password ..." | Out-File $using:outputFile -Append
+                    & $distro run useradd -m "$userName" | Out-File $using:outputFile -Append
+                    
+                    # following wizardry is required to get the pipe to work druing & $distro run:
+                    $commandString = "echo ""${userName}:${password}"" | chpasswd"
+                    $commandBytes = [System.Text.Encoding]::UTF8.GetBytes($commandString)
+                    $base64Command = [System.Convert]::ToBase64String($commandBytes)
+                    & $distro run "echo $base64Command | base64 --decode | sh" | Out-File $using:outputFile -Append
+
+                    & $distro run chsh -s /bin/bash "$userName" | Out-File $using:outputFile -Append
+                    & $distro run usermod -aG adm,cdrom,sudo,dip,plugdev "$userName" | Out-File $using:outputFile -Append
+                    & $distro config --default-user "$userName" | Out-File $using:outputFile -Append
+
+                    # =============================================================================================================
+                    # initial system update of the distro
+                    Write-Output "### Performing initial system update ..." | Out-File $using:outputFile -Append
+                    $env:DEBIAN_FRONTEND = "noninteractive"
+                    $env:WSLENV += ":DEBIAN_FRONTEND"
+                    Write-Output "### apt-get update ..." | Out-File $using:outputFile -Append
+                    wsl -u root -d $distroName sh -c 'apt-get update -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
+                    
+                    Write-Output "### apt-get upgrade ..." | Out-File $using:outputFile -Append
+                    wsl -u root -d $distroName sh -c 'apt-get full-upgrade -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
+                    
+                    Write-Output "### apt-get autoremove ..." | Out-File $using:outputFile -Append
+                    wsl -u root -d $distroName sh -c 'apt-get autoremove -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
+                    
+                    Write-Output "### apt-get autoclean ..." | Out-File $using:outputFile -Append
+                    wsl -u root -d $distroName sh -c 'apt-get autoclean -qy' | ForEach-Object { $_ -replace "\x00", ""} | Out-File $using:outputFile -Append
+                    
+                    # =============================================================================================================
+                    # /etc/wsl.conf inside the distro
+
+                    Write-Output "### Configuring /etc/wsl.conf ..." | Out-File $using:outputFile -Append
+                    $wslConf = $using:UserConfig.Wsl["/etc/wsl.conf"]
+                    foreach ($sectionKey in $wslConf.Keys) {
+                        foreach ($key in $wslConf[$sectionKey].Keys) {
+                            $value = $wslConf[$sectionKey][$key]
+                            $iniCommand = "git config --file=/etc/wsl.conf $sectionKey.$key `"$value`""
+                            Write-Output "### will perform: $iniCommand" | Out-File $using:outputFile -Append
+                            wsl -u root -d $distroName sh -c $iniCommand
+                        }
+                    }
+                    Write-Output "### cat /etc/wsl.conf ..."
+                    wsl -u root -d $distroName sh -c 'cat /etc/wsl.conf' | Out-File $using:outputFile -Append
+
+                    Write-Output "### Shutting down distro to take effect ..." | Out-File $using:outputFile -Append
+                    ExecuteWithTimeout `
+                        -CommandScriptBlock { wsl --shutdown $using:distroName } `
+                        -TimeoutSeconds 10 `
+                        -OnTimeoutScriptBlock { & "$using:RepoRoot\scripts\killWsl.ps1" } `
+                        | Out-File $using:outputFile -Append
+                    
+                    # as seen on https://learn.microsoft.com/en-us/windows/wsl/wsl-config#the-8-second-rule
+                    Write-Output "### Waiting 8 seconds ..." | Out-File $using:outputFile -Append
+                    Start-Sleep -Seconds 8
+
+                    # =============================================================================================================
+                    # ansible enablement - a mvp-bootstrap that will do the rest of the setup from inside the distro
+                    #  This compromise is the least intrusive way to get ansible installed and configured
+                    
+                    Write-Output "### Bootstrapping ansible ..." | Out-File $using:outputFile -Append
+                    wsl -u root -d $distroName sh -c 'apt-get install -y python3-pip' | Out-File $using:outputFile -Append
+                    
+                    # python3-venv is needed for pipx as ensurepip is not enabled for the system python on Ubuntu:
+                    wsl -u root -d $distroName sh -c 'apt-get install -y python3-venv' | Out-File $using:outputFile -Append
+                    wsl -d $distroName sh -c 'python3 -m pip install --user --progress-bar off pipx' | Out-File $using:outputFile -Append
+                    wsl -d $distroName sh -c 'python3 -m pipx ensurepath' | Out-File $using:outputFile -Append
+                    
+                    wsl -d $distroName sh -lc 'pipx install --include-deps ansible' | Out-File $using:outputFile -Append
+                    wsl -d $distroName sh -lc 'ansible --version' | Out-File $using:outputFile -Append
+                    
+                    # https://github.com/microsoft/WSL/issues/7749
+                    #Restart-Service -Name vmcompute
+                    #gpupdate /force
+                }
+            }
+        }
+    }
+    ApplyDscConfiguration "InstallWslDistro"
+    Get-Content $outputFile | Write-Verbose
+}
 
 Write-Output "### Excluding WSL from Windows Defender ..." | Out-File $outputFile -Append
 & "$RepoRoot\scripts\excludeWSLfromDefender\excludeWSLfromDefender.ps1" | Out-File $outputFile -Append
