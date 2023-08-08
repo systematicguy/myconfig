@@ -357,6 +357,53 @@ Configuration IniSettingsFile_SetPlainTextEntry_Config
 }
 ```
 
+## DSC json
+https://github.com/mkht/DSCR_FileContent#examples-2
+```
+Install-Module -Name DSCR_FileContent -Force
+```
+
+```
+Configuration Example1 {
+    Import-DscResource -ModuleName DSCR_FileContent
+    JsonFile String {
+        Path = 'C:\Test.json'
+        Key = 'StringValue'
+        Value = '"Apple"'
+    }
+    JsonFile Bool {
+        Path = 'C:\Test.json'
+        Key = 'BoolValue'
+        Value = 'true'
+    }
+    JsonFile Array {
+        Path = 'C:\Test.json'
+        Key = "ArrayValue"
+        Value = '[true, 123, "banana"]'
+    }
+}
+
+Configuration Example2 {
+    Import-DscResource -ModuleName DSCR_FileContent
+    JsonFile Dictionary {
+        Path = 'C:\Test2.json'
+        Key = 'KeyA'
+        Value = '{"Ame":false,"Gura":true}'
+    }
+    JsonFile SubDictionary {
+        Path = 'C:\Test2.json'
+        Key = 'KeyB/SubKeyB'
+        Value = 'Ina'
+    }
+    #If the key name contains a slash, please escape it with a backslash
+    JsonFile SubDictionaryWithSlash {
+        Path = 'C:\Test2.json'
+        Key = 'KeyB/Sub\/\/Key'
+        Value = 'Kiara'
+    }
+}
+```
+
 ## Yaml
 https://github.com/cloudbase/powershell-yaml
 
