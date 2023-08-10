@@ -71,7 +71,7 @@ ApplyDscConfiguration "PxProxyScriptFiles"
 
 EnsureScheduledTaskAndStart `
     -TaskName "Start Px Proxy" `
-    -StartScriptPath $startScriptPath `
+    -ScriptPath $startScriptPath `
     -SkipStartDecisionScript {
         $pxProcesses = Get-Process px -ErrorAction SilentlyContinue
         if ($pxProcesses) {
