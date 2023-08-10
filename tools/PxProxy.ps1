@@ -6,6 +6,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\helpers\Downloader.ps1
 . $RepoRoot\helpers\EnsureFile.ps1
 . $RepoRoot\helpers\Ini.ps1
+. $RepoRoot\helpers\EnsureScheduledTaskAndStart.ps1
 Import-Module CredentialManager
 
 $pxVersion = $UserConfig.PxProxy.Version
@@ -13,7 +14,6 @@ $pxZipFile = "px-v$pxVersion-windows.zip"
 $pxProxyDownloadUrl = "https://github.com/genotrance/px/releases/download/v$pxVersion/$pxZipFile"
 $pxProxyDir = "$UserBinDir\px_proxy"
 $startScriptPath = "$UserBinDir\StartPxProxy.ps1"
-$schTaskName = "Start Px Proxy"
 $pxConfigPath = "$UserDir\px.ini"
 $pxIniConfig = $UserConfig.PxProxy.PxIni
 $pxCredentialTarget = "Px"
@@ -43,10 +43,9 @@ EnsureExtractedUrl `
     -Url $pxProxyDownloadUrl `
     -ExtractedDir $pxProxyDir
 
-Configuration PxProxy
+Configuration PxProxyScriptFiles
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName ComputerManagementDsc
     Import-DSCResource -ModuleName FileContentDsc
 
     Node localhost 
@@ -66,50 +65,29 @@ Configuration PxProxy
             DestinationPath = "$UserBinDir\StopPxProxy.ps1"
             Ensure          = "Present"
         }
+    }
+}
+ApplyDscConfiguration "PxProxyScriptFiles"
 
-        ScheduledTask ScheduledTaskLogon
-        {
-            DependsOn                  = "[File]StartPxProxy"
-
-            TaskName                   = $schTaskName
-            User                       = "$UserName"
-            ScheduleType               = 'AtLogOn'
-            LogonType                  = "Interactive"
-            ExecuteAsCredential        = $UserCredential  # this was $UserCredentialAtAd
-            ActionExecutable           = "powershell.exe"
-            ActionArguments            = $startScriptPath  
-            
-            Enable                     = $true
-            AllowStartIfOnBatteries    = $true
-            DontStopIfGoingOnBatteries = $true
-            DontStopOnIdleEnd          = $true
-            MultipleInstances          = "IgnoreNew"
+EnsureScheduledTaskAndStart `
+    -TaskName "Start Px Proxy" `
+    -StartScriptPath $startScriptPath `
+    -SkipStartDecisionScript {
+        $pxProcesses = Get-Process px -ErrorAction SilentlyContinue
+        if ($pxProcesses) {
+            $true
+        } else {
+            $false
         }
+    }
 
-        Script StartPxProxyNow
-        {
-            DependsOn  = "[ScheduledTask]ScheduledTaskLogon"
-            Credential = $UserCredential
-
-            GetScript = {
-                #Do Nothing
-            }
-            SetScript = {
-                Start-ScheduledTask -TaskName $using:schTaskName
-            }
-            TestScript = {
-                $pxProcesses = Get-Process px -ErrorAction SilentlyContinue
-                if ($pxProcesses) {
-                    $true
-                } else {
-                    $false
-                }
-            }
-        }
-
+Configuration PxProxyEnvVars 
+{
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+    Node localhost
+    {
         Script SetUserProxyEnvVars
         {
-            DependsOn = "[Script]StartPxProxyNow"
             # Environment resource cannot set an Environment Variable in the User's context
             Credential = $UserCredential
 
@@ -128,6 +106,6 @@ Configuration PxProxy
         }
     }
 }
-ApplyDscConfiguration "PxProxy"
+ApplyDscConfiguration "PxProxyEnvVars"
 
 LogTodo -Message "PxProxy: You may want to review $startScriptPath (and optionally $pxConfigPath) based on https://github.com/genotrance/px#usage"
