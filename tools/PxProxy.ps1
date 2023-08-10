@@ -13,7 +13,7 @@ $pxVersion = $UserConfig.PxProxy.Version
 $pxZipFile = "px-v$pxVersion-windows.zip"
 $pxProxyDownloadUrl = "https://github.com/genotrance/px/releases/download/v$pxVersion/$pxZipFile"
 $pxProxyDir = "$UserBinDir\px_proxy"
-$startScriptPath = "$UserBinDir\StartPxProxy.ps1"
+$startPxScriptPath = "$UserBinDir\StartPxProxy.ps1"
 $pxConfigPath = "$UserDir\px.ini"
 $pxIniConfig = $UserConfig.PxProxy.PxIni
 $pxCredentialTarget = "Px"
@@ -54,7 +54,7 @@ Configuration PxProxyScriptFiles
         {
             Type            = 'File'
             Contents        = "$pxProxyDir\px.exe --config=$pxConfigPath"
-            DestinationPath = $startScriptPath
+            DestinationPath = $startPxScriptPath
             Ensure          = "Present"
         }
 
@@ -71,10 +71,10 @@ ApplyDscConfiguration "PxProxyScriptFiles"
 
 EnsureScheduledTaskAndStart `
     -TaskName "Start Px Proxy" `
-    -ScriptPath $startScriptPath `
+    -ScriptPath $startPxScriptPath `
     -SkipStartDecisionScript {
-        $pxProcesses = Get-Process px -ErrorAction SilentlyContinue
-        if ($pxProcesses) {
+        $runningProcesses = Get-Process px -ErrorAction SilentlyContinue
+        if ($runningProcesses) {
             $true
         } else {
             $false
@@ -108,4 +108,4 @@ Configuration PxProxyEnvVars
 }
 ApplyDscConfiguration "PxProxyEnvVars"
 
-LogTodo -Message "PxProxy: You may want to review $startScriptPath (and optionally $pxConfigPath) based on https://github.com/genotrance/px#usage"
+LogTodo -Message "PxProxy: You may want to review $startPxScriptPath (and optionally $pxConfigPath) based on https://github.com/genotrance/px#usage"
