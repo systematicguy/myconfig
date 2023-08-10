@@ -2,6 +2,9 @@
 
 #. $RepoToolsDir\PxProxy.ps1
 
+. $RepoToolsDir\PsTools.ps1
+. $RepoToolsDir\ProcMon.ps1
+
 . $RepoToolsDir\AutoDarkMode.ps1
 . $RepoToolsDir\GoogleChrome.ps1
 

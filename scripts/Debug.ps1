@@ -6,7 +6,6 @@
 
 . $PSScriptRoot\..\windows\Environment.ps1
 
-#. $RepoToolsDir\Wsl.ps1
-. $RepoToolsDir\Docker.ps1
+. $RepoToolsDir\ProcMon.ps1
 
 #ShowTodo
