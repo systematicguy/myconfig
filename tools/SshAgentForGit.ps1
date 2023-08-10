@@ -6,13 +6,9 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 
 . $RepoToolsDir\GitConfig.ps1
 . $RepoToolsDir\SshKey.ps1
-. $RepoToolsDir\PowershellConfig.ps1
-. $RepoToolsDir\PowershellProfile.ps1
+. $RepoToolsDir\PowershellConfig.ps1  # TODO validate if still needed
 
 $sshAgentScriptPath = "$RepoRoot\config\powershell_profile\ssh_agent_for_git.ps1"
-
-Write-Output "Profile is $CurrentUserProfilePath"
-$desiredProfileContent = ". `"$sshAgentScriptPath`""
 
 $outputFile = "$DscWorkDir\SshAgentForGit.txt"
 Configuration SshAgent
@@ -42,30 +38,6 @@ Configuration SshAgent
             InstallScope         = 'currentuser'
             Ensure               = "Present"
         }
-
-        # Script EnsureProfileContent
-        # {
-        #     DependsOn = @("[PSModuleResource]PoshGit", "[PSModuleResource]PoshSshell")
-
-        #     GetScript = {
-        #         #Do Nothing
-        #     }
-        #     SetScript = {
-        #         Write-Output "appending to Profile [$using:CurrentUserProfilePath]" | Out-File $using:outputFile -Append
-        #         $using:desiredProfileContent | Out-File $using:CurrentUserProfilePath -Append
-        #     }
-        #     TestScript = {
-        #         Write-Output "-----------------" | Out-File $using:outputFile -Append
-        #         Write-Output "Profile is [$using:CurrentUserProfilePath]" | Out-File $using:outputFile -Append
-        #         $currentContent = Get-Content $using:CurrentUserProfilePath
-        #         $desiredProfileContent = $using:desiredProfileContent
-        #         $desiredProfileContent | Out-File $using:outputFile -Append
-        #         if ($currentContent -eq $null) {
-        #             return $false
-        #         }
-        #         return $currentContent.ToLower().Contains($desiredProfileContent.ToLower())
-        #     }
-        # }
 
         Service SshAgent 
         {
