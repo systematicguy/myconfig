@@ -6,6 +6,6 @@
 
 . $PSScriptRoot\..\windows\Environment.ps1
 
-. $RepoToolsDir\ProcMon.ps1
+. $RepoToolsDir\VsCode.ps1
 
 #ShowTodo

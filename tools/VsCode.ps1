@@ -1,6 +1,7 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
+. $RepoRoot\helpers\Json.ps1
 . $RepoToolsDir\Chocolatey.ps1
 
 Configuration VsCode
@@ -15,23 +16,14 @@ Configuration VsCode
             Name = "vscode"
         }
 
-        # TODO: merge settings instead of overwriting them
-        File VsCodeUserConfig
-        {
-            DependsOn = "[cChocoPackageInstaller]InstallVsCode"
-
-            Type            = 'File'
-            SourcePath      = "$RepoRoot\config\vscode\settings.json"
-            DestinationPath = "$UserDir\AppData\Roaming\Code\User\settings.json"
-            Ensure          = "Present"
-            Checksum        = "SHA-1"
-        }
-
         # TODO: plugins
     }
 }
-
 ApplyDscConfiguration "VsCode"
+
+EnsureJsonConfig `
+    -Path "$UserDir\AppData\Roaming\Code\User\settings.json" `
+    -JsonConfigPath "$RepoRoot\config\vscode\settings.json" # TODO make configurable
 
 $VsCodeExePath = "C:\Program Files\Microsoft VS Code\Code.exe"
 
