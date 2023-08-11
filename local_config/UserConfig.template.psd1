@@ -80,7 +80,6 @@
         mayStopDockerDesktop = $false  # if $false, the script will throw an error if docker desktop is running 
         fallbackSettingsVersion = 29  # if no settings.json present, this will be the default value of "settingsVersion"
         "settings.json" = @{
-            # warning: @() list entries have not been tested: one-element lists @("example") would be converted to "example" instead of ["example"] due to PS 5.1's limitation
             #  https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/convertfrom-json?view=powershell-7.3#-noenumerate
 
             #integratedWslDistros = @()
