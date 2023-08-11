@@ -2,7 +2,7 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\helpers\UserCredential.ps1
-. $RepoRoot\helpers\EnsureScheduledTaskAndStart.ps1
+. $RepoRoot\helpers\ScheduledTask.ps1
 
 . $RepoToolsDir\GitConfig.ps1
 . $RepoToolsDir\SshKey.ps1

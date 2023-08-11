@@ -6,7 +6,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\helpers\Downloader.ps1
 . $RepoRoot\helpers\EnsureFile.ps1
 . $RepoRoot\helpers\Ini.ps1
-. $RepoRoot\helpers\EnsureScheduledTaskAndStart.ps1
+. $RepoRoot\helpers\ScheduledTask.ps1
 Import-Module CredentialManager
 
 $pxVersion = $UserConfig.PxProxy.Version
