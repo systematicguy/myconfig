@@ -1,6 +1,6 @@
 # to help yourself debugging:
 # . helpers\CredentialProvider.ps1
-if ($CachedCredentials -eq $null) { 
+if ($null -eq $CachedCredentials) { 
     $CachedCredentials = @{} 
 }
 

@@ -49,7 +49,7 @@ Configuration SshKeyScan
                     }
 
                     $knownHostsContent = Get-Content $using:SshKnownHostsFile
-                    if ($knownHostsContent -eq $null) {
+                    if ($null -eq $knownHostsContent) {
                         $knownHostsContent = ""
                     }
                     if (! $knownHostsContent.Contains($hostKey)) {

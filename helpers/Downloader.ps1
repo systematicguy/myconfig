@@ -10,7 +10,7 @@ function EnsureDownloadedUrl {
         [string]$DownloadedPath = $null
     )
 
-    if ($DownloadedPath -eq $null -or $DownloadedPath -eq "") {
+    if ($null -eq $DownloadedPath -or $DownloadedPath -eq "") {
         $DownloadedPath = "$DscWorkDir\$(Split-Path -Path $Url -Leaf)"
         Write-Host "No download path specified, using [$DownloadedPath]..."
     }

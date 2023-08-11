@@ -54,7 +54,7 @@ Configuration AwsCli
                 $currentContent = Get-Content $using:CurrentUserProfilePath
                 $desiredProfileContent = $using:desiredProfileContent
                 $desiredProfileContent | Out-File $using:outputFile -Append
-                if ($currentContent -eq $null) {
+                if ($null -eq $currentContent) {
                     return $false
                 }
                 return $currentContent.ToLower().Contains($desiredProfileContent.ToLower())

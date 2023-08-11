@@ -23,7 +23,7 @@ $pxIniProxyUsername = $pxIniConfig.proxy.username
 if (($pxIniConfig.Count -gt 0) -and ($pxIniProxyUsername -ne $null)) {
     Write-Host "UserConfig.PxProxy.PxIni.proxy.username has been specified, dealing with password for proxy server..."
     $storedPxProxyCredential = Get-StoredCredential -Target $pxCredentialTarget
-    if ($storedPxProxyCredential -eq $null) {
+    if ($null -eq $storedPxProxyCredential) {
         $proxyCredentials = ProvideCredential -Purpose "px_password" -User $pxIniProxyUsername -Message "Provide password for px proxy server (UserConfig.PxProxy.PxIni.proxy.username was set)"
         New-StoredCredential -Credentials $proxyCredentials -Target $pxCredentialTarget -Persist "Enterprise" > $null
     } else {
@@ -31,7 +31,7 @@ if (($pxIniConfig.Count -gt 0) -and ($pxIniProxyUsername -ne $null)) {
     }
 }
 
-if (($pxIniConfig.Count -gt 0) -and ($pxIniConfig.proxy.Count -gt 0) -and ($pxIniConfig.proxy.noproxy -eq $null)) {
+if (($pxIniConfig.Count -gt 0) -and ($pxIniConfig.proxy.Count -gt 0) -and ($null -eq $pxIniConfig.proxy.noproxy)) {
     Write-Host "Setting server:noproxy to be the same value as UserConfig.NoProxy (UserConfig.PxProxy.PxIni.proxy.server section is present but server:noproxy was absent)..."
     $pxIniConfig.proxy.noproxy = $UserConfig.NoProxy
 }
