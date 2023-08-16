@@ -19,6 +19,7 @@ region = $($UserConfig.AwsDefaultRegion)
 
 EnsureChocoPackage -Name "awscli"
 EnsureChocoPackage -Name "awscli-session-manager"
+EnsureChocoPackage -Name "eksctl"
 
 $outputFile = "$DscWorkDir\AwsCli.txt"
 Configuration AwsCli
