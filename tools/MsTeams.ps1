@@ -4,3 +4,5 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\helpers\Chocolatey.ps1
 
 EnsureChocoPackage -Name "microsoft-teams"
+
+# TODO disable autostart
