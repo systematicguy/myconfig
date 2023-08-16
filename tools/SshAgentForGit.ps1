@@ -10,7 +10,6 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 
 $sshAgentScriptPath = "$RepoRoot\config\powershell_profile\ssh_agent_for_git.ps1"
 
-$outputFile = "$DscWorkDir\SshAgentForGit.txt"
 Configuration SshAgent
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
