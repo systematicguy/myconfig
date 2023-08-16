@@ -93,11 +93,20 @@ function ShowTodo {
 function ApplyDscConfiguration {
     param (
         [Parameter(Mandatory=$true)]
-        [string]$ConfigurationName
+        [string]$ConfigurationName,
+
+        [Parameter(Mandatory=$false)]
+        [switch]$IgnoreError = $false
     )
 
     & $ConfigurationName -Output "$DscMofDir\$ConfigurationName" -ConfigurationData $DscConfigPath
-    Start-DscConfiguration -Path "$DscMofDir\$ConfigurationName" -Wait -Force -Verbose
+    
+    # https://stackoverflow.com/questions/27201314/start-dscconfiguration-doesnt-throw-exceptions
+    $originalErrorCount = $error.Count;
+    Start-DscConfiguration -Path "$DscMofDir\$ConfigurationName" -Force -Verbose -Wait
+    if ($error.Count -gt $originalErrorCount -and $IgnoreError -eq $false) {
+        throw "DSC configuration $ConfigurationName failed"
+    }
     return $null
 }
 
