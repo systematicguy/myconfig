@@ -2,6 +2,9 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\helpers\ToIdentifier.ps1
+. $RepoRoot\helpers\Chocolatey.ps1
+
+EnsureChocoPackage -Name "jq"
 
 function EnsureJsonConfig {
     param (
