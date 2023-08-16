@@ -1,0 +1,40 @@
+{
+	"global.vaultTimeout": -1,
+	"global.vaultTimeoutAction": "lock",
+	"rememberEmail": true,
+	"global": {
+		"locale": "en",
+		"theme": "system",
+		"openAtLogin": true,
+        "requirePasswordOnStart": true,
+		"enableBiometrics": true,
+		"vaultTimeout": -1,
+		"vaultTimeoutAction": "lock",
+        "clearClipboard": 120,
+		"enableTray": true,
+		"enableMinimizeToTray": true,
+		"enableCloseToTray": true,
+		"enableStartToTray": true,
+		"enableBrowserIntegration": true,
+		"disableFavicon": false,
+		"enableBrowserIntegrationFingerprint": true,
+		"region": "US",
+        "passwordGenerationOptions": {
+            "length": 16,
+            "ambiguous": false,
+            "number": true,
+            "minNumber": 1,
+            "uppercase": true,
+            "minUppercase": 0,
+            "lowercase": true,
+            "minLowercase": 0,
+            "special": true,
+            "minSpecial": 1,
+            "type": "password",
+            "numWords": 3,
+            "wordSeparator": "-",
+            "capitalize": false,
+            "includeNumber": false
+        }
+	}
+}
