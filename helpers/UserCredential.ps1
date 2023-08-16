@@ -5,7 +5,7 @@
 $DomainUser = whoami  # e.g. BIG\horvathda for a domain-joined enterprise computer; e.g. DESKTOP-1\horvathda for a BYOD non-domain-joined computer
 $parsedUserName = ($DomainUser -split "\\")[-1]
 
-if ($AlreadySourcedUserCredential -ne $null) { 
+if ($null -ne $AlreadySourcedUserCredential) { 
     Write-Output "Working with previously queried credential for [$($UserCredential.UserName)]"
     if ($parsedUserName -ne $UserName) {
         Write-Output "Warning: your UserName coming from your local_config\UserConfig.psd1 is [$UserName] while whoami is [$(whoami)]"

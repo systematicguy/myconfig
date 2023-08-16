@@ -3,7 +3,7 @@
 # This file is dot sourced almost everywhere, assumed to be working before any setup.
 # It must not rely on any non-standard module, nor should it perform any DSC job.
 #####################################################################################
-if ($AlreadySourced -ne $null) { return } else { $AlreadySourced = @{} }
+if ($null -ne $AlreadySourced) { return } else { $AlreadySourced = @{} }
 
 $ErrorActionPreference = "Stop"
 
