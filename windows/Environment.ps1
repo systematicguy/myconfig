@@ -104,8 +104,12 @@ function ApplyDscConfiguration {
     # https://stackoverflow.com/questions/27201314/start-dscconfiguration-doesnt-throw-exceptions
     $originalErrorCount = $error.Count;
     Start-DscConfiguration -Path "$DscMofDir\$ConfigurationName" -Force -Verbose -Wait
-    if ($error.Count -gt $originalErrorCount -and $IgnoreError -eq $false) {
-        throw "DSC configuration $ConfigurationName failed"
+    if ($error.Count -gt $originalErrorCount) {
+        if ($IgnoreError -eq $false) {
+            throw "DSC configuration $ConfigurationName failed"
+        } else {
+            Write-Warning "DSC configuration $ConfigurationName failed, ignoring as requested"
+        }
     }
     return $null
 }

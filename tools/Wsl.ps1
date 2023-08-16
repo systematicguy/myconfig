@@ -23,7 +23,7 @@ EnsureDownloadedUrl -Url $wslKernelUpdaterUrl -DownloadedPath $downloadedWslKern
 $wslKernelUpdaterProductName = $msiTools::GetProductName($downloadedWslKernelUpdaterInstallerPath)
 $wslKernelUpdaterProductGuid = $msiTools::GetProductCode($downloadedWslKernelUpdaterInstallerPath)
 
-Configuration Wsl
+Configuration WslFeature
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName ComputerManagementDsc  # needed for PendingReboot
@@ -48,25 +48,51 @@ Configuration Wsl
 
             SkipPendingFileRename = $true
         }
+    }
+}
+ApplyDscConfiguration "WslFeature"
+$rebootPending = (Get-DscLocalConfigurationManager).RebootPending
+if ($rebootPending) {
+    Write-Host "Reboot is pending."
+    throw "Reboot is pending"
+}
 
+Configuration WslKernelUpdater
+{
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+    Import-DscResource -ModuleName ComputerManagementDsc
+
+    Node "localhost" 
+    {
         Package WslKernelUpdater
         {
-            DependsOn = "[PendingReboot]WinFeatureReboot"
-
             Name      = $wslKernelUpdaterProductName
             Path      = $downloadedWslKernelUpdaterInstallerPath
             ProductId = $wslKernelUpdaterProductGuid
             Ensure    = "Present"
+            ReturnCode = @(
+                0, 
+                1603  # a newer version is already installed
+            )
 
             # You might encounter the following error: The return code 1603 was not expected. Configuration is likely not correct
             # This is most probably the case if you have already installed the WSL2 kernel update manually.
             # In this case you can ignore this error.
             # https://learn.microsoft.com/en-us/troubleshoot/windows-server/application-management/msi-installation-error-1603
         }
+    }
+}
+ApplyDscConfiguration "WslKernelUpdater" -IgnoreError # TODO find out how to make this nicer
 
+Configuration WslVersion2
+{
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+    Import-DscResource -ModuleName ComputerManagementDsc
+
+    Node "localhost" 
+    {
         Script SetWslDefaultVersion 
         {
-            DependsOn = "[Package]WslKernelUpdater"
             Credential = $UserCredential
 
             GetScript = {
@@ -84,7 +110,8 @@ Configuration Wsl
         }
     }
 }
-ApplyDscConfiguration "Wsl"
+ApplyDscConfiguration "WslVersion2"
+
 $rebootPending = (Get-DscLocalConfigurationManager).RebootPending
 if ($rebootPending) {
     Write-Host "Reboot is pending."
