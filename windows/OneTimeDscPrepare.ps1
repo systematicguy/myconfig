@@ -23,6 +23,7 @@ Install-Module -Name PowerShellModule -Force
 Install-Module -Name xPowerShellExecutionPolicy -Force
 Install-Module -Name DSCR_AppxPackage -Force
 Install-Module -Name CredentialManager -Force
+Install-Module -Name powershell-yaml -Force
 Install-Script -Name ConvertTo-Expression -Force
 
 . $PSScriptRoot\DscSetupCert.ps1
