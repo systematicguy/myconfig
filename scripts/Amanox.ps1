@@ -11,6 +11,8 @@
 . $RepoToolsDir\VsCode.ps1
 
 . $RepoToolsDir\PsTools.ps1
+. $RepoToolsDir\Jq.ps1
+. $RepoToolsDir\Yq.ps1
 
 . $RepoToolsDir\GitConfig.ps1
 . $RepoToolsDir\SshKey.ps1
