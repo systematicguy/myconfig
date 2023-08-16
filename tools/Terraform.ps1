@@ -17,6 +17,8 @@ EnsureChocoPackage `
 EnsureChocoPackage `
     -Name "terraform-docs"
 
+# TODO pipx install tftui
+
 Configuration TerraformTooling
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
