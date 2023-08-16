@@ -14,6 +14,8 @@ Configuration VsCode
         cChocoPackageInstaller InstallVsCode
         {
             Name = "vscode"
+
+            PsDscRunAsCredential = $UserCredential
         }
 
         # TODO: plugins

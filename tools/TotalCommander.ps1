@@ -22,6 +22,8 @@ Configuration TotalCommanderInstallation
         cChocoPackageInstaller TotalCommander
         {
             Name = "totalcommander"
+            
+            PsDscRunAsCredential = $UserCredential
         }
     }
 }

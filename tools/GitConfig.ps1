@@ -14,6 +14,8 @@ Configuration GitConfig
     {
         cChocoPackageInstaller Git
         {
+            PsDscRunAsCredential = $UserCredential  # untested, was wo credentials
+
             Name = "git"
         }
 
