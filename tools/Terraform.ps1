@@ -2,37 +2,27 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\helpers\UserCredential.ps1
+. $RepoRoot\helpers\Chocolatey.ps1
 . $RepoRoot\tools\GitConfig.ps1
 . $RepoRoot\tools\SshKey.ps1
+
+EnsureChocoPackage `
+    -Name "terraform" `
+    -Version $UserConfig.Terraform.Version
+
+EnsureChocoPackage `
+    -Name "tflint" `
+    -Version $UserConfig.Terraform.TfLintVersion
+
+EnsureChocoPackage `
+    -Name "terraform-docs"
 
 Configuration TerraformTooling
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco
 
     Node "localhost"
     {
-
-        cChocoPackageInstaller Terraform
-        {
-            Name                 = "terraform"
-            PsDscRunAsCredential = $UserCredential  # needed to be able to download in some hardened corporate environments
-            Version              = $UserConfig.Terraform.Version
-        }
-
-        cChocoPackageInstaller TfLint
-        {
-            Name                 = "tflint"
-            PsDscRunAsCredential = $UserCredential  # needed to be able to download in some hardened corporate environments
-            Version              = $UserConfig.Terraform.TfLintVersion
-        }
-
-        cChocoPackageInstaller TerraformDocs
-        {
-            Name                 = "terraform-docs"
-            PsDscRunAsCredential = $UserCredential  # needed to be able to download in some hardened corporate environments
-        }
-
         Script SetUserEnvVars
         {
             # Environment resource cannot set an Environment Variable in the User's context
@@ -51,6 +41,5 @@ Configuration TerraformTooling
         }
     }
 }
-
 ApplyDscConfiguration "TerraformTooling"
 LogTodo -Message "Get .tflint.hcl and place it into $UserDir"

@@ -3,8 +3,8 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 
 . $RepoRoot\helpers\Downloader.ps1
 . $RepoRoot\helpers\Ini.ps1
+. $RepoRoot\helpers\Chocolatey.ps1
 
-. $RepoToolsDir\Chocolatey.ps1
 . $RepoToolsDir\VsCode.ps1
 
 # existing ini file location: https://ghisler.ch/board/viewtopic.php?t=26830
@@ -12,22 +12,7 @@ $winCmdParentDir = "$UserDir\AppData\Roaming\GHISLER"
 $winCmdPath = "$winCmdParentDir\wincmd.ini"
 $totalCmdPluginDir = "$UserBinDir\total_commander\plugins"
 
-Configuration TotalCommanderInstallation
-{
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco
-
-    Node "localhost"
-    {
-        cChocoPackageInstaller TotalCommander
-        {
-            Name = "totalcommander"
-            
-            PsDscRunAsCredential = $UserCredential
-        }
-    }
-}
-ApplyDscConfiguration "TotalCommanderInstallation"
+EnsureChocoPackage -Name "totalcommander"
 
 Configuration TotalCommanderConfigDir
 {

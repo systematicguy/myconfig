@@ -1,27 +1,20 @@
 . $PSScriptRoot\..\windows\Environment.ps1
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
-. $RepoToolsDir\Chocolatey.ps1
 . $RepoRoot\helpers\UserCredential.ps1
+. $RepoRoot\helpers\Chocolatey.ps1
 . $RepoToolsDir\LongPathsEnabled.ps1
+
+EnsureChocoPackage -Name "git" # untested, was without credentials
 
 Configuration GitConfig
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco
 
     Node "localhost"
     {
-        cChocoPackageInstaller Git
-        {
-            PsDscRunAsCredential = $UserCredential  # untested, was wo credentials
-
-            Name = "git"
-        }
-
         Script GitConfig 
         {
-            DependsOn  = "[cChocoPackageInstaller]Git"
             Credential = $UserCredential
 
             GetScript = {
@@ -57,5 +50,4 @@ Configuration GitConfig
         }
     }
 }
-
 ApplyDscConfiguration "GitConfig"

@@ -2,7 +2,7 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\helpers\UserCredential.ps1
-. $RepoToolsDir\Chocolatey.ps1
+. $RepoRoot\helpers\Chocolatey.ps1
 
 $UserLocalAppData = $env:LOCALAPPDATA
 
@@ -14,20 +14,17 @@ $cachedPythonInstallerPath = "$UserDir\.pyenv\pyenv-win\install_cache\$pythonIns
 $pyenvOutputFile = "$DscWorkDir\pyenv.txt"
 "-------------" | Out-File -Append $pyenvOutputFile -Encoding ASCII
 
+
+# will modify the user's PATH environment variable
+EnsureChocoPackage -Name "pyenv-win"
+
 Configuration PyenvConfig
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName xPSDesiredStateConfiguration
-    Import-DscResource -Name cChocoPackageInstaller -ModuleName cChoco
 
     Node "localhost"
     {
-        cChocoPackageInstaller Pyenv
-        {
-            PsDscRunAsCredential = $UserCredential  # need to set for proper PATH
-            Name                 = "pyenv-win"
-        }
-
         # removing App Execution aliases as seen on https://superuser.com/a/1746939
         Script RemoveAppAlias 
         {
@@ -48,7 +45,6 @@ Configuration PyenvConfig
             # This is a hack needed in some strict environments where pyenv itself was not able to download the msi file
             xRemoteFile DownloadGlobalPython
             {
-                DependsOn            = "[cChocoPackageInstaller]Pyenv"
                 PsDscRunAsCredential = $UserCredential
                 DestinationPath      = $cachedPythonInstallerPath
                 Uri                  = $pythonInstallerUrl
@@ -60,7 +56,7 @@ Configuration PyenvConfig
 
         Script InstallGlobalPythonVersion
         {
-            DependsOn = @("[cChocoPackageInstaller]Pyenv") + $installGlobalPythonDependency
+            DependsOn = $installGlobalPythonDependency
             Credential = $UserCredential
             GetScript = {
                 #Do Nothing

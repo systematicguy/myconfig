@@ -2,26 +2,10 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\helpers\Json.ps1
-. $RepoToolsDir\Chocolatey.ps1
+. $RepoRoot\helpers\Chocolatey.ps1
 
-Configuration VsCode
-{
-    Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName cChoco
-
-    Node "localhost"
-    {
-        cChocoPackageInstaller InstallVsCode
-        {
-            Name = "vscode"
-
-            PsDscRunAsCredential = $UserCredential
-        }
-
-        # TODO: plugins
-    }
-}
-ApplyDscConfiguration "VsCode"
+EnsureChocoPackage -Name "vscode"
+# TODO: plugins
 
 EnsureJsonConfig `
     -Path "$UserDir\AppData\Roaming\Code\User\settings.json" `

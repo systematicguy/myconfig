@@ -2,8 +2,10 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\helpers\UserCredential.ps1
+. $RepoRoot\helpers\Chocolatey.ps1
+
 . $RepoToolsDir\PowershellProfile.ps1
-. $RepoToolsDir\Chocolatey.ps1
+
 
 Write-Output "Profile is $CurrentUserProfilePath"
 # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html
@@ -15,6 +17,9 @@ $desiredAwsConfigContent = @"
 region = $($UserConfig.AwsDefaultRegion)
 "@
 
+EnsureChocoPackage -Name "awscli"
+EnsureChocoPackage -Name "awscli-session-manager"
+
 $outputFile = "$DscWorkDir\AwsCli.txt"
 Configuration AwsCli
 {
@@ -23,24 +28,8 @@ Configuration AwsCli
     
     Node "localhost"
     {
-        cChocoPackageInstaller AwsCli
-        {
-            PsDscRunAsCredential = $UserCredential  # needed to be able to download the msi in some hardened corporate environments
-
-            Name = "awscli"
-        }
-
-        cChocoPackageInstaller AwsSessionManagerPlugin
-        {
-            DependsOn = "[cChocoPackageInstaller]AwsCli"
-            PsDscRunAsCredential = $UserCredential  # needed to be able to download the msi in some hardened corporate environments
-
-            Name = "awscli-session-manager"
-        }
-
         Script EnsureProfileContent
         {
-            DependsOn  = "[cChocoPackageInstaller]AwsCli"
             GetScript = {
                 #Do Nothing
             }
@@ -84,6 +73,4 @@ Configuration AwsCli
         }
     }
 }
-
-
 ApplyDscConfiguration "AwsCli"

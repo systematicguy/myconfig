@@ -37,6 +37,7 @@ function EnsureChocoPackage {
     )
     
     if ($null -eq $Credential) {
+        # Most hardened corporate environments required me to use a credential to download MSIs, etc.
         $Credential = $UserCredential
     }
 
