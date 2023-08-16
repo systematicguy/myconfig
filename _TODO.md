@@ -5,34 +5,24 @@ network drive mapping
     Computer\HKEY_CURRENT_USER\Network\
 
 windows features
-    Containers
-    Hyper-V
-        Hyper-V Management TOols
-        Hyper-V Platform
     Media Features
         WIndows Media Player
     ? SMB 1.0/CIFS
     SMB Direct
 
-
 wsl
-    exclude wsl from scan
     aws session manager plugin
 
-docker desktop
-powershell 7
 powershell 5-7 profile interop
 
 tfswitch
-    check out tfenv
+    check out if tfenv is applicable on windows
 kubectl and completion
 azure cli
 nodejs
     npm
 java
 
-windirstat
-procexp
 registry exporter and differ
 notepad++
 beyond compare
@@ -43,7 +33,6 @@ citrix workspace
 ###############
 communication
 ###############
-ms teams
 google meet
 whatsapp
 signal

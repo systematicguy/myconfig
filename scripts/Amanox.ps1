@@ -2,17 +2,17 @@
 
 #. $RepoToolsDir\PxProxy.ps1
 
+. $RepoToolsDir\PowerConfig.ps1
+
 . $RepoToolsDir\PsTools.ps1
 . $RepoToolsDir\ProcMon.ps1
+. $RepoToolsDir\ProcExp.ps1
+. $RepoToolsDir\WinDirStat.ps1
 
-. $RepoToolsDir\AutoDarkMode.ps1
-. $RepoToolsDir\GoogleChrome.ps1
-
-. $RepoToolsDir\VsCode.ps1
-
-. $RepoToolsDir\PsTools.ps1
 . $RepoToolsDir\Jq.ps1
 . $RepoToolsDir\Yq.ps1
+
+. $RepoToolsDir\VsCode.ps1
 
 . $RepoToolsDir\GitConfig.ps1
 . $RepoToolsDir\SshKey.ps1
@@ -39,6 +39,9 @@
 . $RepoToolsDir\JetbrainsToolbox.ps1
 . $RepoToolsDir\PycharmProfessional.ps1
 
+. $RepoToolsDir\AutoDarkMode.ps1
+. $RepoToolsDir\GoogleChrome.ps1
+
 . $RepoToolsDir\MsTeams.ps1
 . $RepoToolsDir\MSOfficeConfig.ps1        # David's personal settings for MS Office
 . $RepoToolsDir\LongPathsEnabled.ps1
@@ -49,7 +52,5 @@
 . $RepoToolsDir\WinExplorerShowFileExt.ps1
 . $RepoToolsDir\WinExplorerShowHidden.ps1
 . $RepoToolsDir\WinExplorerConfig.ps1     # David's personal settings for Windows Explorer
-
-. $RepoToolsDir\PowerConfig.ps1
 
 ShowTodo
