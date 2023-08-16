@@ -6,6 +6,6 @@
 
 . $PSScriptRoot\..\windows\Environment.ps1
 
-. $RepoToolsDir\AutoDarkMode.ps1
+. $RepoToolsDir\Pwsh.ps1
 
 #ShowTodo
