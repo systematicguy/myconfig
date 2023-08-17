@@ -2,6 +2,9 @@
 
 #. $RepoToolsDir\PxProxy.ps1
 
+. $RepoToolsDir\Pwsh.ps1
+. $RepoToolsDir\WindowsTerminal.ps1
+
 . $RepoToolsDir\PsTools.ps1
 . $RepoToolsDir\ProcMon.ps1
 . $RepoToolsDir\ProcExp.ps1
@@ -52,7 +55,6 @@
 
 . $RepoToolsDir\Smb.ps1
 . $RepoToolsDir\PowerConfig.ps1
-. $RepoToolsDir\WindowsTerminalConfig.ps1
 . $RepoToolsDir\MSOfficeConfig.ps1        # David's personal settings for MS Office
 . $RepoToolsDir\LongPathsEnabled.ps1
 . $RepoToolsDir\LanguageConfig.ps1
