@@ -3,6 +3,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 
 . $RepoRoot\helpers\ToIdentifier.ps1
 . $RepoRoot\helpers\Chocolatey.ps1
+. $RepoRoot\helpers\EnsureFile.ps1
 
 EnsureChocoPackage -Name "yq"
 
@@ -20,6 +21,10 @@ function EnsureYamlConfig {
         [Parameter(Mandatory=$false)]
         [scriptblock]$ScriptBeforeApplying = {}
     )
+
+    EnsureFile `
+        -Path $Path
+        #-EncodingIfMissing ASCII
 
     # work dir with datetime string and identifier
     $workDir = "$DscWorkDir\$(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss')_$(PathToIdentifier $Path)"

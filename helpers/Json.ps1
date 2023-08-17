@@ -3,6 +3,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 
 . $RepoRoot\helpers\ToIdentifier.ps1
 . $RepoRoot\helpers\Chocolatey.ps1
+. $RepoRoot\helpers\EnsureFile.ps1
 
 EnsureChocoPackage -Name "jq"
 
@@ -21,8 +22,12 @@ function EnsureJsonConfig {
         [scriptblock]$ScriptBeforeApplying = {}
     )
 
-    # work dir with datetime string and identifier
-    
+    EnsureFile `
+        -Path $Path `
+        -EncodingIfMissing ASCII `
+        -ContentIfMissing "{}"
+
+    # work dir with datetime string and identifier    
     $workDir = "$DscWorkDir\$(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss')_$(PathToIdentifier $Path)"
     New-Item -Path $workDir -ItemType Directory -Force
 

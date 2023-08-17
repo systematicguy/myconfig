@@ -51,6 +51,12 @@
 
     AwsDefaultRegion = "eu-central-1"
 
+    WindowsTerminal = @{
+        "settings.json" = @{
+            # theme = "system"
+        }
+    }
+
     Wsl = @{
         Distro   = "https://aka.ms/wslubuntu2204"  # https://learn.microsoft.com/en-us/windows/wsl/install-manual#downloading-distributions
         UserName = "david"

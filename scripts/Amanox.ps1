@@ -52,6 +52,7 @@
 
 . $RepoToolsDir\Smb.ps1
 . $RepoToolsDir\PowerConfig.ps1
+. $RepoToolsDir\WindowsTerminalConfig.ps1
 . $RepoToolsDir\MSOfficeConfig.ps1        # David's personal settings for MS Office
 . $RepoToolsDir\LongPathsEnabled.ps1
 . $RepoToolsDir\LanguageConfig.ps1
