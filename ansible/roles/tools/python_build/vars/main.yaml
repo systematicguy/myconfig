@@ -11,4 +11,5 @@ python_build_deps: # https://github.com/danhper/asdf-python/issues/115:
   - libbz2-dev 
   - libsqlite3-dev
 
+  - liblzma-dev  # https://stackoverflow.com/questions/57743230/userwarning-could-not-import-the-lzma-module-your-installed-python-is-incomple
   - lzma  # I needed this for python 3.11.4

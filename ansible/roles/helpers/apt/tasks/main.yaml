@@ -4,3 +4,4 @@
     state: present
   become: true
   with_items: "{{ packages }}"
+  when: not skip_package_install

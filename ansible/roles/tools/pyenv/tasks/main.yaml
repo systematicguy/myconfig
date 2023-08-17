@@ -8,17 +8,37 @@
   when: not pyenv_exists.stat.exists
 
 - name: Setup pyenv in bashrc
-  lineinfile:
+  blockinfile:
     path: ~/.bashrc
-    line: "{{ item }}"
-    state: present
-  with_items:
-    - 'export PATH="$HOME/.pyenv/bin:$PATH"'
-    - 'eval "$(pyenv init --path)"'
-    - 'eval "$(pyenv virtualenv-init -)"'
+    block: |
+      export PATH="$HOME/.pyenv/bin:$PATH"
+      eval "$(pyenv init --path)"
+      eval "$(pyenv virtualenv-init -)"
 
 - name: install dependencies necessary for building pythons
   include_role:
     name: "{{ package_installer_role }}"
   vars:
     packages: "{{ python_build_deps }}"
+
+- name: check if global python version is already installed
+  shell: bash -lc "pyenv versions --bare | grep {{ python_global_version }}"
+  register: python_global_version_installed
+  changed_when: false
+
+- name: pyenv update
+  shell: bash -lc "pyenv update"
+  when: not python_global_version_installed.stdout
+
+- name: install global python version
+  shell: bash -lc "pyenv install {{ python_global_version }}"
+  when: not python_global_version_installed.stdout
+  
+- name: check if global python version is already set
+  shell: bash -lc "pyenv global | grep {{ python_global_version }}"
+  register: python_global_version_set
+  changed_when: false
+
+- name: set global python version
+  shell: bash -lc "pyenv global {{ python_global_version }}"
+  when: not python_global_version_set.stdout
