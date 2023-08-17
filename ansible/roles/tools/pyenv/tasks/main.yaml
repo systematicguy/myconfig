@@ -1,0 +1,18 @@
+- name: check if ~/.pyenv exists
+  stat:
+    path: ~/.pyenv
+  register: pyenv_exists
+
+- name: install pyenv
+  shell: curl https://pyenv.run | bash
+  when: not pyenv_exists.stat.exists
+
+- name: Setup pyenv in bashrc
+  lineinfile:
+    path: ~/.bashrc
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - 'export PATH="$HOME/.pyenv/bin:$PATH"'
+    - 'eval "$(pyenv init --path)"'
+    - 'eval "$(pyenv virtualenv-init -)"'

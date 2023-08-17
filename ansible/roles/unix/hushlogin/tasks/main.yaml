@@ -1,0 +1,4 @@
+- name: ensure ~/.hushlogin exists
+  copy:
+    dest: ~/.hushlogin
+    content: ''

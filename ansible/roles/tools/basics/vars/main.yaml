@@ -1,0 +1,4 @@
+basic_packages:
+  - jq
+  - tree
+  - zip
