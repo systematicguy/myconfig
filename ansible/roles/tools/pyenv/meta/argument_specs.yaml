@@ -1,0 +1,6 @@
+argument_specs:
+  main:
+    options:
+      package_installer_role:
+        required: true
+        description: name of the role to use for installing packages

@@ -3,11 +3,6 @@
   gather_facts: false
   vars:
     ansible_become_password: "{{ lookup('env', 'ANSIBLE_BECOME_PASSWORD') }}"
+    package_installer_role: helpers/apt
   roles:
-    - tools/basics
-  tasks:
-    - name: install basic tools
-      include_role:
-        name: helpers/apt
-      vars:
-        packages: "{{ basic_packages }}"
+    - tools/pyenv

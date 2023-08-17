@@ -1,0 +1,10 @@
+# allow_duplicates: true # TODO remove - probably not needed when using different parameters
+
+argument_specs:
+  main:
+    short_description: Install packages using apt
+    options:
+      packages:
+        type: list
+        required: true
+        description: list of packages to install

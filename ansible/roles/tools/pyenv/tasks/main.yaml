@@ -16,3 +16,9 @@
     - 'export PATH="$HOME/.pyenv/bin:$PATH"'
     - 'eval "$(pyenv init --path)"'
     - 'eval "$(pyenv virtualenv-init -)"'
+
+- name: install dependencies necessary for building pythons
+  include_role:
+    name: "{{ package_installer_role }}"
+  vars:
+    packages: "{{ python_build_deps }}"

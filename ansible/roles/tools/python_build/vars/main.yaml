@@ -1,0 +1,14 @@
+python_build_deps: # https://github.com/danhper/asdf-python/issues/115:
+  - build-essential  # to get c compiler
+  
+  - libffi-dev 
+  - libncurses5-dev 
+  - zlib1g 
+  - zlib1g-dev 
+  - libssl-dev
+
+  - libreadline-dev 
+  - libbz2-dev 
+  - libsqlite3-dev
+
+  - lzma  # I needed this for python 3.11.4

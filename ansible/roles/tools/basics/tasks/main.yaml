@@ -1,0 +1,5 @@
+- name: install basic tools
+  include_role:
+    name: "{{ package_installer_role }}"
+  vars:
+    packages: "{{ basic_packages }}"
