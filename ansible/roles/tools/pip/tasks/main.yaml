@@ -1,0 +1,12 @@
+- name: ensure ~/.pip folder
+  file:
+    path: ~/.pip
+    state: directory
+
+- name: symlink pip.conf
+  when: symlinked_pip_conf_path is defined
+  file:
+    src: "{{ symlinked_pip_conf_path }}"
+    dest: ~/.pip/pip.conf
+    state: link
+    force: true
