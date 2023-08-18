@@ -4,6 +4,10 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\helpers\Registry.ps1
 
 EnsureRegistry -Purpose "MsOfficeConfig" -RegistryConfig @{
+    # https://www.kapilarya.com/how-to-enable-dark-mode-in-office-2021-365
+    "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Common" = @{
+        "UI Theme" = 0x00000006  # follow system
+    }
     "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Shared Tools\Proofing Tools\1.0\Office" = @{
         OneNoteSpellingOptions = 0x00000002
         WordSpellingOptions    = 0x00000005

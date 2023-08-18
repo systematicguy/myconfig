@@ -16,9 +16,8 @@ SystemSwitch:
 ColorFilterSwitch:
   Enabled: false
 OfficeSwitch:
-  Enabled: true
-  Component:
-    Mode: Switch
+  # we do this using the registry, see tools\MsOfficeConfig.ps1
+  Enabled: false
 Location:
   Enabled: true
   SunsetOffsetMin: -60
@@ -38,7 +37,7 @@ Notifications:
   OnSkipNextSwitch: true
 AutoSwitchNotify:
   Enabled: true
-  GracePeriodMinutes: 5
+  GracePeriodMinutes: 1
 Hotkeys:
   Enabled: true
   ToggleTheme: Ctrl + D8
