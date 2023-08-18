@@ -10,6 +10,7 @@
 - name: Setup pyenv in bashrc
   blockinfile:
     path: ~/.bashrc
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - pyenv"
     block: |
       export PATH="$HOME/.pyenv/bin:$PATH"
       eval "$(pyenv init --path)"
