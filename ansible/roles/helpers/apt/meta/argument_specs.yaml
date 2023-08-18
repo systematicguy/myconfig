@@ -1,10 +1,15 @@
-# allow_duplicates: true # TODO remove - probably not needed when using different parameters
-
 argument_specs:
   main:
     short_description: Install packages using apt
     options:
       packages:
         type: list
+        elements: str
         required: true
         description: list of packages to install
+      
+      skip_package_install:
+        type: bool
+        required: false
+        default: false
+        description: skip package installation (useful for debugging)
