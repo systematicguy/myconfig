@@ -301,6 +301,8 @@ if ($wslDistroInstallNeeded) {
                     # =============================================================================================================
                     # ansible enablement - a mvp-bootstrap that will do the rest of the setup from inside the distro
                     #  This compromise is the least intrusive way to get ansible installed and configured
+                    # TODO apply https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu
+                    #  and manage python3, pip, pipx from ansible
                     
                     Write-Output "### Bootstrapping ansible ..." | Out-File $using:outputFile -Append
                     wsl -u root -d $distroName sh -c 'apt-get install -y python3-pip' | Out-File $using:outputFile -Append
@@ -311,6 +313,8 @@ if ($wslDistroInstallNeeded) {
                     wsl -d $distroName sh -c 'python3 -m pipx ensurepath' | Out-File $using:outputFile -Append
                     
                     wsl -d $distroName sh -lc 'pipx install --include-deps ansible' | Out-File $using:outputFile -Append
+                    # this is wild, I know, but our use of ansible itself will need pipx installed inside ansible's venv:
+                    wsl -d $distroName sh -lc 'pipx inject ansible pipx' | Out-File $using:outputFile -Append
                     wsl -d $distroName sh -lc 'ansible --version' | Out-File $using:outputFile -Append
                     
                     # https://github.com/microsoft/WSL/issues/7749
