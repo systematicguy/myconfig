@@ -1,0 +1,5 @@
+- name: ensure poetry with pipx
+  when: version != ""
+  community.general.pipx:
+    name: poetry
+    source: "{{ (version != '') | ternary('poetry==' + version, omit) }}"

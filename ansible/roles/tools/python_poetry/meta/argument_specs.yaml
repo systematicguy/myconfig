@@ -1,0 +1,8 @@
+argument_specs:
+  main:
+    options:
+      version:
+        type: str
+        required: false
+        default: ""
+        description: version of poetry to install

@@ -4,8 +4,9 @@
   vars_files:
     - vars/wsl.yaml
   vars:
-    skip_package_install: true
+    # skip_package_install: true
   roles:
-    - role: tools/pip
+    - role: tools/python_poetry
       vars:
-        symlinked_pip_conf_path: "{{ windows_user_dir }}/pip/pip.ini"
+        version: 1.4.1
+  tasks:
