@@ -1,0 +1,6 @@
+windows_user_dir: "/mnt/c/Users/<YOURWINDOWSUSER>"
+poetry_version: 1.4.1
+added_to_keychain:
+  - id_ed25519
+git_user_name: "David Horvath"
+git_user_email: "david.horvath@<BIG>.ch"

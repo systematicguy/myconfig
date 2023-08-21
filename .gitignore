@@ -7,3 +7,4 @@ dsc_run/
 repro.*
 local_config/manual_todo.txt
 .idea/
+ansible/vars/user_config.yaml

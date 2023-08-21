@@ -1,3 +1,2 @@
 ansible_become_password: "{{ lookup('env', 'ANSIBLE_BECOME_PASSWORD') }}"
-windows_user_dir: "/mnt/c/Users/kotta"
 package_installer_role: helpers/apt
