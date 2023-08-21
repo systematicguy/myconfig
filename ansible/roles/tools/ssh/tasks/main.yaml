@@ -35,4 +35,4 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK - keychain"
     block: |
       # Add keys to keychain
-      eval `keychain --eval --agents ssh {{ added_to_keychain | sort | join(" ") }}`
+      eval `keychain --eval --quiet --agents ssh {{ added_to_keychain | sort | join(" ") }}`
