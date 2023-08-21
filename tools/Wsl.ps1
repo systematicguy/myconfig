@@ -313,8 +313,6 @@ if ($wslDistroInstallNeeded) {
                     wsl -d $distroName sh -c 'python3 -m pipx ensurepath' | Out-File $using:outputFile -Append
                     
                     wsl -d $distroName sh -lc 'pipx install --include-deps ansible' | Out-File $using:outputFile -Append
-                    # this is wild, I know, but our use of ansible itself will need pipx installed inside ansible's venv:
-                    wsl -d $distroName sh -lc 'pipx inject ansible pipx' | Out-File $using:outputFile -Append
                     wsl -d $distroName sh -lc 'ansible --version' | Out-File $using:outputFile -Append
                     
                     # https://github.com/microsoft/WSL/issues/7749

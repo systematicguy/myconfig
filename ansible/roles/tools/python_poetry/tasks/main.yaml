@@ -1,5 +1,5 @@
 - name: ensure poetry with pipx
-  when: version != ""
   community.general.pipx:
+    executable: ~/.local/bin/pipx
     name: poetry
     source: "{{ (version != '') | ternary('poetry==' + version, omit) }}"
