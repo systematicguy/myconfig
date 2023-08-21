@@ -1,0 +1,23 @@
+- name: git config user.name
+  git_config:
+    name: user.name
+    value: "{{ git_user_name }}"
+    scope: global
+  
+- name: git config user.email
+  git_config:
+    name: user.email
+    value: "{{ git_user_email }}"
+    scope: global
+
+- name: git config core.autocrlf
+  git_config:
+    name: core.autocrlf
+    value: input
+    scope: global
+
+- name: git config symlinks
+  git_config:
+    name: core.symlinks
+    value: true
+    scope: global

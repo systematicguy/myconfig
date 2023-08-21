@@ -2,14 +2,10 @@
   hosts: localhost
   gather_facts: false
   vars_files:
+    - vars/user_config.yaml
     - vars/wsl.yaml
   vars:
     # skip_package_install: true
   roles:
-    - role: tools/ssh
-      vars:
-        symlinked_ssh_dir: "{{ windows_user_dir }}/.ssh"
-        added_to_keychain:
-          - id_ed25519
-          - id_ed25519_bitbucketcloud
+    - role: tools/git
   tasks:

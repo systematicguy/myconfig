@@ -1,0 +1,12 @@
+argument_specs:
+  main:
+    options:
+      git_user_name:
+        type: str
+        required: true
+        description: git user name
+      
+      git_user_email:
+        type: str
+        required: true
+        description: git user email
