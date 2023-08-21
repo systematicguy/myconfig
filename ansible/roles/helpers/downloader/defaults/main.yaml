@@ -1,0 +1,3 @@
+download_root_dir: "{{ work_dir }}/downloads"
+downloaded_filename: "{{ url | basename }}"
+max_age_seconds: "{{ '1day' | community.general.to_seconds }}"

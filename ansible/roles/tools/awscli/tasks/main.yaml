@@ -1,0 +1,61 @@
+- name: symlink .aws directory
+  when: symlinked_aws_dir != ""
+  file:
+    src: "{{ symlinked_aws_dir }}"
+    dest: ~/.aws
+    state: link
+    force: true
+
+- name: Download awscli v2
+  include_role:
+    name: helpers/downloader
+  vars:
+    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    max_age_seconds: "{{ '1day' | community.general.to_seconds }}"
+
+- debug:
+    var: downloaded_path
+
+- debug:
+    var: sha1_checksum
+
+- name: Check if we have an installation checksum already
+  stat:
+    path: "{{ installed_sha1_path }}"
+  register: installed_sha1_path_info
+
+- name: Determine if installation is needed
+  set_fact:
+    needs_installation: "{{ not installed_sha1_path_info.stat.exists or lookup('file', installed_sha1_path) != sha1_checksum }}"
+
+- name: Install awscli if checksum is different
+  when: needs_installation
+  block:
+    - name: Ensure empty installer dir
+      file:
+        path: "{{ installer_dir }}"
+        state: "{{ item }}"
+      with_items: 
+        - absent
+        - directory
+
+    - name: Extract awscli
+      unarchive:
+        src: "{{ downloaded_path }}"
+        copy: false
+        dest: "{{ installer_dir }}"
+
+    - name: Install awscli
+      command: "{{ installer_dir }}/aws/install --update --bin-dir {{ bin_dir }} --install-dir {{ awscli_install_dir }}"
+
+    - name: Store sha1 checksum of awscli zip
+      copy:
+        content: "{{ sha1_checksum }}"
+        dest: "{{ installed_sha1_path }}"
+
+- name: enable aws completion
+  blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - aws completion"
+    block: |
+      complete -C {{ "'" }}{{ bin_dir | expanduser }}/aws_completer{{ "'" }} aws

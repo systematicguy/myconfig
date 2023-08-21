@@ -1,0 +1,58 @@
+- name: check if already downloaded
+  stat:
+    path: "{{ downloaded_path }}"
+    get_checksum: false
+  register: downloaded_path_info
+
+- name: Ensure fresh download
+  when: needs_download
+  block:
+    - name: ensure parent directory exists
+      file:
+        path: "{{ download_dir }}"
+        state: directory
+
+    - name: clean sha1 file if found downloaded file is too old
+      file:
+        path: "{{ sha1_path }}"
+        state: absent
+
+    - name: download file
+      get_url:
+        url: "{{ url }}"
+        dest: "{{ downloaded_path }}"
+      register: new_downloaded_path_info
+
+- name: check if sha1 file exists
+  stat:
+    path: "{{ sha1_path }}"
+    get_checksum: false
+  register: sha1_path_info
+
+- name: Ensure sha1 file
+  when: not sha1_path_info.stat.exists
+  block:
+    - name: Calculate checksum of downloaded file
+      stat:
+        path: "{{ downloaded_path }}"
+        get_checksum: true
+        checksum_algorithm: sha1
+      register: new_downloaded_path_info
+
+    - name: Store checksum of downloaded file
+      copy:
+        content: "{{ new_downloaded_path_info.stat.checksum }}"
+        dest: "{{ sha1_path }}"
+
+    - name: Set freshly calculated checksum as fact
+      set_fact:
+        sha1_checksum: "{{ new_downloaded_path_info.stat.checksum }}"
+
+- name: Set already stored checksum as fact
+  when: sha1_path_info.stat.exists
+  set_fact:
+    sha1_checksum: "{{ lookup('file', sha1_path) }}"
+
+- name: set downloaded path as fact
+  set_fact:
+    downloaded_path: "{{ downloaded_path }}"

@@ -1,6 +1,6 @@
 - name: wsl
   hosts: localhost
-  gather_facts: false
+  gather_facts: true
   vars_files:
     - vars/user_config.yaml
     - vars/wsl.yaml
@@ -22,3 +22,7 @@
         symlinked_ssh_dir: "{{ windows_user_dir }}/.ssh"
 
     - role: tools/git
+
+    - role: tools/awscli
+      vars:
+        symlinked_aws_dir: "{{ windows_user_dir }}/.aws"

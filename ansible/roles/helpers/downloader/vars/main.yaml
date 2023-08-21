@@ -1,0 +1,5 @@
+download_dir: "{{ download_root_dir }}/{{ url | to_identifier }}"
+downloaded_path: "{{ download_dir }}/{{ downloaded_filename }}"
+sha1_path: "{{ downloaded_path }}.sha1"
+
+needs_download: "{{ not downloaded_path_info.stat.exists or downloaded_path_info.stat.mtime < ((ansible_date_time.epoch | int) - (max_age_seconds | int)) }}"

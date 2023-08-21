@@ -1,0 +1,31 @@
+argument_specs:
+  main:
+    description: | 
+      Download a file from a URL. Skip redownload for max_age_seconds.
+      Registers the downloaded file path in downloaded_path variable.
+      Registers the downloaded file checksum in sha1_checksum variable.
+    options:
+      url:
+        type: str
+        required: true
+        description: URL to download from.
+
+      downloaded_filename:
+        type: str
+        required: false
+        description: Filename to save the downloaded file as.
+
+      download_root_dir:
+        type: str
+        required: false
+        description: Root directory for downloads.
+        default: "{{ work_dir }}/downloads"
+
+      max_age_seconds:
+        required: false
+        description: |
+          Redownload if already downloaded file is older than this.
+          It is recommended to make use of the to_seconds filter
+          E.g. '4h' | community.general.to_seconds (enclosed in jinja2 curly braces)
+          See https://docs.ansible.com/ansible/latest/collections/community/general/docsite/filter_guide_working_with_times.html#working-with-times
+        default: "{{ '1day' | community.general.to_seconds }}"

@@ -1,0 +1,4 @@
+installer_dir: "{{ work_dir }}/installer/awscli"
+installed_sha1_path: "{{ installer_dir }}/awscliv2.zip.sha1"
+bin_dir: "~/.local/bin"
+awscli_install_dir: "~/.local/aws-cli"

@@ -1,0 +1,8 @@
+argument_specs:
+  main:
+    options:
+      symlinked_aws_dir:
+        type: str
+        required: false
+        default: ""
+        description: directory to symlink

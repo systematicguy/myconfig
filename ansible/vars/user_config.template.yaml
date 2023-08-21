@@ -1,4 +1,5 @@
 windows_user_dir: "/mnt/c/Users/<YOURWINDOWSUSER>"
+work_dir: "~/myconfig_work"
 poetry_version: 1.4.1
 added_to_keychain:
   - id_ed25519

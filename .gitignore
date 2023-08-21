@@ -8,3 +8,4 @@ repro.*
 local_config/manual_todo.txt
 .idea/
 ansible/vars/user_config.yaml
+__pycache__/
