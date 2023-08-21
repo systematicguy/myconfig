@@ -29,6 +29,7 @@
       - keychain
 
 - name: Add keys to keychain
+  when: added_to_keychain | length > 0
   blockinfile:
     path: ~/.bashrc
     marker: "# {mark} ANSIBLE MANAGED BLOCK - keychain"
