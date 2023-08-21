@@ -6,7 +6,10 @@
   vars:
     # skip_package_install: true
   roles:
-    - role: tools/python_poetry
+    - role: tools/ssh
       vars:
-        version: 1.4.1
+        symlinked_ssh_dir: "{{ windows_user_dir }}/.ssh"
+        added_to_keychain:
+          - id_ed25519
+          - id_ed25519_bitbucketcloud
   tasks:

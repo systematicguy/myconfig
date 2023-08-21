@@ -1,0 +1,15 @@
+argument_specs:
+  main:
+    options:
+      symlinked_ssh_dir:
+        type: str
+        required: false
+        default: ""
+        description: directory to symlink
+
+      added_to_keychain:
+        type: list
+        elements: str
+        required: false
+        default: []
+        description: list of key files to use and add to ssh agent (using keychain) upon first login

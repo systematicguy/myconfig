@@ -1,0 +1,37 @@
+- name: symlink .ssh directory
+  when: symlinked_ssh_dir != ""
+  file:
+    src: "{{ symlinked_ssh_dir }}"
+    dest: ~/.ssh
+    state: link
+    force: true
+
+- name: Ensure proper file mode on ~/.ssh directory
+  file:
+    path: ~/.ssh
+    mode: '0755'
+    state: directory
+    follow: yes
+
+- name: Ensure proper file mode on files under ~/.ssh
+  file:
+    path: "{{ item }}"
+    mode: '0600'
+    state: file
+  with_fileglob:
+    - "~/.ssh/*"
+
+- name: Ensure keychain
+  include_role:
+    name: "{{ package_installer_role }}"
+  vars:
+    packages:
+      - keychain
+
+- name: Add keys to keychain
+  blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - keychain"
+    block: |
+      # Add keys to keychain
+      eval `keychain --eval --agents ssh {{ added_to_keychain | sort | join(" ") }}`

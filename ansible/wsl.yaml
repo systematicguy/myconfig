@@ -15,3 +15,10 @@
     - role: tools/python_poetry
       vars:
         version: 1.4.1
+
+    - role: tools/ssh
+      vars:
+        symlinked_ssh_dir: "{{ windows_user_dir }}/.ssh"
+        added_to_keychain:
+          - id_ed25519
+          - id_ed25519_bitbucketcloud
