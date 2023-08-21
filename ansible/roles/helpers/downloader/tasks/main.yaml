@@ -1,6 +1,6 @@
 - name: check if already downloaded
   stat:
-    path: "{{ downloaded_path }}"
+    path: "{{ dest }}"
     get_checksum: false
   register: downloaded_path_info
 
@@ -20,7 +20,7 @@
     - name: download file
       get_url:
         url: "{{ url }}"
-        dest: "{{ downloaded_path }}"
+        dest: "{{ dest }}"
       register: new_downloaded_path_info
 
 - name: check if sha1 file exists
@@ -34,7 +34,7 @@
   block:
     - name: Calculate checksum of downloaded file
       stat:
-        path: "{{ downloaded_path }}"
+        path: "{{ dest }}"
         get_checksum: true
         checksum_algorithm: sha1
       register: new_downloaded_path_info
@@ -55,4 +55,4 @@
 
 - name: set downloaded path as fact
   set_fact:
-    downloaded_path: "{{ downloaded_path }}"
+    downloaded_path: "{{ dest }}"
