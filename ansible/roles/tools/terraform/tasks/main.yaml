@@ -1,0 +1,48 @@
+- name: ensure checkout of tfenv repo
+  git:
+    repo: https://github.com/tfutils/tfenv.git
+    dest: "{{ tfenv_dir }}"
+
+- name: ensure symlink to tfenv
+  file:
+    src: "{{ item }}"
+    dest: "{{ bin_dir }}/{{ item | basename }}"
+    state: link
+  with_fileglob:
+    - "{{ tfenv_dir }}/bin/*"
+
+# TODO investigate TFENV_NO_COLOR=true  https://github.com/tfutils/tfenv/pull/148/files  
+- name: check if any terraform is installed
+  shell: terraform --version
+  register: terraform_version
+  failed_when: false
+
+- name: show installed terraform version
+  when: terraform_version.rc == 0
+  debug:
+    msg: "terraform version: {{ terraform_version.stdout }}"
+
+- name: install terraform using tfenv
+  when: terraform_version.rc != 0
+  block:
+    - name: install terraform using tfenv
+      command: "{{ bin_dir }}/tfenv install"
+
+    - name: use terraform using tfenv
+      command: "{{ bin_dir }}/tfenv use"
+
+    - name: check terraform version
+      command: terraform --version
+      register: fresh_terraform_version
+    
+    - name: show freshly installed terraform version
+      debug:
+        msg: "terraform version: {{ fresh_terraform_version.stdout }}"
+
+- name: ensure tftui with pipx
+  include_role:
+    name: helpers/pipx
+  vars:
+    name: tftui
+
+# TODO terraform-docs https://github.com/terraform-docs/terraform-docs/

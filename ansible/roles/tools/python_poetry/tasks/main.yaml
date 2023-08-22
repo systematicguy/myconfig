@@ -1,5 +1,6 @@
 - name: ensure poetry with pipx
-  community.general.pipx:
-    executable: ~/.local/bin/pipx
+  include_role:
+    name: helpers/pipx
+  vars:
     name: poetry
-    source: "{{ (version != '') | ternary('poetry==' + version, omit) }}"
+    version: "{{ version }}"

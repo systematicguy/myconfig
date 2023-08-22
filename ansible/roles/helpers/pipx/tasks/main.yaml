@@ -1,0 +1,5 @@
+- name: ensure package with pipx
+  community.general.pipx:
+    executable: "{{ bin_dir }}/pipx"
+    name: "{{ name }}"
+    source: "{{ (version != '') | ternary(name + '==' + version, omit) }}"

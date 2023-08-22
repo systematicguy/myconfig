@@ -1,0 +1,19 @@
+argument_specs:
+  main:
+    short_description: Install package using apt
+    options:
+      bin_dir:
+        type: str
+        required: true
+        description: user's directory where pipx is installed
+
+      name:
+        type: str
+        required: true
+        description: name of package to install
+
+      version:
+        type: str
+        required: false
+        default: ""
+        description: version of package to install

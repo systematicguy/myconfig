@@ -2,12 +2,10 @@
   hosts: localhost
   gather_facts: true
   vars_files:
-    - vars/user_config.yaml
     - vars/wsl.yaml
+    - vars/user_config.yaml
   vars:
     # skip_package_install: true
   roles:
-    - role: tools/awscli
-      vars:
-        symlinked_aws_dir: "{{ windows_user_dir }}/.aws"
+    - role: tools/terraform
   tasks:
