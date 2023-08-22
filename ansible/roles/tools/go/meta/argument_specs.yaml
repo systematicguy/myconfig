@@ -1,0 +1,22 @@
+argument_specs:
+  main:
+    short_description: Install golang
+    options:
+      version:
+        type: str
+        required: false
+        description: |
+          Version to install. If omitted, will install latest version. Format: go1.21.0
+        default: ""
+
+      install_dir:
+        type: str
+        required: false
+        description: Directory to install go to. Essentially GOROOT.
+        default: "~/.local/go"
+
+      go_path:
+        type: str
+        required: false
+        description: Directory to set GOPATH to.
+        default: "~/go"

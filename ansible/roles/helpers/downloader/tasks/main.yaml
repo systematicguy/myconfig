@@ -12,9 +12,9 @@
         path: "{{ download_dir }}"
         state: directory
 
-    - name: clean sha1 file if found downloaded file is too old
+    - name: clean checksum file if found downloaded file is too old
       file:
-        path: "{{ sha1_path }}"
+        path: "{{ checksum_path }}"
         state: absent
 
     - name: download file
@@ -23,36 +23,44 @@
         dest: "{{ dest }}"
       register: new_downloaded_path_info
 
-- name: check if sha1 file exists
+- name: check if checksum file exists
   stat:
-    path: "{{ sha1_path }}"
+    path: "{{ checksum_path }}"
     get_checksum: false
-  register: sha1_path_info
+  register: checksum_path_info
 
-- name: Ensure sha1 file
-  when: not sha1_path_info.stat.exists
+- name: Ensure checksum file
+  when: not checksum_path_info.stat.exists
   block:
     - name: Calculate checksum of downloaded file
       stat:
         path: "{{ dest }}"
         get_checksum: true
-        checksum_algorithm: sha1
+        checksum_algorithm: "{{ checksum_algorithm }}"
       register: new_downloaded_path_info
 
     - name: Store checksum of downloaded file
       copy:
         content: "{{ new_downloaded_path_info.stat.checksum }}"
-        dest: "{{ sha1_path }}"
+        dest: "{{ checksum_path }}"
 
     - name: Set freshly calculated checksum as fact
       set_fact:
-        sha1_checksum: "{{ new_downloaded_path_info.stat.checksum }}"
+        downloaded_checksum: "{{ new_downloaded_path_info.stat.checksum }}"
 
 - name: Set already stored checksum as fact
-  when: sha1_path_info.stat.exists
+  when: checksum_path_info.stat.exists
   set_fact:
-    sha1_checksum: "{{ lookup('file', sha1_path) }}"
+    downloaded_checksum: "{{ lookup('file', checksum_path) }}"
 
 - name: set downloaded path as fact
   set_fact:
     downloaded_path: "{{ dest }}"
+
+- name: Fail if downloaded checksum is not the expected checksum
+  when: expected_checksum != "" and expected_checksum != downloaded_checksum
+  fail:
+    msg: |
+      Checksum of downloaded file does not match expected checksum.
+      Expected: {{ expected_checksum }}
+      Actual: {{ downloaded_checksum }}

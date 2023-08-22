@@ -5,3 +5,4 @@ added_to_keychain:
   - id_ed25519
 git_user_name: "David Horvath"
 git_user_email: "david.horvath@<BIG>.ch"
+#go_version: go1.21.0

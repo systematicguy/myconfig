@@ -17,7 +17,7 @@
     var: downloaded_path
 
 - debug:
-    var: sha1_checksum
+    var: downloaded_checksum
 
 - name: Check if we have an installation checksum already
   stat:
@@ -26,7 +26,7 @@
 
 - name: Determine if installation is needed
   set_fact:
-    needs_installation: "{{ not installed_sha1_path_info.stat.exists or lookup('file', installed_sha1_path) != sha1_checksum }}"
+    needs_installation: "{{ not installed_sha1_path_info.stat.exists or lookup('file', installed_sha1_path) != downloaded_checksum }}"
 
 - name: Install awscli if checksum is different
   when: needs_installation
@@ -50,7 +50,7 @@
 
     - name: Store sha1 checksum of awscli zip
       copy:
-        content: "{{ sha1_checksum }}"
+        content: "{{ downloaded_checksum }}"
         dest: "{{ installed_sha1_path }}"
 
 - name: enable aws completion
@@ -74,7 +74,7 @@
         var: downloaded_path
 
     - debug:
-        var: sha1_checksum
+        var: downloaded_checksum
 
     - name: install session manager plugin on Debian-based system
       when: ansible_os_family == 'Debian'

@@ -1,0 +1,3 @@
+version: ""
+install_dir: "~/.local/go"
+go_path: "~/go"

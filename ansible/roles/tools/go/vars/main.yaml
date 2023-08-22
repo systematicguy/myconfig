@@ -1,0 +1,18 @@
+# =============================================================================
+# go download vars
+go_version: "{{ (version != '') | ternary(version, latest_go_version) }}"
+
+go_platform: "{{ ansible_system | lower }}"
+
+go_arch_mapping:
+  x86_64: amd64
+  aarch64: arm64
+go_arch: "{{ go_arch_mapping[ansible_architecture] | default(ansible_architecture) }}"
+
+downloaded_fileext_mapping:
+  darwin: pkg
+go_ext: "{{ downloaded_fileext_mapping[go_platform] | default('tar.gz') }}"
+
+go_downloaded_filename: "{{ go_version }}.{{ go_platform }}-{{ go_arch }}.{{ go_ext }}"
+
+go_download_url: "https://go.dev/dl/{{ go_downloaded_filename }}"

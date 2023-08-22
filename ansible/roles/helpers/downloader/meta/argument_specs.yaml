@@ -3,7 +3,7 @@ argument_specs:
     description: | 
       Download a file from a URL. Skip redownload for max_age_seconds.
       Registers the downloaded file path in downloaded_path variable.
-      Registers the downloaded file checksum in sha1_checksum variable.
+      Registers the downloaded file checksum in downloaded_checksum variable.
     options:
       url:
         type: str
@@ -29,3 +29,15 @@ argument_specs:
           E.g. '4h' | community.general.to_seconds (enclosed in jinja2 curly braces)
           See https://docs.ansible.com/ansible/latest/collections/community/general/docsite/filter_guide_working_with_times.html#working-with-times
         default: "{{ '1day' | community.general.to_seconds }}"
+
+      checksum_algorithm:
+        type: str
+        required: false
+        description: Algorithm to use for checksum.
+        default: sha1
+
+      expected_checksum:
+        type: str
+        required: false
+        description: Expected checksum of downloaded file.
+        default: ""

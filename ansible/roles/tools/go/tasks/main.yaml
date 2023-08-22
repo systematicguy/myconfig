@@ -1,0 +1,77 @@
+# check if go is already installed
+- name: check if go is already installed
+  shell: bash -lic "go version"
+  register: go_version_run_result
+  failed_when: false
+
+- debug:
+    var: go_version_run_result
+
+- name: install go
+  when: go_version_run_result.rc != 0
+  block:
+    - name: get version info from go.dev
+      uri:
+        url: https://go.dev/dl/?mode=json
+        return_content: yes
+      register: go_version_info
+
+    # https://stackoverflow.com/a/71850340/429162
+    - name: determine latest go version
+      when: version == ""
+      set_fact:
+        latest_go_version: "{{ go_version_info.json | first | json_query('version') }}"
+
+    - debug:
+        var: go_download_url
+
+    - name: Collect info about downloaded go version
+      set_fact:
+        downloaded_version_info: "{{ go_version_info.json | json_query('[*].files[?filename == `' + go_downloaded_filename + '`]') | first | first }}"
+      
+    - debug:
+        var: downloaded_version_info
+
+    - name: download go
+      include_role:
+        name: helpers/downloader
+      vars:
+        url: "{{ go_download_url }}"
+        max_age_seconds: "{{ '1year' | community.general.to_seconds }}"
+        checksum_algorithm: sha256
+        expected_checksum: "{{ downloaded_version_info.sha256 }}"
+
+    - debug:
+        var: downloaded_checksum
+
+    - name: ensure empty go install dir
+      file:
+        path: "{{ install_dir }}"
+        state: "{{ item }}"
+      with_items:
+        - absent
+        - directory
+
+    - name: extract go
+      unarchive:
+        src: "{{ downloaded_path }}"
+        dest: "{{ install_dir | dirname }}"
+        copy: false
+
+- name: ensure GO_PATH dir for user
+  file:
+    path: "{{ go_path }}"
+    state: directory
+
+# about GOROOT: https://go.dev/doc/manage-install
+# about GOPATH: https://go.dev/doc/code
+#	 https://stackoverflow.com/a/10847122/429162
+
+- name: ensure go-specific envvars
+  blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - go"
+    block: |
+      export PATH="$PATH:{{ install_dir | expanduser }}/bin"
+      export GOPATH="{{ go_path | expanduser }}:$GOPATH"
+      

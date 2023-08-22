@@ -313,6 +313,7 @@ if ($wslDistroInstallNeeded) {
                     wsl -d $distroName sh -c 'python3 -m pipx ensurepath' | Out-File $using:outputFile -Append
                     
                     wsl -d $distroName sh -lc 'pipx install --include-deps ansible' | Out-File $using:outputFile -Append
+                    wsl -d $distroName sh -lc 'pipx inject ansible jmespath' | Out-File $using:outputFile -Append
                     wsl -d $distroName sh -lc 'ansible --version' | Out-File $using:outputFile -Append
                     
                     # https://github.com/microsoft/WSL/issues/7749
