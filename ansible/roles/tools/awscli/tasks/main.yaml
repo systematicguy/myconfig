@@ -90,3 +90,5 @@
     name: https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm
     state: present
   become: true
+
+# TODO eksctl with completion https://eksctl.io/introduction/#installation
