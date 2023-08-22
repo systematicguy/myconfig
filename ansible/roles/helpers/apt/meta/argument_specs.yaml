@@ -1,6 +1,6 @@
 argument_specs:
   main:
-    short_description: Install packages using apt
+    short_description: Install package using apt
     options:
       package:
         type: str
