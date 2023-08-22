@@ -1,6 +1,11 @@
 argument_specs:
   main:
     options:
+      bin_dir:
+        type: str
+        required: true
+        description: user's directory to install binaries
+
       symlinked_aws_dir:
         type: str
         required: false
