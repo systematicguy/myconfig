@@ -1,0 +1,19 @@
+argument_specs:
+  main:
+    options:
+      src:
+        type: str
+        required: true
+        description: Installed url.
+
+      existence_check_command:
+        type: str
+        required: false
+        description: Command to check if tool is installed.
+        default: ""
+
+      expected_output:
+        type: str
+        required: false
+        description: Expected output of existence_check_command to skip installation.
+        default: ""

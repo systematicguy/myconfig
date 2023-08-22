@@ -7,6 +7,5 @@
   vars:
     # skip_package_install: true
   roles:
-    #- role: tools/terraform
-    - role: tools/go
+    - role: tools/terraform
   tasks:

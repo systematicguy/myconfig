@@ -1,0 +1,34 @@
+- name: check existing tool
+  when: existence_check_command != ""
+  block:
+    - debug:
+        var: existence_check_command 
+
+    - name: check if tool is installed
+      shell: bash -lc "{{ existence_check_command }}"
+      register: existence_check_result
+      changed_when: false
+      failed_when: false
+
+- name: show installed tool version
+  when: existence_check_command != "" and existence_check_result.rc == 0
+  debug:
+    msg: "found tool version: {{ existence_check_result.stdout }}"
+
+- name: installation
+  when: > 
+    existence_check_command == "" or 
+    existence_check_result.rc != 0 or 
+    (expected_output != "" and expected_output not in existence_check_result.stdout)
+  block:
+    - name: install using go
+      shell: bash -lc "go install {{ src }}"
+
+    - name: final check of tool version
+      shell: bash -lc "{{ existence_check_command }}"
+      register: final_existence_check_result
+
+    - name: show installed tool version
+      debug:
+        msg: "final tool version: {{ final_existence_check_result.stdout }}"
+

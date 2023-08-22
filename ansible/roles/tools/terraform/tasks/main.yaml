@@ -18,6 +18,7 @@
   shell: terraform --version
   register: terraform_version
   failed_when: false
+  changed_when: false
 
 - name: show installed terraform version
   when: terraform_version.rc == 0
@@ -72,4 +73,11 @@
     name: tftui
 
 # ===============================================================================================
-# TODO terraform-docs https://github.com/terraform-docs/terraform-docs/
+# terraform-docs
+- name: go install terraform-docs
+  include_role:
+    name: helpers/go
+  vars:
+    src: github.com/terraform-docs/terraform-docs@latest
+    existence_check_command: terraform-docs --version
+    expected_output: terraform-docs version
