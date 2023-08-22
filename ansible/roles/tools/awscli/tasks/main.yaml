@@ -53,7 +53,7 @@
         content: "{{ downloaded_checksum }}"
         dest: "{{ installed_sha1_path }}"
 
-- name: enable aws completion
+- name: enable aws completion only in ~/.bashrc (that is only sourced when interactive)
   blockinfile:
     path: ~/.bashrc
     marker: "# {mark} ANSIBLE MANAGED BLOCK - aws completion"

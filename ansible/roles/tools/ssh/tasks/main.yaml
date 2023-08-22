@@ -27,7 +27,7 @@
   vars:
     package: keychain
 
-- name: Add keys to keychain
+- name: Add keys to keychain only in ~/.bashrc (that is only sourced when interactive)
   when: added_to_keychain | length > 0
   blockinfile:
     path: ~/.bashrc

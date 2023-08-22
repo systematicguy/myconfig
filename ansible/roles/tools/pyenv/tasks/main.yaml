@@ -7,9 +7,9 @@
   shell: curl https://pyenv.run | bash
   when: not pyenv_exists.stat.exists
 
-- name: Setup pyenv in bashrc
+- name: Setup pyenv in ~/.profile (that is always sourced)
   blockinfile:
-    path: ~/.bashrc
+    path: ~/.profile
     marker: "# {mark} ANSIBLE MANAGED BLOCK - pyenv"
     block: |
       export PATH="$HOME/.pyenv/bin:$PATH"
@@ -24,23 +24,23 @@
   with_items: "{{ python_build_deps}}"
 
 - name: check if global python version is already installed
-  shell: bash -lic "pyenv versions --bare | grep {{ python_global_version }}"
+  shell: bash -lc "pyenv versions --bare | grep {{ python_global_version }}"
   register: python_global_version_installed
   changed_when: false
 
 - name: pyenv update
-  shell: bash -lic "pyenv update"
+  shell: bash -lc "pyenv update"
   when: not python_global_version_installed.stdout
 
 - name: install global python version
-  shell: bash -lic "pyenv install {{ python_global_version }}"
+  shell: bash -lc "pyenv install {{ python_global_version }}"
   when: not python_global_version_installed.stdout
   
 - name: check if global python version is already set
-  shell: bash -lic "pyenv global | grep {{ python_global_version }}"
+  shell: bash -lc "pyenv global | grep {{ python_global_version }}"
   register: python_global_version_set
   changed_when: false
 
 - name: set global python version
-  shell: bash -lic "pyenv global {{ python_global_version }}"
+  shell: bash -lc "pyenv global {{ python_global_version }}"
   when: not python_global_version_set.stdout

@@ -1,11 +1,12 @@
 # check if go is already installed
 - name: check if go is already installed
-  shell: bash -lic "go version"
+  shell: bash -lc "go version"
   register: go_version_run_result
   failed_when: false
+  changed_when: false
 
 - debug:
-    var: go_version_run_result
+    msg: "go version found: {{ go_version_run_result.stdout | default('') }}"
 
 - name: install go
   when: go_version_run_result.rc != 0
@@ -67,11 +68,23 @@
 # about GOPATH: https://go.dev/doc/code
 #	 https://stackoverflow.com/a/10847122/429162
 
-- name: ensure go-specific envvars
+- name: ensure go-specific envvars in ~/.profile (that is always sourced)
   blockinfile:
-    path: ~/.bashrc
+    path: ~/.profile
     marker: "# {mark} ANSIBLE MANAGED BLOCK - go"
     block: |
-      export PATH="$PATH:{{ install_dir | expanduser }}/bin"
       export GOPATH="{{ go_path | expanduser }}:$GOPATH"
+      export PATH="{{ go_path | expanduser }}/bin:{{ install_dir | expanduser }}/bin:$PATH"
       
+
+- name: final go version
+  when: go_version_run_result.rc != 0
+  block:
+    - name: final check of go version
+      shell: bash -lc "go version"
+      register: final_go_version_run_result
+      changed_when: false
+
+    - name: show final go version
+      debug:
+        msg: "final go version: {{ final_go_version_run_result.stdout }}"
