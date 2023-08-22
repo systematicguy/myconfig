@@ -1,6 +1,6 @@
 argument_specs:
   main:
-    short_description: Install package using apt
+    short_description: Install package using pipx
     options:
       bin_dir:
         type: str
