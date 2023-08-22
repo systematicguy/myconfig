@@ -2,10 +2,11 @@
 WSL
 ##############
 symlinks
-aws session manager plugin
 pyenv
 pipx
 tfswitch
+tflint
+~/.bash_logout # keychain?
 
 ##############
 Windows
