@@ -2,11 +2,9 @@ argument_specs:
   main:
     short_description: Install packages using apt
     options:
-      packages:
-        type: list
-        elements: str
+      package:
+        type: str
         required: true
-        description: list of packages to install
       
       skip_package_install:
         type: bool

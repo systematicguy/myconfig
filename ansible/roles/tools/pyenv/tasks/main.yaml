@@ -20,7 +20,8 @@
   include_role:
     name: "{{ package_installer_role }}"
   vars:
-    packages: "{{ python_build_deps }}"
+    package: "{{ item }}"
+  with_items: "{{ python_build_deps}}"
 
 - name: check if global python version is already installed
   shell: bash -lc "pyenv versions --bare | grep {{ python_global_version }}"

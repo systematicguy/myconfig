@@ -1,8 +1,7 @@
 # TODO evaluate https://docs.ansible.com/ansible/latest/collections/ansible/builtin/package_module.html
 - name: install using apt
   apt:
-    name: "{{ item }}"
+    name: "{{ package }}"
     state: present
   become: true
-  with_items: "{{ packages }}"
   when: not skip_package_install

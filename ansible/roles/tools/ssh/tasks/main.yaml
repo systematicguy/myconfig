@@ -25,8 +25,7 @@
   include_role:
     name: "{{ package_installer_role }}"
   vars:
-    packages:
-      - keychain
+    package: keychain
 
 - name: Add keys to keychain
   when: added_to_keychain | length > 0
