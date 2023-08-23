@@ -1,10 +1,7 @@
 ##############
 WSL
 ##############
-symlinks
-pyenv
 pipx
-tfswitch
 tflint
 ~/.bash_logout # keychain?
 
@@ -20,12 +17,10 @@ network drive mapping
 powershell 5-7 profile interop
 
 tfswitch
-    check out if tfenv is applicable on windows
 kubectl and completion
 java
 visual studio
 
-registry exporter and differ
 beyond compare
 
 vmware horizon client
@@ -58,8 +53,3 @@ logitech unifying software
 calibre
 winx dvd copy pro 3.9.6
 cyberlink powerdirector
-
-# games
-Audiosurf 2
-Badland
-Factorio

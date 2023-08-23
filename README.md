@@ -101,6 +101,7 @@ See [windows/OneTimeDscPrepare.ps1](./windows/OneTimeDscPrepare.ps1)
 https://learn.microsoft.com/en-us/powershell/scripting/dsc/overview?view=powershell-7.2
 
 They have removed DSC from 7.2: https://learn.microsoft.com/en-us/powershell/scripting/dsc/overview?view=powershell-7.2
+https://learn.microsoft.com/en-us/powershell/dsc/overview?view=dsc-2.0
 
 The lowest installable version is 2.0.5 from the gallery.
 https://www.powershellgallery.com/packages?q=PSDesiredStateConfiguration
@@ -110,7 +111,7 @@ Anyways, I tried with 7.2 as admin, it partially worked, but not any more once s
 With version 5 all stuff works.
 
 We cannot even uninstall Powershell 5.1 as it relies on .NET framework, with parts not opensourced,
-wherease Powershell 7.2 is relying on .NET core.
+whereas Powershell 7.2 is relying on .NET core.
 
 Read more here: https://stackoverflow.com/questions/70931513/how-to-uninstall-powershell-5-1-on-windows-after-installing-72
 
