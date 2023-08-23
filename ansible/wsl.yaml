@@ -8,6 +8,7 @@
     - unix/hushlogin
     - tools/basics
     - tools/pyenv
+    - tools/docker
     
     - role: tools/pip
       vars:
@@ -29,3 +30,7 @@
 
     - tools/go
     - tools/terraform
+
+    - role: helpers/pipx
+      vars:
+        name: toml-cli

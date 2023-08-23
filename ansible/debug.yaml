@@ -7,5 +7,7 @@
   vars:
     # skip_package_install: true
   roles:
-    - role: tools/terraform
+    - role: helpers/pipx
+      vars:
+        name: toml-cli
   tasks:

@@ -1,0 +1,15 @@
+- name: check ~/.docker/config.json existence
+  stat:
+    path: ~/.docker/config.json
+  register: docker_config_json_stat
+
+- name: ensure ~/.docker/config.json has no credsStore key
+  when: docker_config_json_stat.stat.exists
+  vars:
+    docker_config_dict: "{{ lookup('file', '~/.docker/config.json') }}"
+  block:
+    - name: Adjust content of ~/.docker/config.json
+      when: "'credsStore' in docker_config_dict"
+      copy:
+        dest: ~/.docker/config.json
+        content: "{{ docker_config_dict | ansible.utils.remove_keys('credsStore') | to_nice_json }}"
