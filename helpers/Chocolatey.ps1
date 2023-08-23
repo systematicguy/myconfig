@@ -25,11 +25,9 @@ function EnsureChocoPackage {
         [string]$Name,
 
         [parameter(Mandatory = $false)]
-        [ValidateNotNullOrEmpty()]
         [string]$Version,
 
         [parameter(Mandatory = $false)]
-        [ValidateNotNullOrEmpty()]
         [string]$Params,
 
         [parameter(Mandatory = $false)]
@@ -50,10 +48,10 @@ function EnsureChocoPackage {
         PsDscRunAsCredential = $Credential
         Name                 = $Name
     }
-    if ($PSBoundParameters.ContainsKey('Version') -and $null -ne $Version) {
+    if ($PSBoundParameters.ContainsKey('Version') -and "$Version" -ne "") {
         $configObject.Version = $Version
     }
-    if ($PSBoundParameters.ContainsKey('Params') -and $null -ne $Params) {
+    if ($PSBoundParameters.ContainsKey('Params') -and "$Params" -ne "") {
         $configObject.Params = $Params
     }
 
