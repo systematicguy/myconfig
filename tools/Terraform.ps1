@@ -8,7 +8,8 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 
 EnsureChocoPackage `
     -Name "terraform" `
-    -Version $UserConfig.Terraform.Version
+    -Version $UserConfig.Terraform.Version `
+    -PinVersion
 
 EnsureChocoPackage `
     -Name "tflint" `
@@ -16,6 +17,9 @@ EnsureChocoPackage `
 
 EnsureChocoPackage `
     -Name "terraform-docs"
+
+# TODO $UserDir\AppData\Roaming\terraform.rc
+#  https://developer.hashicorp.com/terraform/cli/config/config-file
 
 # TODO pipx install tftui
 
