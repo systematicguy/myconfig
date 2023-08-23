@@ -33,7 +33,10 @@ function EnsureChocoPackage {
         [string]$Params,
 
         [parameter(Mandatory = $false)]
-        [PsCredential]$Credential = $null
+        [PsCredential]$Credential = $null,
+
+        [parameter(Mandatory = $false)]
+        [switch]$PinVersion = $false
     )
     
     if ($null -eq $Credential) {
@@ -65,4 +68,9 @@ function EnsureChocoPackage {
         }
     }
     ApplyDscConfiguration $configurationName
+
+    if ("$Version" -ne "" -and $PinVersion) {
+        # https://chocolatey.org/docs/commands-pin
+        choco pin add --name $Name --version $Version
+    }
 }
