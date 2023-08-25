@@ -34,3 +34,7 @@
     - role: helpers/pipx
       vars:
         name: toml-cli
+
+    - role: helpers/pipx
+      vars:
+        name: deterministic_zip
