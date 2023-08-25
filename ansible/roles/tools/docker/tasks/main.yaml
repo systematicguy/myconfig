@@ -3,6 +3,10 @@
     path: ~/.docker/config.json
   register: docker_config_json_stat
 
+# To avoid docker ERROR [internal] load metadata for <image url>
+# https://stackoverflow.com/questions/66912085/why-is-docker-compose-failing-with-error-internal-load-metadata-suddenly
+# https://stackoverflow.com/a/76577464/429162
+
 - name: ensure ~/.docker/config.json has no credsStore key
   when: docker_config_json_stat.stat.exists
   vars:
