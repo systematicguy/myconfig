@@ -3,4 +3,3 @@
     name: helpers/pipx
   vars:
     name: poetry
-    version: "{{ version }}"
