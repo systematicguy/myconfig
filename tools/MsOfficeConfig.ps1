@@ -50,7 +50,7 @@ Configuration MSOfficeConfig
 
     Node "localhost"
     {
-        foreach ($appName in @("OneNote", "Excel", "Word", "olkexplorer"))
+        foreach ($appName in @("OneNote", "Excel", "Word", "olkexplorer", "olkmailread"))
         {
             # https://social.technet.microsoft.com/Forums/en-US/ce8a0544-8fcc-4ab8-ac7f-e0c83960dce7/location-of-qat-quick-access-toolbar-officeui-files?forum=outlook
             File "$appName.officeUI"
