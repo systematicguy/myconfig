@@ -53,6 +53,7 @@
 
 . $RepoToolsDir\Citrix.ps1
 
+. $RepoToolsDir\WindowsUpdateRebootConfig.ps1
 . $RepoToolsDir\Smb.ps1
 . $RepoToolsDir\PowerConfig.ps1
 . $RepoToolsDir\MSOfficeConfig.ps1        # David's personal settings for MS Office
