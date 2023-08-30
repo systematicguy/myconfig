@@ -32,6 +32,13 @@ EnsureRegistry -Purpose "MsOfficeConfig" -RegistryConfig @{
         "WorkDay"                = 0x0000007c  #  (124)
         "WeekNum"                = 0x00000001  #  (1)
     }
+    "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\Outlook\Settings\Data\" = @{
+        # I have found these weird json entries using newer versions of Outlook. 
+        # I simply set the id to "" and isFirstSync to "true" and it worked.
+        "global_Calendar_FirstDayOfWeek" =  '{"name":"Calendar_FirstDayOfWeek", "itemClass":"roamingsetting","id":"","scope":"global","parentSetting":"","secondaryKey":"",                        "status":"SYNCEDTOSERVICE","type":"Int","timestamp":0,                 "metadata":"","value":"1","isFirstSync":"true","source":"UserOverride"}'
+        "global_Calendar_FirstWeekOfYear" = '{"name":"Calendar_FirstWeekOfYear","itemClass":"roamingsetting","id":"","scope":"global","parentSetting":"","secondaryKey":"Calendar_FirstWeekOfYear","status":"SYNCEDTOSERVICE","type":"Int","timestamp":637623536518476416,"metadata":"","value":"0","isFirstSync":"true","source":"UserOverride"}'
+        "global_Calendar_WeekNum" =         '{"name":"Calendar_WeekNum",        "itemClass":"roamingsetting","id":"","scope":"global","parentSetting":"","secondaryKey":"Calendar_WeekNum",        "status":"SYNCEDTOSERVICE","type":"Int","timestamp":637673009662226944,"metadata":"","value":"0","isFirstSync":"true","source":"UserOverride"}'
+    }
     "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\16.0\Outlook\Options\Conversations" = @{
         ConversationsOnInAllFoldersChangeNumber = 0x00000003
     }
