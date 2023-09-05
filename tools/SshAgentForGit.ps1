@@ -8,7 +8,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoToolsDir\SshKey.ps1
 . $RepoToolsDir\PowershellConfig.ps1  # TODO validate if still needed
 
-$sshAgentScriptPath = "$RepoRoot\config\powershell_profile\ssh_agent_for_git.ps1"
+$sshAgentScriptPath = "$RepoRoot\scripts\StartSshAgentForGit.ps1"
 
 Configuration SshAgent
 {
