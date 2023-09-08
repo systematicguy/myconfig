@@ -174,6 +174,19 @@
         }
     }
 
+    Slack = @{
+        "root-state.json" = @{
+            settings = @{
+                userChoices = @{
+                    # locale = "en-US"
+                    # launchOnStartup = $false
+                    # systemThemeSyncEnabled = $true
+                }
+            }
+        }
+    }
+
+
     KeyboardLanguagesInOrder = @("DE-ch", "EN-us", "HU-hu")
 
     Draft = $true

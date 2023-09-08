@@ -46,6 +46,7 @@ function EnsureJsonConfig {
     jq.exe --argfile appliedConfig $appliedConfigPath 'with_entries(select(.key | in($appliedConfig)))' $Path `
         | Set-Content $affectedConfigPath -Encoding ASCII
 
+    # TODO fix: e.g. in case of slack this detects changes whereas there is no change
     # calculate difference between affected and applied config
     $configAdjustments = jq.exe --argfile affected "$affectedConfigPath" 'with_entries(select(.value != ($affected[.key])))' "$appliedConfigPath"
     if ($($configAdjustments | jq.exe 'keys | length') -eq 0) {
