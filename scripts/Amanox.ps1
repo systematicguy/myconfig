@@ -45,6 +45,7 @@
 
 . $RepoToolsDir\JetbrainsToolbox.ps1
 . $RepoToolsDir\PycharmProfessional.ps1
+. $RepoToolsDir\WebStormProfessional.ps1
 
 . $RepoToolsDir\AutoDarkMode.ps1
 . $RepoToolsDir\GoogleChrome.ps1
