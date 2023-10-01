@@ -5,9 +5,18 @@ pipx
 tflint
 ~/.bash_logout # keychain?
 
+nodejs
+nvm
+
+~/.azure
+azurecli
+
 ##############
 Windows
 #############
+task manager select columns
+    command line
+focus assistant turn off (incl. full screen, etc.)
 snip & sketch turn off notification sound
 fn-ctrl switch on lenovo
 
