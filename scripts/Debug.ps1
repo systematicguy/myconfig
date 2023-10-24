@@ -6,6 +6,6 @@
 
 . $PSScriptRoot\..\windows\Environment.ps1
 
-. $RepoToolsDir\WindowsTerminal.ps1
+. $RepoToolsDir\WinExplorerConfig.ps1
 
 #ShowTodo
