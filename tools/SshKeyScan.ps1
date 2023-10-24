@@ -33,8 +33,10 @@ Configuration SshKeyScan
 
     Node "localhost"
     {
-        foreach ($hostName in $UserConfig.SshKey.KeyScannedHosts)
+        foreach ($hostConfig in $UserConfig.SshKey.KeyScannedHosts)
         {
+            $hostname = $hostConfig.host
+            $port = $hostConfig.port
             Script "SshKeyScan_$hostName"
             {
                 Credential = $UserCredential
@@ -43,7 +45,7 @@ Configuration SshKeyScan
                     #Do Nothing
                 }
                 SetScript = {
-                    $hostKey = (ssh-keyscan -p 7999 $using:hostName 2> $null)
+                    $hostKey = (ssh-keyscan -p $using:port $using:hostName 2> $null)
                     if ($LASTEXITCODE -ne 0) {
                         throw "Exited with $LASTEXITCODE"
                     }

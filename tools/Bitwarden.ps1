@@ -7,15 +7,17 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 
 EnsureChocoPackage -Name "bitwarden"
 
+$bitwardenSettingsPath = "$UserDir\AppData\Roaming\Bitwarden\data.json"
+
 EnsureFile `
-    -Path $dockerSettingsPath `
+    -Path $bitwardenSettingsPath `
     -EncodingIfMissing ASCII `
     -ContentIfMissing "{}"
 
 # TODO: untested:
 # https://bitwarden.com/help/configure-clients/#desktop-apps
 EnsureJsonConfig `
-    -Path "$UserDir\AppData\Roaming\Bitwarden\data.json" `
+    -Path $bitwardenSettingsPath `
     -JsonConfigPath "$RepoRoot\config\bitwarden\data.json"
 
 LogTodo -Message "bitwarden: check if config is working & configure browser extension"

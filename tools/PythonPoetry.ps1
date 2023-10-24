@@ -27,6 +27,7 @@ Configuration PythonPoetry
                     $versionedPoetry = "poetry"
                 }
                 pipx install $versionedPoetry
+                # TODO expect output ending with "done!"
             }
             TestScript = {
                 try {
@@ -40,4 +41,4 @@ Configuration PythonPoetry
     }
 }
 
-ApplyDscConfiguration "PythonPoetry"
+ApplyDscConfiguration "PythonPoetry" -IgnoreError # TODO don't ignore once poetry install ceases to exit with no error

@@ -35,6 +35,7 @@ ApplyDscConfiguration "TotalCommanderConfigDir"
 # https://www.ghisler.ch/wiki/index.php?title=Wincmd.ini
 $totalCmdIniConfig = @{
     Configuration = @{
+        # TODO fix: Editor first quote
         Editor                    = "`"$VsCodeExePath`" `"%1`""
         DarkMode                  = "1"
         RenameSelOnlyName         = "1"

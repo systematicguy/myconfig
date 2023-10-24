@@ -1,5 +1,7 @@
 # this script was born during troubleshooting
 
+. $PSScriptRoot\..\windows\Environment.ps1
+
 . $PSScriptRoot\..\helpers\UserCredential.ps1
 
 Invoke-Command -Credential $UserCredential -ComputerName localhost `
@@ -15,3 +17,29 @@ Invoke-Command -Credential $UserCredential -ComputerName localhost `
 
 Start-Process PowerShell.exe -Credential $UserCredential "-command whoami"  # works
 # Start-Process PowerShell.exe -Credential $UserCredentialAtComputerDomain "-command whoami"  # will not work
+
+Write-Output "Testing DSC Script with Credentials..."
+Configuration TestUserCredential
+{
+    Import-DscResource -ModuleName PSDesiredStateConfiguration
+
+    Node "localhost"
+    {
+        Script TestUserCredential
+        {
+            Credential = $UserCredential
+
+            GetScript = {
+                #Do Nothing
+            }
+            SetScript = {
+                whoami
+                Write-Output "here goes nothing"
+            }
+            TestScript = {
+                $false
+            }
+        }
+    }
+}
+ApplyDscConfiguration "TestUserCredential"

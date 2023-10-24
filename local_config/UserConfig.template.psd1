@@ -31,7 +31,12 @@
     SshKey = @{
         Type            = "ed25519"
         Comment         = "david.horvath@big.com"
-        KeyScannedHosts = @("github.com")  # format: @("url1", "url2")
+        KeyScannedHosts = @(
+            @{
+                host = "github.com" 
+                port = 22
+            }
+        )
     }
 
     Python = @{

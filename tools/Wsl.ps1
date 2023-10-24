@@ -51,10 +51,10 @@ Configuration WslFeature
     }
 }
 ApplyDscConfiguration "WslFeature"
-$rebootPending = (Get-DscLocalConfigurationManager).RebootPending
+$rebootPending = (Test-PendingReboot -SkipPendingFileRenameOperationsCheck -SkipConfigurationManagerClientCheck).IsRebootPending
 if ($rebootPending) {
-    Write-Host "Reboot is pending."
-    throw "Reboot is pending"
+    Write-Host "Reboot is pending, cannot continue."
+    throw "Reboot is pending, cannot continue"
 }
 
 Configuration WslKernelUpdater
@@ -112,10 +112,10 @@ Configuration WslVersion2
 }
 ApplyDscConfiguration "WslVersion2"
 
-$rebootPending = (Get-DscLocalConfigurationManager).RebootPending
+$rebootPending = (Test-PendingReboot -SkipPendingFileRenameOperationsCheck -SkipConfigurationManagerClientCheck).IsRebootPending
 if ($rebootPending) {
-    Write-Host "Reboot is pending."
-    throw "Reboot is pending"
+    Write-Host "Reboot is pending, cannot continue."
+    throw "Reboot is pending, cannot continue"
 }
 
 EnsureIniConfig -Path "$UserDir\.wslconfig" -IniConfig $UserConfig.Wsl[".wslconfig"]
@@ -174,10 +174,13 @@ Write-Host "Parsed wsl distro short name: $wslDistroShortName"
 # detect if wsl distro install is needed
 $wslOutput = (wsl.exe -l) -replace "\x00",""
 $noInstalledDistributions = $wslOutput.Contains("Windows Subsystem for Linux has no installed distributions.")
-$wslDistroInstallNeeded = $false
-if ($noInstalledDistributions) {
+$wslListGaveUsageInfo = $wslOutput.Contains("Usage: wsl.exe [Argument]")
+
+$wslDistroInstallNeeded = $true
+
+# even if there are installed distros, they might be Docker's one, not the one we will work with
+if ($noInstalledDistributions -or $wslListGaveUsageInfo) {
     Write-Host "No installed wsl distros detected."
-    $wslDistroInstallNeeded = $true
 } else {
     foreach ($line in $wslOutput -split '\r?\n') {
         if ($line.StartsWith($wslDistroShortName)) {
@@ -187,14 +190,14 @@ if ($noInstalledDistributions) {
         }
     }
 }
+
 if ($wslDistroInstallNeeded) {
     Write-Host "wsl distro install is needed."
 
     $wslCredential = ProvideCredential -Purpose "wsl_password_$wslDistroShortName" -Message "Specify password for wsl distro" -User $userConfig.Wsl.UserName
     $wslDistroExe = "$wslDistroDir\$wslDistroShortName"
-
-    # https://github.com/microsoft/WSL/issues/3369#issuecomment-803515113
-    Configuration "InstallWslDistro"
+    
+    Configuration InstallWslDistroAppx
     {
         Import-DscResource -ModuleName PSDesiredStateConfiguration
         Import-DscResource -ModuleName DSCR_AppxPackage
@@ -208,10 +211,20 @@ if ($wslDistroInstallNeeded) {
                 Name        = $wslDistroAppxName
                 PackagePath = $wslDistroAppxPath
             }
+        }
+    }
+    ApplyDscConfiguration "InstallWslDistroAppx"
 
+    # https://github.com/microsoft/WSL/issues/3369#issuecomment-803515113
+    Configuration InstallWslDistro
+    {
+        Import-DscResource -ModuleName PSDesiredStateConfiguration
+
+        Node "localhost"
+        {
+            # WARNING! do not put more tasks here, it would break credential serialization for some unknown reason
             Script InstallWslDistro 
             {
-                DependsOn = "[cAppxPackage]WslDistroAppxPackageInstall"
                 Credential = $UserCredential
 
                 GetScript = {
@@ -221,10 +234,11 @@ if ($wslDistroInstallNeeded) {
                     $false
                 }
                 SetScript = {
+                    $wslCredential = $using:wslCredential
                     $distro = $using:wslDistroExe
                     $distroName = $using:wslDistroShortName
                     # https://github.com/microsoft/WSL/issues/3369
-                    $wslCredential = $using:wslCredential
+                    
                     $userName = $wslCredential.GetNetworkCredential().UserName
                     $password = $wslCredential.GetNetworkCredential().Password
                     $RepoRoot = $using:RepoRoot
@@ -243,7 +257,7 @@ if ($wslDistroInstallNeeded) {
                     # create user account
                     Write-Output "### Setting up [${userName}] user account and password ..." | Out-File $using:outputFile -Append
                     & $distro run useradd -m "$userName" | Out-File $using:outputFile -Append
-                    
+                                        
                     # following wizardry is required to get the pipe to work druing & $distro run:
                     $commandString = "echo ""${userName}:${password}"" | chpasswd"
                     $commandBytes = [System.Text.Encoding]::UTF8.GetBytes($commandString)
@@ -329,3 +343,5 @@ if ($wslDistroInstallNeeded) {
 
 Write-Output "### Excluding WSL from Windows Defender ..." | Out-File $outputFile -Append
 & "$RepoRoot\scripts\excludeWSLfromDefender\excludeWSLfromDefender.ps1" | Out-File $outputFile -Append
+
+LogTodo -Message "You can set the default distro like this: wsl --set-default $wslDistroShortName"
