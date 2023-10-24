@@ -1,3 +1,27 @@
+# play to fail if vars/user_config.yaml is not present
+- name: ensure user_config.yaml is present and set
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - vars/user_config.yaml
+  tasks:
+    - name: check if vars/user_config.yaml exists
+      stat:
+        path: vars/user_config.yaml
+      register: user_config_exists
+      
+    - name: copy vars/user_config.template.yaml to vars/user_config.yaml
+      when: not user_config_exists.stat.exists
+      copy:
+        src: vars/user_config.template.yaml
+        dest: vars/user_config.yaml
+
+    - name: fail if draft_config is true
+      when: draft_config
+      fail:
+        msg: "Update vars/user_config.yaml where necessary and set draft_config to false"
+      
+
 - name: wsl
   hosts: localhost
   gather_facts: true
