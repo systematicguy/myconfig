@@ -11,4 +11,7 @@ EnsureRegistry -Purpose "WinExplorerConfig" -RegistryConfig @{
         TaskbarAl         = 0x00000000  # Taskbar alignment: Left
         TaskbarMn         = 0x00000000  # Hide chat from Taskbar
     }
+    "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Dsh" = @{
+        AllowNewsAndInterests = 0x00000000  # Disable News and Interests Widget
+    }
 }
