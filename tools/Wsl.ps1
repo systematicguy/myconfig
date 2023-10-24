@@ -2,6 +2,7 @@
 if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced[$PSCommandPath] = $true }
 
 . $RepoRoot\helpers\UserCredential.ps1
+. $RepoRoot\helpers\CredentialProvider.ps1
 . $RepoRoot\helpers\MsiTools.ps1
 . $RepoRoot\helpers\Downloader.ps1
 . $RepoRoot\helpers\Ini.ps1

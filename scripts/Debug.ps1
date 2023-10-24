@@ -6,6 +6,6 @@
 
 . $PSScriptRoot\..\windows\Environment.ps1
 
-. $RepoToolsDir\WinExplorerConfig.ps1
+. $RepoToolsDir\NetworkDriveConfig.ps1
 
 #ShowTodo

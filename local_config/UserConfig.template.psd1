@@ -6,6 +6,22 @@
     UserBinDir = "C:\Users\horvathda\bin"
     NoProxy    = "localhost"
 
+    NetworkDriveConfig = @{
+        CredentialGroups = @{
+            #nas = @{
+            #    NetworkAddress = "<nas>"
+            #    UserName       = "<username>"
+            #    # password will be queried at runtime
+            #}
+        }
+        Drives = @{
+            #H = @{
+            #    Path            = "\\<nas>\home"
+            #    CredentialGroup = "nas"
+            #}
+        }
+    }
+
     PxProxy = @{
         Version = "0.8.3"  # https://github.com/genotrance/px/issues/182
         PxIni = @{

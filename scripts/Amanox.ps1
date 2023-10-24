@@ -54,6 +54,7 @@
 
 . $RepoToolsDir\Citrix.ps1
 
+. $RepoToolsDir\NetworkDriveConfig.ps1
 . $RepoToolsDir\WindowsUpdateRebootConfig.ps1
 . $RepoToolsDir\Smb.ps1
 . $RepoToolsDir\PowerConfig.ps1
