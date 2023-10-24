@@ -27,6 +27,7 @@
   shell: bash -lc "pyenv versions --bare | grep {{ python_global_version }}"
   register: python_global_version_installed
   changed_when: false
+  ignore_errors: true  # grep returns 1 if not found
 
 - name: pyenv update
   shell: bash -lc "pyenv update"
@@ -40,6 +41,7 @@
   shell: bash -lc "pyenv global | grep {{ python_global_version }}"
   register: python_global_version_set
   changed_when: false
+  ignore_errors: true  # grep returns 1 if not found
 
 - name: set global python version
   shell: bash -lc "pyenv global {{ python_global_version }}"
