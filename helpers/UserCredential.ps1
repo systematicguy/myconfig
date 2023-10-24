@@ -16,7 +16,7 @@ if ($null -ne $AlreadySourcedUserCredential) {
 $ComputerDomain = (Get-CimInstance -ClassName Win32_ComputerSystem).Domain  # e.g. big.ch for a domain-joined enterprise computer; WORKGROUP for a BYOD non-domain-joined computer
 if ($ComputerDomain -eq "WORKGROUP") {
     $queriedUserName = ""
-    $queryMessage = "It seems you are using a non-domain joined machine. If you use a local user, please specify your username. If you use a Microsoft account, please specify your email address."
+    $queryMessage = "It seems you are using a non-domain joined machine. If you use a local user, please specify your username with machine\username format. If you use a Microsoft account, please specify your email address."
 } else {
     $queriedUserName = $DomainUser
     $queryMessage = "Please specify your credential"
