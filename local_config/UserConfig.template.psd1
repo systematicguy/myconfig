@@ -45,14 +45,23 @@
     }
 
     SshKey = @{
-        Type            = "ed25519"
-        Comment         = "david.horvath@big.com"
         KeyScannedHosts = @(
             @{
                 host = "github.com" 
                 port = 22
             }
         )
+        GeneratedKeys = @{
+            "id_ed25519" = @{
+                Type    = "ed25519"
+                Comment = "<org>_<machine>"
+                ReminderPurposes = @(
+                    "github.com",
+                    "gitlab.com",
+                    "bitbucket.org"
+                )
+            }
+        }
     }
 
     Python = @{
