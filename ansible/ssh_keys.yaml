@@ -22,44 +22,13 @@
       fail:
         msg: "Update vars/user_config.yaml where necessary and set draft_config to false"
       
-
-- name: wsl
+- name: ssh
   hosts: localhost
   gather_facts: true
   vars_files:
     - vars/wsl.yaml
     - vars/user_config.yaml
   roles:
-    - unix/hushlogin
-    - tools/basics
-    - tools/pyenv
-    - tools/docker
-    
-    - role: tools/pip
-      vars:
-        symlinked_pip_conf_path: "{{ windows_user_dir }}/pip/pip.ini"
-    
-    - role: tools/python_poetry
-      vars:
-        version: "{{ poetry_version }}"
-
     - role: tools/ssh
       vars:
         symlinked_ssh_dir: "{{ windows_user_dir }}/.ssh"
-
-    - tools/git
-
-    - role: tools/awscli
-      vars:
-        symlinked_aws_dir: "{{ windows_user_dir }}/.aws"
-
-    - tools/go
-    - tools/terraform
-
-    - role: helpers/pipx
-      vars:
-        name: toml-cli
-
-    - role: helpers/pipx
-      vars:
-        name: deterministic_zip

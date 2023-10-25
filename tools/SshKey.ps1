@@ -25,7 +25,7 @@ ApplyDscConfiguration "SshDir"
 
 foreach ($sshKeyName in $UserConfig.SshKey.GeneratedKeys.Keys) {
     $sshKeyConfig = $UserConfig.SshKey.GeneratedKeys[$sshKeyName]
-    $sshKeyFilePath = "$UserDir\.ssh\id_$($sshKeyName)"
+    $sshKeyFilePath = "$UserDir\.ssh\$($sshKeyName)"
     Write-Output "Checking existence of $sshKeyFilePath..."
     if (Test-Path $sshKeyFilePath) {
         Write-Output "Skipping $sshKeyFilePath because it already exists."
