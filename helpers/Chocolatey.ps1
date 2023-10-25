@@ -71,4 +71,11 @@ function EnsureChocoPackage {
         # https://chocolatey.org/docs/commands-pin
         choco pin add --name $Name --version $Version
     }
+
+    # check using choco whether the package is installed, cChocoPackageInstaller does not check this
+    # workaround for https://github.com/chocolatey/cChoco/issues/61
+    $installedChocoPackage = choco list --exact --limit-output $Name
+    if ($null -eq $installedChocoPackage) {
+        throw "Package $Name is not installed"
+    }
 }
