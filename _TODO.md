@@ -20,9 +20,6 @@ focus assistant turn off (incl. full screen, etc.)
 snip & sketch turn off notification sound
 fn-ctrl switch on lenovo
 
-network drive mapping
-    Computer\HKEY_CURRENT_USER\Network\
-
 powershell 5-7 profile interop
 
 tfswitch
@@ -54,7 +51,6 @@ no choco package yet:
     epuboor
 
 hp scan and capture
-duplicati via docker
 google chrome settings
 handbrake
 logitech options
