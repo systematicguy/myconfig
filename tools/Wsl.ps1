@@ -6,6 +6,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\helpers\MsiTools.ps1
 . $RepoRoot\helpers\Downloader.ps1
 . $RepoRoot\helpers\Ini.ps1
+. $RepoRoot\helpers\PendingReboot.ps1
 
 . $RepoToolsDir\PsTools.ps1
 
@@ -52,11 +53,7 @@ Configuration WslFeature
     }
 }
 ApplyDscConfiguration "WslFeature"
-$rebootPending = (Test-PendingReboot -SkipPendingFileRenameOperationsCheck -SkipConfigurationManagerClientCheck).IsRebootPending
-if ($rebootPending) {
-    Write-Host "Reboot is pending, cannot continue."
-    throw "Reboot is pending, cannot continue"
-}
+EnsureNoPendingReboot
 
 Configuration WslKernelUpdater
 {
@@ -113,11 +110,7 @@ Configuration WslVersion2
 }
 ApplyDscConfiguration "WslVersion2"
 
-$rebootPending = (Test-PendingReboot -SkipPendingFileRenameOperationsCheck -SkipConfigurationManagerClientCheck).IsRebootPending
-if ($rebootPending) {
-    Write-Host "Reboot is pending, cannot continue."
-    throw "Reboot is pending, cannot continue"
-}
+EnsureNoPendingReboot
 
 EnsureIniConfig -Path "$UserDir\.wslconfig" -IniConfig $UserConfig.Wsl[".wslconfig"]
 
