@@ -65,8 +65,6 @@
 . $RepoToolsDir\GoogleChrome_Adguard.ps1
 . $RepoToolsDir\Firefox.ps1
 
-. $RepoToolsDir\Citrix.ps1
-
 . $RepoToolsDir\MsTeams.ps1
 . $RepoToolsDir\WhatsApp.ps1
 . $RepoToolsDir\Telegram.ps1
@@ -85,9 +83,11 @@
 . $RepoToolsDir\AppleHeic.ps1
 . $RepoToolsDir\Speedtest.ps1
 . $RepoToolsDir\GoogleDrive.ps1
+. $RepoToolsDir\Grammarly.ps1
 
 . $RepoToolsDir\Wsl.ps1
 . $RepoToolsDir\Docker.ps1
 . $RepoToolsDir\Duplicati.ps1
+. $RepoToolsDir\Citrix.ps1
 
 ShowTodo
