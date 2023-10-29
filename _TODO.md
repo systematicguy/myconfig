@@ -20,6 +20,8 @@ focus assistant turn off (incl. full screen, etc.)
 snip & sketch turn off notification sound
 fn-ctrl switch on lenovo
 
+cdk
+
 powershell 5-7 profile interop
 
 tfswitch
