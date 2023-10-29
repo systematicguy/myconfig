@@ -8,6 +8,8 @@ $slackSettingsPath = "$UserDir\AppData\Roaming\Slack\storage\root-state.json"
 
 EnsureChocoPackage -Name "slack"
 
+# TODO fix theme, it should be system
 EnsureJsonConfig `
     -Path $slackSettingsPath `
     -JsonConfigObject $UserConfig.Slack['root-state.json']
+
