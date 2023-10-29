@@ -52,6 +52,15 @@ EnsureRegistry -Purpose "MsOfficeConfig" -RegistryConfig @{
     }
 }
 
+# as seen on https://pastebin.com/AbaPjJHa after https://www.reddit.com/r/sysadmin/comments/14kdpcj/set_open_hyperlinks_from_outlook_in_to_default/
+# TODO does not work:
+# EnsureRegistry -Purpose "OutlookUseDefaultBrowser" -ValueType "Binary" -RegistryConfig @{
+#     "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Common\Links" = @{
+#         BrowserChoice     = "01000000d08c9ddf0115d1118c7a00c04fc297eb010000005c6f7248d1111e4cbd5a39799128f3e6000000004a0000005600320020004d006900630072006f0073006f006600740020003300360035002000420072006f007700730065007200200055007300650072002000430068006f006900630065000000106600000001000020000000c1f9967e98d143d19772b5f604b4b5d6ba9d7856e546dc68af3166e790089154000000000e80000000020000200000008b56d733f43283b44946fe4d2b4f80b24dde1d377143f390a88adcdb46d3062e100000002f229739ba74b7b214bcb359a6b31d1340000000ff2aa7b33ae5ed984dc751a1a84d6c33b0c1248f5fc9f376823eb21266858ae7b0c9dd11570431aa98ec1fa9fcf677943d5edac843a626b7"
+#         BrowserChoiceTime = "d2eb7d175309da01"
+#     }
+# } 
+
 Configuration MSOfficeConfig
 {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
