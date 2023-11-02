@@ -97,15 +97,18 @@ $totalCmdIniConfig = @{
     DirMenu = @{
         menu1 = "dev"
         cmd1  = "cd $UserDir\dev"
+
+        menu2 = "devp"
+        cmd2  = "cd $UserDir\devp"
         
-        menu2 = "Downloads"
-        cmd2  = "cd $UserDir\Downloads"
+        menu3 = "Downloads"
+        cmd3  = "cd $UserDir\Downloads"
         
-        menu3 = "myconfig"
-        cmd3  = "cd $RepoRoot"
+        menu4 = "myconfig"
+        cmd4  = "cd $RepoRoot"
         
-        menu4 = "Registry"
-        cmd4  = "cd \\\Registry"
+        menu5 = "Registry"
+        cmd5  = "cd \\\Registry"
     }
 }
 EnsureIniConfig -Path $winCmdPath -IniConfig $totalCmdIniConfig
