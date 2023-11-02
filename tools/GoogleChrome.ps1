@@ -57,3 +57,6 @@ Configuration GoogleChromeAsDefaultBrowser
     }
 }
 ApplyDscConfiguration "GoogleChromeAsDefaultBrowser"
+
+# TODO
+#  don't allow notifications
