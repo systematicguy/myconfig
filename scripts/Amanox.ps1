@@ -54,6 +54,7 @@
 . $RepoToolsDir\PsTools.ps1
 . $RepoToolsDir\ProcMon.ps1
 . $RepoToolsDir\ProcExp.ps1
+. $RepoToolsDir\RamMap.ps1
 . $RepoToolsDir\WinDirStat.ps1
 
 . $RepoToolsDir\JetbrainsToolbox.ps1
