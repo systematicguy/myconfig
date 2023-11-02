@@ -1,4 +1,4 @@
-#if you have downloaded this from github, you need to unblock the whole folder:
+#if you have downloaded this as a zip from github, you need to unblock the whole folder:
 # Get-ChildItem -Path . -Recurse | Unblock-File
 #alternatively you can bypass the execution policy for this process:
 # Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
