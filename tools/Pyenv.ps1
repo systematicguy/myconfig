@@ -94,3 +94,5 @@ Configuration PyenvConfig
 }
 
 ApplyDscConfiguration "PyenvConfig"
+
+# TODO remove app aliases
