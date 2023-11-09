@@ -9,3 +9,4 @@ local_config/manual_todo.txt
 .idea/
 ansible/vars/user_config.yaml
 __pycache__/
+local_config/windows_recent_user.txt

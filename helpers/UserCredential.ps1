@@ -2,6 +2,7 @@
 # . helpers\UserCredential.ps1 can help you ease debugging without the danger of rewriting stuff but still using
 #  dangling .-sourced left-over stuff from Environment.ps1's AlreadySourced table.
 
+$recentUserFilePath = (Resolve-Path "$PSScriptRoot\..\local_config\windows_recent_user.txt").Path
 $DomainUser = whoami  # e.g. BIG\horvathda for a domain-joined enterprise computer; e.g. DESKTOP-1\horvathda for a BYOD non-domain-joined computer
 $parsedUserName = ($DomainUser -split "\\")[-1]
 
@@ -13,19 +14,28 @@ if ($null -ne $AlreadySourcedUserCredential) {
     return 
 }
 
-$ComputerDomain = (Get-CimInstance -ClassName Win32_ComputerSystem).Domain  # e.g. big.ch for a domain-joined enterprise computer; WORKGROUP for a BYOD non-domain-joined computer
-if ($ComputerDomain -eq "WORKGROUP") {
-    $queriedUserName = ""
-    $queryMessage = "It seems you are using a non-domain joined machine. If you use a local user, please specify your username with machine\username format. If you use a Microsoft account, please specify your email address."
-} else {
-    $queriedUserName = $DomainUser
-    $queryMessage = "Please specify your credential"
+$queryMessage = "Please specify your credential"
+if (Test-Path $recentUserFilePath) {
+    $queriedUserName = Get-Content $recentUserFilePath
+}
+if (($null -eq $queriedUserName) -or ($queriedUserName -eq "")) {
+    $ComputerDomain = (Get-CimInstance -ClassName Win32_ComputerSystem).Domain  # e.g. big.ch for a domain-joined enterprise computer; WORKGROUP for a BYOD non-domain-joined computer
+    if ($ComputerDomain -eq "WORKGROUP") {
+        $queriedUserName = ""
+        $queryMessage = "It seems you are using a non-domain joined machine. If you use a local user, please specify your username with machine\username format. If you use a Microsoft account, please specify your email address."
+    } else {
+        $queriedUserName = $DomainUser
+    }
 }
 
 while ($true) {
     $UserCredential = Get-Credential -Message $queryMessage -UserName $queriedUserName
     try {
-        Invoke-Command -Credential $UserCredential -ComputerName localhost -ScriptBlock {Write-Output "Testing your credentials"}
+        Invoke-Command -ErrorAction Stop -Credential $UserCredential -ComputerName localhost -ScriptBlock {Write-Output "Successfully tested your credentials"}
+
+        # save the last user name to a file so that next time we can use it as a default
+        Write-Output $UserCredential.UserName | Out-File $recentUserFilePath
+        Write-Output "Saved [$($UserCredential.UserName)] to [$recentUserFilePath]"
         break
     } catch {
         Write-Output "Your credentials are not working. Please try again."
