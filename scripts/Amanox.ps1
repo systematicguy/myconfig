@@ -40,6 +40,7 @@
 . $RepoToolsDir\PipConfig.ps1
 . $RepoToolsDir\Pipx.ps1
 . $RepoToolsDir\PythonPoetry.ps1
+. $RepoToolsDir\VisualStudioBuildTools.ps1
 
 . $RepoToolsDir\NodeJs.ps1
 
