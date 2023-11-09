@@ -36,7 +36,7 @@ Notifications:
   OnAutoThemeSwitching: true
   OnSkipNextSwitch: true
 AutoSwitchNotify:
-  Enabled: true
+  Enabled: false
   GracePeriodMinutes: 1
 Hotkeys:
   Enabled: true
