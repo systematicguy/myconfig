@@ -53,6 +53,8 @@ no choco package yet:
     epuboor
 
 hp scan and capture
+    https://apps.microsoft.com/detail/9WZDNCRFHWL0?hl=de-ch&gl=CH
+    settings
 google chrome settings
 handbrake
 logitech options
