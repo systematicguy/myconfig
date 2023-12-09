@@ -30,6 +30,10 @@ if (($null -eq $queriedUserName) -or ($queriedUserName -eq "")) {
 
 while ($true) {
     $UserCredential = Get-Credential -Message $queryMessage -UserName $queriedUserName
+    if ($null -eq $UserCredential) {
+        Write-Host "Cancelled the credential dialog";
+        throw "Cancelled the credential dialog";
+    }
     try {
         Invoke-Command -ErrorAction Stop -Credential $UserCredential -ComputerName localhost -ScriptBlock {Write-Output "Successfully tested your credentials"}
 
