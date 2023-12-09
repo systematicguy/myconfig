@@ -2,7 +2,7 @@
 # . helpers\UserCredential.ps1 can help you ease debugging without the danger of rewriting stuff but still using
 #  dangling .-sourced left-over stuff from Environment.ps1's AlreadySourced table.
 
-$recentUserFilePath = (Resolve-Path "$PSScriptRoot\..\local_config\windows_recent_user.txt").Path
+$recentUserFilePath = "$((Resolve-Path "$PSScriptRoot\..\local_config").Path)\windows_recent_user.txt"
 $DomainUser = whoami  # e.g. BIG\horvathda for a domain-joined enterprise computer; e.g. DESKTOP-1\horvathda for a BYOD non-domain-joined computer
 $parsedUserName = ($DomainUser -split "\\")[-1]
 
