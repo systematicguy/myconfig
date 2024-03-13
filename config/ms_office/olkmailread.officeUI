@@ -3,6 +3,7 @@
         <mso:qat>
             <mso:sharedControls>
                 <mso:control idQ="mso:FileSave" visible="true"/>
+                <mso:control idQ="mso:SendReceiveAll" visible="true"/>
                 <mso:control idQ="mso:FilePrintQuick" visible="false"/>
                 <mso:control idQ="mso:FilePrintPreview" visible="false"/>
                 <mso:control idQ="mso:WritingAssistanceCheckDocument" visible="false"/>
@@ -19,6 +20,10 @@
                 <mso:control idQ="mso:PointerModeOptions" visible="false"/>
                 <mso:control idQ="mso:MinimizeRibbon" visible="false"/>
                 <mso:control idQ="mso:MessageOptions" visible="true"/>
+                <mso:control idQ="mso:ShowFrom" visible="true"/>
+                <mso:control idQ="mso:SignaturesStationeryDialog" visible="true"/>
+                <mso:control idQ="mso:OutOfOffice" visible="true"/>
+                <mso:control idQ="mso:TakeMeetingNotes" visible="true"/>
             </mso:sharedControls>
         </mso:qat>
         <mso:tabs>
