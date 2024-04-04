@@ -40,6 +40,8 @@ Configuration GitConfig
                 git config --global core.autocrlf input
                 git config --global core.symlinks true
 
+                git config --global submodule.recurse true
+
                 if ($LASTEXITCODE -ne 0) {
                     throw "Exited with $LASTEXITCODE"
                 }
