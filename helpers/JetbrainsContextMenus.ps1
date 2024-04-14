@@ -8,7 +8,8 @@ function SetupJetbrainsContextMenus {
         [string]$ToolName
     )
 
-    $toolRootDir = FindLatestToolLexicographically -Vendor "JetBrains" -Tool $toolName
+    $toolRootDir = FindLatestToolLexicographically -Vendor "JetBrains" -Tool $toolName -ExistingChildPath "bin"
+    Write-Host "Found newest $toolName (that also contains bin folder) at $toolRootDir"
 
     $jetbrainsToolContextMenuConfigName = "JetbrainsToolContextMenu_$($toolName)"
     Configuration $jetbrainsToolContextMenuConfigName

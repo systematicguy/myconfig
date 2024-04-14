@@ -1,11 +1,12 @@
 function FindLatestToolLexicographically {
     param (
-        # param for vendor
         [Parameter(Mandatory=$true)]
         [string]$Vendor,
 
         [Parameter(Mandatory=$true)]
-        [string]$Tool
+        [string]$Tool,
+
+        [string]$ExistingChildPath = $null
     )
 
     $programFilesVendor = "$Env:ProgramFiles\$Vendor"
@@ -13,7 +14,18 @@ function FindLatestToolLexicographically {
     if (-not (Test-Path $programFilesVendor)) {
         $programFilesVendor = "$Env:ProgramFiles (x86)\$Vendor"
     }
-    # look for the latest version of given tool
-    $toolDir = Get-ChildItem $programFilesVendor -Filter "$Tool*" | Sort-Object -Property Name -Descending | Select-Object -First 1
-    return $toolDir.FullName
+
+    # Look for all directories containing the given tool
+    $toolDirs = Get-ChildItem $programFilesVendor -Filter "$Tool*" | Where-Object {
+        if ($null -ne $ExistingChildPath) {
+            Test-Path (Join-Path $_.FullName -ChildPath $ExistingChildPath)
+        } else {
+            $true
+        }
+    }
+
+    # Sort the directories based on name and return the first one
+    $latestToolDir = $toolDirs | Sort-Object -Property Name -Descending | Select-Object -First 1
+
+    return $latestToolDir.FullName
 }
