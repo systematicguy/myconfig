@@ -5,6 +5,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\helpers\Chocolatey.ps1
 
 . $RepoToolsDir\PowershellProfile.ps1
+. $RepoToolsDir\Pipx.ps1 # TODO clarify why I wanted to include this
 
 
 Write-Output "Profile is $CurrentUserProfilePath"
