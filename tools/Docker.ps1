@@ -37,3 +37,16 @@ EnsureJsonConfig `
         }
         Write-Host "Docker Desktop is not running"
     }
+
+# TODO exclude from Windows Defender:
+# - dev folder
+# - C:\Program Files\Docker\Docker\Docker Desktop.exe file
+# - C:\Program Files\Docker\Docker\DockerCli.exe file
+# - C:\Users\...\AppData\Local\Docker\wsl folder
+# - c:\Users\david\AppData\Roaming\Docker\
+# - c:\Users\david\AppData\Roaming\Docker Desktop\
+# - c:\Users\david\.docker\
+# - pycharm folder
+# - pycharm indexing folder
+#  https://docs.docker.com/engine/security/antivirus/
+#  https://forums.docker.com/t/windows-defenderreal-time-protection-cripples-server-while-docker-is-running/64904

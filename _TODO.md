@@ -8,12 +8,20 @@ tflint
 nodejs
 nvm
 
+issue a bash login warning if ~/.docker/config.json exists or "credStore" is "desktop.exe" there
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash
+
 ~/.azure
 azurecli
 
 ##############
 Windows
 #############
+exclude dev/ and devp/ from Microsoft Windows Search Indexer
+    https://admx.help/?Category=Windows_8.1_2012R2&Policy=FullArmor.Policies.3B9EA2B5_A1D1_4CD5_9EDE_75B22990BC21::PreventIndexingCertainPaths_2
+    HKCU\SOFTWARE\Policies\Microsoft\Windows\Windows Search\PreventIndexingCertainPaths
+    
 task manager select columns
     command line
 focus assistant turn off (incl. full screen, etc.)

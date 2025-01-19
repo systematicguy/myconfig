@@ -337,5 +337,7 @@ if ($wslDistroInstallNeeded) {
 
 Write-Output "### Excluding WSL from Windows Defender ..." | Out-File $outputFile -Append
 & "$RepoRoot\scripts\excludeWSLfromDefender\excludeWSLfromDefender.ps1" | Out-File $outputFile -Append
+# TODO exclude from defender:
+#  c:\Users\david\bin\Ubuntu_2204.1.7.0_x64.appx\ <- yes it is a folder
 
 LogTodo -Message "You can set the default distro like this: wsl --set-default $wslDistroShortName"
