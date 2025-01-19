@@ -6,7 +6,7 @@ if ($AlreadySourced[$PSCommandPath] -eq $true) { return } else { $AlreadySourced
 . $RepoRoot\helpers\Downloader.ps1
 . $RepoRoot\helpers\PendingReboot.ps1
 
-$duplicatiInstaller = "duplicati-2.0.7.1_beta_2023-05-25-x64.msi"
+$duplicatiInstaller = "duplicati-2.1.0.2_beta_2024-11-29-x64.msi"
 $duplicatiInstallerUrl = "https://updates.duplicati.com/beta/$duplicatiInstaller"
 $downloadedDuplicatiInstallerPath = "$DscWorkDir\$duplicatiInstaller"
 
