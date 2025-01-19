@@ -49,6 +49,8 @@
 
 #. $RepoToolsDir\Precommit.ps1
 
+. $RepoToolsDir\Nuget.ps1
+
 . $RepoToolsDir\AwsCli.ps1
 . $RepoToolsDir\AzureCli.ps1
 
